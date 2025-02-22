@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
+/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:31 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/02/21 18:18:32 by najeuneh         ###   ########.fr       */
+/*   Updated: 2025/02/22 15:26:24 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,45 @@
 Server::Server() {}
 
 Server::~Server() {}
+
+void read_data_from_socket(int i, struct pollfd **poll_fds, int *poll_count, int server_socket) {
+
+	char buffer[BUFSIZ];
+    char msg_to_send[BUFSIZ];
+    int bytes_read;
+    int status;
+    int dest_fd;
+    int sender_fd;
+
+	sender_fd = (*poll_fds)[i].fd;
+	memset(&buffer, '\0', sizeof buffer);
+	bytes_read = recv(sender_fd, buffer, BUFSIZ, 0);
+	if (bytes_read <= 0) {
+		if (bytes_read == 0) {
+			std::cout << sender_fd << " Client socket closed connection." << std::endl;
+		}
+		else {
+			std::cerr << "[Server] Recv error: " << strerror(errno);
+		}
+		close(sender_fd); // Ferme la socket
+		//del_from_poll_fds(poll_fds, i, poll_count);
+    }
+    else {
+        std::cout << sender_fd << "Got message: " << buffer << std::endl;
+
+        memset(&msg_to_send, '\0', sizeof msg_to_send);
+        sprintf(msg_to_send, "[%d] says: %s", sender_fd, buffer);
+        for (int j = 0; j < *poll_count; j++) {
+            dest_fd = (*poll_fds)[j].fd;
+            if (dest_fd != server_socket && dest_fd != sender_fd) {
+                status = send(dest_fd, msg_to_send, strlen(msg_to_send), 0);
+                if (status == -1) {
+                    std::cerr << "[Server] Send error to client fd" << dest_fd << strerror(errno);
+                }
+            }
+        }
+    }
+}
 
 int	Server::sondage_poll(void)
 {

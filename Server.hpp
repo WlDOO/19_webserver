@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
+/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:12 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/02/21 17:55:30 by najeuneh         ###   ########.fr       */
+/*   Updated: 2025/02/22 15:19:11 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <sys/socket.h>
 #include <sys/poll.h>
 #include <iostream>
+#include <unistd.h>
 
 #pragma once
 
@@ -53,5 +54,6 @@ class Server
 		Server();
 		int	sondage_poll(void);
 		int	create_server(void);
+		void read_data_from_socket(int i, struct pollfd **poll_fds, int *poll_count, int server_socket);
 		~Server();
 };
