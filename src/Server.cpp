@@ -6,18 +6,15 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:31 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/02/24 10:41:41 by armitite         ###   ########.fr       */
+/*   Updated: 2025/02/24 11:13:26 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Server.hpp"
-
+#include "../include/Server.hpp"
 
 Server::Server() {}
 
 Server::~Server() {}
-
-
 
 void	Server::accept_new_connection(int server_socket, std::vector<struct pollfd> &poll_fds, int *poll_count, int *poll_size)
 {
