@@ -81,3 +81,38 @@ In your C++ web server, CGI will allow you to handle requests that require dynam
         The CGI program writes the response to stdout.
 
         Your server captures this output and sends it back to the client as an HTTP response.
+
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Implementing CGI in Your C++ Web Server
+
+Here’s how you can integrate CGI into your server:
+
+    Identify CGI Requests:
+
+        Check if the requested URL corresponds to a CGI script (e.g., based on a specific directory like /cgi-bin/ or file extensions like .cgi).
+
+    Set Up Environment Variables:
+
+        Set up environment variables to pass request data to the CGI program:
+
+            REQUEST_METHOD: The HTTP method (e.g., GET, POST).
+
+            QUERY_STRING: The query parameters (for GET requests).
+
+            CONTENT_LENGTH: The length of the request body (for POST requests).
+
+            CONTENT_TYPE: The type of the request body (e.g., application/x-www-form-urlencoded).
+
+    Fork and Execute the CGI Program:
+
+        Use fork() to create a new process.
+
+        Use execve() to execute the CGI program.
+
+        Redirect stdin and stdout using dup2().
+
+    Capture the Output:
+
+        Read the output from the CGI program's stdout and send it back to the client.
