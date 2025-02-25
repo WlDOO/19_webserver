@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:31 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/02/24 11:13:26 by armitite         ###   ########.fr       */
+/*   Updated: 2025/02/25 15:10:03 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	Server::accept_new_connection(int server_socket, std::vector<struct pollfd>
 	}
 	serv.add_to_poll_fds(poll_fds, client_fd, poll_count, poll_size);
 	std::cout << "[server] Accepted new connection on client socket" << client_fd << std::endl;
-	oss << "Welcome. You are client fd: " << client_fd << std::endl;
+	oss << "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!" << client_fd << std::endl;
 	std::string msg = oss.str();
 	std::strncpy(msg_to_send, msg.c_str(), BUFSIZ - 1);
 	msg_to_send[BUFSIZ - 1] = '\0';	
@@ -130,11 +130,16 @@ void Server::read_data_from_socket(int i, std::vector<struct pollfd> &poll_fds, 
 
 	char buffer[BUFSIZ];
     char msg_to_send[BUFSIZ];
+	std::ostringstream oss;
+	std::ostringstream oss_tmp;
+	std::string sender_msg;
+	char *verbs = NULL;
     int bytes_read;
     int status;
-    int dest_fd;
     int sender_fd;
+	(void)server_socket;
 
+	verbs = strdup("");
 	sender_fd = (poll_fds)[i].fd;
 	memset(&buffer, '\0', sizeof buffer);
 	bytes_read = recv(sender_fd, buffer, BUFSIZ, 0);
@@ -149,19 +154,21 @@ void Server::read_data_from_socket(int i, std::vector<struct pollfd> &poll_fds, 
 		del_from_poll_fds(poll_fds, i, poll_count);
     }
     else {
+		oss_tmp << buffer;
+		sender_msg = oss_tmp.str();
+		std::strncpy(verbs, sender_msg.c_str(), 5);
+		printf("verbs : %s\n", verbs);
         std::cout << sender_fd << "Got message: " << buffer << std::endl;
-
         memset(&msg_to_send, '\0', sizeof msg_to_send);
-        sprintf(msg_to_send, "[%d] says: %s", sender_fd, buffer);
-        for (int j = 0; j < *poll_count; j++) {
-            dest_fd = (poll_fds)[j].fd;
-            if (dest_fd != server_socket && dest_fd != sender_fd) {
-                status = send(dest_fd, msg_to_send, strlen(msg_to_send), 0);
-                if (status == -1) {
-                    std::cerr << "[Server] Send error to client fd" << dest_fd << strerror(errno);
-                }
-            }
-        }
+		oss << "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nabcde 12345!" << sender_fd << std::endl;
+		std::string msg = oss.str();
+		std::strncpy(msg_to_send, msg.c_str(), BUFSIZ - 1);
+		msg_to_send[BUFSIZ - 1] = '\0';	
+		status = send(sender_fd, msg_to_send, strlen(msg_to_send), 0);
+		if (status == -1) 
+		{
+			std::cerr << "[Server] Send error to client fd" << sender_fd << strerror(errno);
+		}
     }
 }
 
@@ -189,7 +196,7 @@ int Server::create_server(void)
 		std::cerr << "bind " << strerror(errno);
 		return -1;
 	}
-	std::cout << "New connectiom1 socket fd:" << socket_fd << std::endl;
+	std::cout << "New connection socket fd:" << socket_fd << std::endl;
 	return socket_fd;
 }
 
