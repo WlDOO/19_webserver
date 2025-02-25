@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:12 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/02/24 10:41:27 by armitite         ###   ########.fr       */
+/*   Updated: 2025/02/25 12:42:32 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 #include <cerrno>
 #pragma once
 
+#define PORT 4242;
 
 uint32_t htonl(uint32_t hostlong);  //"Host to network long"
 uint16_t htons(uint16_t hostshort); //"Host to network short"
