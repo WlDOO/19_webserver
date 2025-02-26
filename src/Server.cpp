@@ -132,11 +132,11 @@ void Server::read_data_from_socket(int i, std::vector<struct pollfd> &poll_fds, 
     char msg_to_send[BUFSIZ];
 	std::ostringstream oss;
 	std::ostringstream oss_tmp;
-	std::string sender_msg;
-	std::string full_msg;
-	std::string verbs;
+	// std::string sender_msg;
+	// std::string full_msg;
+	// std::string verbs;
     int bytes_read;
-	int	found;
+	// int	found;
     //int status;
     int sender_fd;
 	(void)server_socket;
@@ -155,15 +155,7 @@ void Server::read_data_from_socket(int i, std::vector<struct pollfd> &poll_fds, 
 		del_from_poll_fds(poll_fds, i, poll_count);
     }
     else {
-		oss_tmp << buffer;
-		sender_msg = oss_tmp.str();
-		full_msg.assign(sender_msg);
-		// printf("full_msg : %s\n", full_msg);
-		std::cout << " full_msg is : " << full_msg << std::endl;
-		found = full_msg.find("HTTP/1.1", 0);
-		verbs = full_msg.substr(0, found);
-		std::cout << "le found : " << found << std::endl;
-		std::cout << " verbs are : " << verbs << std::endl;
+		set_request_type(buffer);
         std::cout << sender_fd << " Got message: " << buffer << std::endl;
         memset(&msg_to_send, '\0', sizeof msg_to_send);
 		oss << "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nabcde 12345!" << sender_fd << std::endl;
@@ -178,6 +170,31 @@ void Server::read_data_from_socket(int i, std::vector<struct pollfd> &poll_fds, 
     }
 }
 
+void	Server::set_request_type(char buffer[BUFSIZ]) {
+
+	std::ostringstream oss_tmp;
+	std::string sender_msg;
+	std::string full_msg;
+	std::string verbs;
+	int	found;
+
+	oss_tmp << buffer;
+	sender_msg = oss_tmp.str();
+	full_msg.assign(sender_msg);
+	std::cout << " full_msg is : " << full_msg << std::endl;
+	found = full_msg.find("HTTP/1.1", 0);
+	verbs = full_msg.substr(0, found);
+	std::cout << "le found : " << found << std::endl;
+	std::cout << " verbs are : " << verbs << std::endl;
+	found = verbs.find(" ", 0);
+	_Request_type = verbs.substr(0, found);
+	verbs.erase(0, found);
+	_Request_content = verbs.substr(1, verbs.size());
+	std::cout << " request type is : " << _Request_type << std::endl;
+	std::cout << " request content is : " << _Request_content << std::endl;
+	//return (verbs);
+}
+
 int Server::create_server(void)
 {
 	struct sockaddr_in	sa;
@@ -187,7 +204,7 @@ int Server::create_server(void)
 	memset(&sa, 0, sizeof sa);
 	sa.sin_family = AF_INET;
 	sa.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-	sa.sin_port = htons(4242);
+	sa.sin_port = htons(4241);
 
 	socket_fd = socket(sa.sin_family, SOCK_STREAM, 0);
     if (socket_fd == -1) {
@@ -213,4 +230,7 @@ int main(int ac, char **av)
 	(void)av;
 	(void)ac;
 	status = serv.sondage_poll();
+	if (status == -1)
+		return (1);
+	return (0);
 }
