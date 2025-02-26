@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:31 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/02/25 15:10:03 by armitite         ###   ########.fr       */
+/*   Updated: 2025/02/26 14:08:00 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,11 +154,11 @@ void Server::read_data_from_socket(int i, std::vector<struct pollfd> &poll_fds, 
 		del_from_poll_fds(poll_fds, i, poll_count);
     }
     else {
-		oss_tmp << buffer;
-		sender_msg = oss_tmp.str();
-		std::strncpy(verbs, sender_msg.c_str(), 5);
-		printf("verbs : %s\n", verbs);
-        std::cout << sender_fd << "Got message: " << buffer << std::endl;
+		// oss_tmp << buffer;
+		// sender_msg = oss_tmp.str();
+		// std::strncpy(verbs, sender_msg.c_str(), 5);
+		// printf("verbs : %s\n", verbs);
+        std::cout << sender_fd << " Got message: " << buffer << std::endl;
         memset(&msg_to_send, '\0', sizeof msg_to_send);
 		oss << "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nabcde 12345!" << sender_fd << std::endl;
 		std::string msg = oss.str();
