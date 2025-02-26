@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:31 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/02/26 14:08:00 by armitite         ###   ########.fr       */
+/*   Updated: 2025/02/26 16:24:35 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,13 +133,14 @@ void Server::read_data_from_socket(int i, std::vector<struct pollfd> &poll_fds, 
 	std::ostringstream oss;
 	std::ostringstream oss_tmp;
 	std::string sender_msg;
-	char *verbs = NULL;
+	std::string full_msg;
+	std::string verbs;
     int bytes_read;
-    int status;
+	int	found;
+    //int status;
     int sender_fd;
 	(void)server_socket;
 
-	verbs = strdup("");
 	sender_fd = (poll_fds)[i].fd;
 	memset(&buffer, '\0', sizeof buffer);
 	bytes_read = recv(sender_fd, buffer, BUFSIZ, 0);
@@ -154,24 +155,28 @@ void Server::read_data_from_socket(int i, std::vector<struct pollfd> &poll_fds, 
 		del_from_poll_fds(poll_fds, i, poll_count);
     }
     else {
-		// oss_tmp << buffer;
-		// sender_msg = oss_tmp.str();
-		// std::strncpy(verbs, sender_msg.c_str(), 5);
-		// printf("verbs : %s\n", verbs);
+		oss_tmp << buffer;
+		sender_msg = oss_tmp.str();
+		full_msg.assign(sender_msg);
+		// printf("full_msg : %s\n", full_msg);
+		std::cout << " full_msg is : " << full_msg << std::endl;
+		found = full_msg.find("HTTP/1.1", 0);
+		verbs = full_msg.substr(0, found);
+		std::cout << "le found : " << found << std::endl;
+		std::cout << " verbs are : " << verbs << std::endl;
         std::cout << sender_fd << " Got message: " << buffer << std::endl;
         memset(&msg_to_send, '\0', sizeof msg_to_send);
 		oss << "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nabcde 12345!" << sender_fd << std::endl;
 		std::string msg = oss.str();
 		std::strncpy(msg_to_send, msg.c_str(), BUFSIZ - 1);
-		msg_to_send[BUFSIZ - 1] = '\0';	
-		status = send(sender_fd, msg_to_send, strlen(msg_to_send), 0);
-		if (status == -1) 
-		{
-			std::cerr << "[Server] Send error to client fd" << sender_fd << strerror(errno);
-		}
+		msg_to_send[BUFSIZ - 1] = '\0';
+		// status = send(sender_fd, msg_to_send, strlen(msg_to_send), 0);
+		// if (status == -1) 
+		// {
+		// 	std::cerr << "[Server] Send error to client fd" << sender_fd << strerror(errno);
+		// }
     }
 }
-
 
 int Server::create_server(void)
 {
