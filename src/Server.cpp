@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:31 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/02/24 11:13:26 by armitite         ###   ########.fr       */
+/*   Updated: 2025/02/25 13:03:06 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	Server::accept_new_connection(int server_socket, std::vector<struct pollfd>
 		return ;
 	}
 	serv.add_to_poll_fds(poll_fds, client_fd, poll_count, poll_size);
-	std::cout << "[server] Accepted new connection on client socket" << client_fd << std::endl;
+	std::cout << "[server] Accepted new connection on client socket " << client_fd << std::endl;
 	oss << "Welcome. You are client fd: " << client_fd << std::endl;
 	std::string msg = oss.str();
 	std::strncpy(msg_to_send, msg.c_str(), BUFSIZ - 1);

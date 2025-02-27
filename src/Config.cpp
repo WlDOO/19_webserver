@@ -6,7 +6,7 @@
 /*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:46:38 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/02/24 18:25:52 by najeuneh         ###   ########.fr       */
+/*   Updated: 2025/02/27 17:44:31 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,98 +16,150 @@ Config::Config() {}
 
 Config::~Config() {}
 
-std::string	GetLoc(int i, int y)
-{}
-
-int	Checkword(int i, std::string str, std::string word)
-{
-	int y = 0;
-	while(str[i])
-	{
-		if (str[i] == 32 || (str[i] >= 9 && str[i] <= 13))
-			i++;
-		else if (str[i] >= 97 && str[i] <= 122)
-		{
-			while (str[i] == word[y])
-			{
-				i++;
-				y++;
-				if (word[y] == '\0')
-					return 1;
-			}
-			return 0;
-		}
-	}
-}
-
 int	Config::CheckServer(int i, std::string str)
 {
-	if (Checkword(i, str, "host") == 1)
+	size_t position;
+
+	if ((position = str.find("host")) != std::string::npos)
 		return 0;
-	else if (Checkword(i, str, "server_name") == 1)
+	else if ((position = str.find("server_name")) != std::string::npos)
 		return 1;
-	else if (Checkword(i, str, "client_max_body_size") == 1)
+	else if ((position = str.find("client_max_body_size")) != std::string::npos)
 		return 2;
-	else if (Checkword(i, str, "listen") == 1)
+	else if ((position = str.find("listen")) != std::string::npos)
 		return 3;
-	else if (Checkword(i, str, "error_page") == 1)
+	else if ((position = str.find("error_page")) != std::string::npos)
 		return 4;
 	return -1;
 }
 
-int	Config::CheckLoc(int i, std::string str)
+void	Config::SetServer(std::string str)
 {
-	if (Checkword(i, str, "location") == 1)
-		return 0;
-	else if (Checkword(i, str, "root") == 1)
-		return 1;
-	else if (Checkword(i, str, "index") == 1)
-		return 2;
-	else if (Checkword(i, str, "redirect_url") == 1)
-		return 3;
-	else if (Checkword(i, str, "upload_store") == 1)
-		return 4;
-	else if (Checkword(i, str, "cgi_pass") == 1)
-		return 5;
-	else if (Checkword(i, str, "directory_listening") == 1)
-		return 6;
-	else if (Checkword(i, str, "allowed_methods") == 1)
-		return 7;
-	else if (Checkword(i, str, "cgi_extonsions") == 1)
-		return 8;
-	return -1;
-}
+	std::istringstream ss;
+	std::string line;
+ 	size_t position;
 
-int	Config::NextLigne(int i, std::string str)
-{
-	while (str[i])
+	if ((position = str.find("listen")) != std::string::npos)
 	{
-		i++;
-		if (str[i] == '\n')
-			return i;
+		ss.str(str);
+		getline(ss, line, ' ');
+		getline(ss, line, ';');
+		this->Server.listen.push_back(line);
 	}
-	return i;
+	else if ((position = str.find("server_name")) != std::string::npos)
+	{
+		ss.str(str);
+		getline(ss, line, ' ');
+		getline(ss, line, ';');
+		this->Server.server_name = line;
+	}
+	else if ((position = str.find("client_max_body_size")) != std::string::npos)
+	{
+		ss.str(str);
+		getline(ss, line, ' ');
+		getline(ss, line, ';');
+		this->Server.client_max_body_size = line;
+	}
+	else if ((position = str.find("host")) != std::string::npos)
+	{
+		ss.str(str);
+		getline(ss, line, ' ');
+		std::getline(ss, line, ';');
+		this->Server.host = line;
+	}
+	else if ((position = str.find("error_page")) != std::string::npos)
+	{
+		ss.str(str);
+		getline(ss, line, ' ');
+		getline(ss, line, ' ');
+		this->Server.error_page_num = line;
+		getline(ss, line, ' ');
+		this->Server.error_page_loc = line;
+	}
+
 }
 
-Config	Config::Config_file(int fd)
+void	Config::SetLoc(std::string str)
+{
+	std::istringstream ss;
+	std::string line;
+ 	size_t position;
+
+	if ((position = str.find("location")) != std::string::npos)
+	{
+		ss.str(str);
+		getline(ss, line, ' ');
+		getline(ss, line, '{');
+		this->Server.Loc[Server.size - 1].Location = line;
+	}
+	else if ((position = str.find("root")) != std::string::npos)
+	{
+		ss.str(str);
+		getline(ss, line, ' ');
+		getline(ss, line, ';');
+		this->Server.Loc[Server.size - 1].root = line;
+	}
+	else if ((position = str.find("index ")) != std::string::npos)
+	{
+		ss.str(str);
+		getline(ss, line, ' ');
+		getline(ss, line, ';');
+		std::cout << line << Server.size << std::endl;
+	}
+	else if ((position = str.find("redirect_url")) != std::string::npos)
+	{
+	}
+	else if ((position = str.find("upload_store")) != std::string::npos)
+	{
+	}
+	else if ((position = str.find("cgi_pass")) != std::string::npos)
+	{
+		
+	}
+	else if ((position = str.find("directory_listening")) != std::string::npos)
+	{
+	}
+	else if ((position = str.find("allowed_methods")) != std::string::npos)
+	{
+	}
+	// else if ((i = Checkword(i, str, "cgi_ext")) == 1)
+		// ;
+}
+
+Config	Config::Config_file(std::string str2)
 {
 	Config Conf;
 	std::string	str;
-	int y;
-	char buffer[4096];
-	int	bs;
-	while(bs = read(fd, buffer, sizeof(buffer)) > 0)
-		str.append(buffer, bs);
-	for (int i = 0; str[i]; i++)
+	std::ifstream fichier(str2.c_str());
+	size_t position;
+
+	Server.size = 1;
+	while (std::getline(fichier, str, '\n'))
 	{
-		if (y = CheckServer(i, str) != -1)
+		if (CheckServer(0, str) != -1)
 		{
-			
+			SetServer(str);
 		}
-		else if (y = CheckLoc(i, str) != -1)
+		else if ((position = str.find("location")) != std::string::npos)
 		{
-			
+			this->Server.size++;
+			this->Server.Loc.resize(Server.size);
+			while (getline(fichier, str))
+			{
+				SetLoc(str);
+				if ((position = str.find("}")) != std::string::npos)
+					break ;
+			}
 		}
-		i = NextLigne(i, str);
 	}
+	fichier.close();
+	return *this;
+}
+
+int	main()
+{
+	Config Conf;
+		
+	Conf = Conf.Config_file("../example.conf");
+	std::cout << "aa " << Conf.Server.server_name << std::endl;
 }
