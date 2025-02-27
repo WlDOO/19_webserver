@@ -6,20 +6,22 @@
 /*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 14:42:58 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/02/24 18:16:35 by najeuneh         ###   ########.fr       */
+/*   Updated: 2025/02/25 19:18:50 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include <iostream>
-#include <string>
 #include <unistd.h>  // Pour read(), close()
+#include <fstream>
+#include <sstream>
 #include <fcntl.h>   // Pour open()
+#include <string>
 #include <vector>
 #include <map>
 
-typedef	struct Location
+struct Location
 {
 	std::string Location;
 	std::string	root;
@@ -27,18 +29,21 @@ typedef	struct Location
 	std::string redirect_url;
 	std::string	upload_store;
 	std::string	cgi_pass;
-	bool directory_listening;
+	std::string directory_listening;
 	std::vector<std::string> methods;
 	std::vector<std::string>cgi_extonsions;
 };
 
-typedef struct Server
+struct Server
 {
 	std::string host;
 	std::string	server_name;
 	std::string	client_max_body_size;
 	std::vector<std::string> listen;
-	std::map<std::string, std::string>	error_page;
+	std::string	error_page_num;
+	std::string	error_page_loc;
+	std::vector<Location> Loc;
+	int size;
 };
 
 
@@ -46,14 +51,12 @@ typedef struct Server
 class Config
 {
 	private:
-		Server Server;
-		std::vector<Location> Loc;
 	public:
-		Config	Config_file(int fd);
-		std::string	GetLoc(int i, int y);
-		int	CheckServer(int i, std::string	str);
-		int	CheckLoc(int i, std::string	str);
-		int NextLigne(int i, std::string str);
+		Server Server;
+		Config	Config_file(std::string str2);
+		int	CheckServer(int i, std::string str);
+		void	SetServer(std::string str);
+		void	SetLoc(std::string str);
 		Config();
 		~Config();
 };
