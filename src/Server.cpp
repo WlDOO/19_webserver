@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:31 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/02/26 16:24:35 by armitite         ###   ########.fr       */
+/*   Updated: 2025/02/27 16:56:17 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	Server::accept_new_connection(int server_socket, std::vector<struct pollfd>
 	int 	client_fd;
 	char	msg_to_send[BUFSIZ];
 	int		status;
-    std::ostringstream oss;
+	std::string msg;
 
 	client_fd = accept(server_socket, NULL, NULL);
 	if (client_fd == -1)
@@ -32,8 +32,7 @@ void	Server::accept_new_connection(int server_socket, std::vector<struct pollfd>
 	}
 	serv.add_to_poll_fds(poll_fds, client_fd, poll_count, poll_size);
 	std::cout << "[server] Accepted new connection on client socket" << client_fd << std::endl;
-	oss << "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!" << client_fd << std::endl;
-	std::string msg = oss.str();
+	msg = html_request(client_fd);
 	std::strncpy(msg_to_send, msg.c_str(), BUFSIZ - 1);
 	msg_to_send[BUFSIZ - 1] = '\0';	
 	status = send(client_fd, msg_to_send, std::strlen(msg_to_send), 0);
@@ -132,15 +131,16 @@ void Server::read_data_from_socket(int i, std::vector<struct pollfd> &poll_fds, 
     char msg_to_send[BUFSIZ];
 	std::ostringstream oss;
 	std::ostringstream oss_tmp;
-	// std::string sender_msg;
-	// std::string full_msg;
-	// std::string verbs;
+	std::ifstream ifs("index.html", std::ios::binary);
     int bytes_read;
 	// int	found;
     //int status;
     int sender_fd;
 	(void)server_socket;
 
+	// std::ostringstream oss_html;
+    // oss_html << ifs.rdbuf();
+    // std::string content = oss_html.str();
 	sender_fd = (poll_fds)[i].fd;
 	memset(&buffer, '\0', sizeof buffer);
 	bytes_read = recv(sender_fd, buffer, BUFSIZ, 0);
@@ -158,7 +158,7 @@ void Server::read_data_from_socket(int i, std::vector<struct pollfd> &poll_fds, 
 		set_request_type(buffer);
         std::cout << sender_fd << " Got message: " << buffer << std::endl;
         memset(&msg_to_send, '\0', sizeof msg_to_send);
-		oss << "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nabcde 12345!" << sender_fd << std::endl;
+		oss << ifs.rdbuf() << sender_fd << std::endl;
 		std::string msg = oss.str();
 		std::strncpy(msg_to_send, msg.c_str(), BUFSIZ - 1);
 		msg_to_send[BUFSIZ - 1] = '\0';
@@ -193,6 +193,25 @@ void	Server::set_request_type(char buffer[BUFSIZ]) {
 	std::cout << " request type is : " << _Request_type << std::endl;
 	std::cout << " request content is : " << _Request_content << std::endl;
 	//return (verbs);
+}
+
+std::string	Server::html_request(int client_fd)
+{
+	std::ifstream ifs("index.html", std::ios::binary);
+	std::ostringstream oss_html;
+	std::ostringstream oss;
+    oss_html << ifs.rdbuf();
+    std::string content = oss_html.str();
+	std::string res;
+
+	oss << "HTTP/1.1 200 OK\r\n";
+    oss << "Content-Type: text/html\r\n";
+    oss << "Content-Length: " << content.size() << "\r\n";
+    oss << "\r\n";
+	oss << content << client_fd << std::endl;
+	res = oss.str();
+
+	return (res);
 }
 
 int Server::create_server(void)
