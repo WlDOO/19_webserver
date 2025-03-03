@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:31 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/02/27 16:56:17 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/03 15:13:48 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,20 @@ int	Server::sondage_poll(void)
 			if (poll_fds[i].fd == server_socket)
 				accept_new_connection(server_socket, poll_fds, &poll_count, &poll_size);
 			else
-				read_data_from_socket(i, poll_fds, &poll_count, server_socket);
+				{
+					if (poll_fds[i].revents & POLLIN)
+					{
+						// Lire les données du client
+						read_data_from_socket(i, poll_fds, &poll_count, server_socket);
+					}
+
+					// Vérifie si la socket est prête pour l'écriture (POLLOUT)
+					if (poll_fds[i].revents & POLLOUT)
+					{
+						// Envoyer des données au client
+						send_data_to_socket(i, poll_fds);
+					}
+				}
 		}
 	}
 	return (0);
@@ -128,19 +141,15 @@ int	Server::sondage_poll(void)
 void Server::read_data_from_socket(int i, std::vector<struct pollfd> &poll_fds, int *poll_count, int server_socket) {
 
 	char buffer[BUFSIZ];
-    char msg_to_send[BUFSIZ];
+    std::string msg_to_send;
 	std::ostringstream oss;
 	std::ostringstream oss_tmp;
-	std::ifstream ifs("index.html", std::ios::binary);
     int bytes_read;
 	// int	found;
     //int status;
     int sender_fd;
 	(void)server_socket;
 
-	// std::ostringstream oss_html;
-    // oss_html << ifs.rdbuf();
-    // std::string content = oss_html.str();
 	sender_fd = (poll_fds)[i].fd;
 	memset(&buffer, '\0', sizeof buffer);
 	bytes_read = recv(sender_fd, buffer, BUFSIZ, 0);
@@ -156,18 +165,22 @@ void Server::read_data_from_socket(int i, std::vector<struct pollfd> &poll_fds, 
     }
     else {
 		set_request_type(buffer);
-        std::cout << sender_fd << " Got message: " << buffer << std::endl;
-        memset(&msg_to_send, '\0', sizeof msg_to_send);
-		oss << ifs.rdbuf() << sender_fd << std::endl;
-		std::string msg = oss.str();
-		std::strncpy(msg_to_send, msg.c_str(), BUFSIZ - 1);
-		msg_to_send[BUFSIZ - 1] = '\0';
-		// status = send(sender_fd, msg_to_send, strlen(msg_to_send), 0);
-		// if (status == -1) 
-		// {
-		// 	std::cerr << "[Server] Send error to client fd" << sender_fd << strerror(errno);
-		// }
     }
+}
+
+void Server::send_data_to_socket(int i, std::vector<struct pollfd>& poll_fds){
+
+	int status;
+	std::string msg_to_send;
+	int sender_fd;
+	
+	sender_fd = (poll_fds)[i].fd;
+	msg_to_send = html_request(sender_fd);
+	status = send(sender_fd, msg_to_send.c_str(), strlen(msg_to_send.c_str()), 0);
+	if (status == -1) 
+	{
+		std::cerr << "[Server] Send error to client fd" << sender_fd << strerror(errno);
+	}
 }
 
 void	Server::set_request_type(char buffer[BUFSIZ]) {
@@ -181,23 +194,32 @@ void	Server::set_request_type(char buffer[BUFSIZ]) {
 	oss_tmp << buffer;
 	sender_msg = oss_tmp.str();
 	full_msg.assign(sender_msg);
-	std::cout << " full_msg is : " << full_msg << std::endl;
+	//std::cout << " full_msg is : " << full_msg << std::endl;
 	found = full_msg.find("HTTP/1.1", 0);
 	verbs = full_msg.substr(0, found);
-	std::cout << "le found : " << found << std::endl;
-	std::cout << " verbs are : " << verbs << std::endl;
+	// std::cout << "le found : " << found << std::endl;
+	// std::cout << " verbs are : " << verbs << std::endl;
 	found = verbs.find(" ", 0);
 	_Request_type = verbs.substr(0, found);
 	verbs.erase(0, found);
 	_Request_content = verbs.substr(1, verbs.size());
-	std::cout << " request type is : " << _Request_type << std::endl;
-	std::cout << " request content is : " << _Request_content << std::endl;
+	// std::cout << " request type is : " << _Request_type << std::endl;
+	// std::cout << " request content is : " << _Request_content << std::endl;
 	//return (verbs);
 }
 
 std::string	Server::html_request(int client_fd)
 {
-	std::ifstream ifs("index.html", std::ios::binary);
+	std::string web_page;
+	if (_Request_content.empty())
+		web_page = "index.html";
+	else
+	{
+		//std::cout << "ici <" << std::endl;
+		web_page.assign(_Request_content, 1);
+		//std::cout << "la page web : " << web_page << std::endl;
+	}
+	std::ifstream ifs(web_page.c_str(), std::ios::binary);
 	std::ostringstream oss_html;
 	std::ostringstream oss;
     oss_html << ifs.rdbuf();
@@ -223,7 +245,7 @@ int Server::create_server(void)
 	memset(&sa, 0, sizeof sa);
 	sa.sin_family = AF_INET;
 	sa.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-	sa.sin_port = htons(4241);
+	sa.sin_port = htons(4242);
 
 	socket_fd = socket(sa.sin_family, SOCK_STREAM, 0);
     if (socket_fd == -1) {
