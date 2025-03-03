@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:31 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/03 15:13:48 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/03 15:33:31 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,15 @@ int	Server::sondage_poll(void)
 			if ((poll_fds[i].revents & POLLIN) != 1)
 				continue ;
 			std::cout << poll_fds[i].fd << " ready for I/O operation" << std::endl;
+			if (poll_fds[i].revents & POLLIN)
+				std::cout << "POLLIN ";
+			if (poll_fds[i].revents & POLLOUT)
+				std::cout << "POLLOUT ";
+			if (poll_fds[i].revents & POLLERR)
+				std::cout << "POLLERR ";
+			if (poll_fds[i].revents & POLLHUP)
+				std::cout << "POLLHUP ";
+			std::cout << std::endl;
 			if (poll_fds[i].fd == server_socket)
 				accept_new_connection(server_socket, poll_fds, &poll_count, &poll_size);
 			else
@@ -229,6 +238,7 @@ std::string	Server::html_request(int client_fd)
 	oss << "HTTP/1.1 200 OK\r\n";
     oss << "Content-Type: text/html\r\n";
     oss << "Content-Length: " << content.size() << "\r\n";
+	oss << "Connection: keep-alive\r\n";
     oss << "\r\n";
 	oss << content << client_fd << std::endl;
 	res = oss.str();
