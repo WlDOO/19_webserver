@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 13:35:52 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/04 14:50:35 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/04 17:20:27 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,15 +59,28 @@ void	Server::set_request_type(char buffer[BUFSIZ]) {
 std::string	Server::html_request(int client_fd)
 {
 	std::string web_page;
+	int i;
+	std::string	pages[] = {
+		"page1.html",
+		"page2.html",
+		"page3.html",
+		"index.html",
+		"res.html",
+	};
 	if (_Request_content.empty())
 		web_page = "index.html";
 	else
 	{
 		std::cout << "ici <" << std::endl;
 		//web_page.assign(_Request_content, 1);
-		if (_Request_content.compare("res.html") == 0)
-			web_page = "res.html";
-		else
+		for(i = 0; i < 6; i++) {
+			if (_Request_content == pages[i])
+			{
+				web_page = pages[i];
+				break ;
+			}
+		}
+		if (i == 6)
 			return (html_error_404(client_fd));
 		//std::cout << "la page web : " << web_page << std::endl;
 	}
@@ -132,6 +145,11 @@ void Server::read_data_from_socket(int i, std::vector<struct pollfd> &poll_fds, 
     }
     else {
 		set_request_type(buffer);
+		// if (_Request_content == "favicon.ico")
+		// {
+		// 	std::cout << "Flavico !" << std::endl;
+		// 	return ;
+		// }
 		send_data_to_socket(i, poll_fds);
     }
 }
