@@ -6,7 +6,7 @@
 /*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 14:42:58 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/02/25 19:18:50 by najeuneh         ###   ########.fr       */
+/*   Updated: 2025/03/03 15:10:05 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ struct Location
 
 struct Server
 {
+	std::string	root;
 	std::string host;
 	std::string	server_name;
 	std::string	client_max_body_size;
@@ -51,10 +52,11 @@ struct Server
 class Config
 {
 	private:
+		int	size_serv;
 	public:
-		Server Server;
+		std::vector<Server> Server;
 		Config	Config_file(std::string str2);
-		int	CheckServer(int i, std::string str);
+		int		CheckServer(std::string str);
 		void	SetServer(std::string str);
 		void	SetLoc(std::string str);
 		Config();
