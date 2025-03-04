@@ -6,7 +6,7 @@
 /*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:46:38 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/04 15:56:05 by najeuneh         ###   ########.fr       */
+/*   Updated: 2025/03/04 17:29:55 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,7 +211,7 @@ void removeExtraWhitespace(std::string& str)
         }
         else if (isWhitespace(str[i]))
 		{
-            if (i != length - 1)
+            if (i != length)
 			{
                 if (!spaceFound)
 				{
@@ -246,11 +246,16 @@ std::string	parse_file(std::string str)
 		{
 			if(line[i] == ';' || line[i] == '{' || line[i] == '}')
 			{
-				line.replace(i + 1, 1, "\n");
-				line = line.substr(y, (i + 2));
+				if (y == 0)
+					line = line.substr(y, i + 1);
+				else
+					line = line.substr(y, i);
 				removeExtraWhitespace(line);
+				line.append("\n");
 				res.append(line);
+				break ;
 			}
+			else
 			i++;
 		}
 	}
@@ -263,6 +268,6 @@ int	main()
 	std::ifstream fichier("../example.conf");
 	
 	std::string str = parse_file("../example.conf");
-	std::cout << str << std::endl;
-	Conf = Conf.Config_file(str);
+	std::cout << "-----------------------" << std::endl << str << std::endl;
+	// Conf = Conf.Config_file(str);
 }
