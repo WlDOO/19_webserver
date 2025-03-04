@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:31 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/03 15:33:31 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/04 14:30:03 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,11 +131,11 @@ int	Server::sondage_poll(void)
 				{
 					if (poll_fds[i].revents & POLLIN)
 					{
-						// Lire les données du client
+						//Lire les données du client
 						read_data_from_socket(i, poll_fds, &poll_count, server_socket);
 					}
 
-					// Vérifie si la socket est prête pour l'écriture (POLLOUT)
+					//Vérifie si la socket est prête pour l'écriture (POLLOUT)
 					if (poll_fds[i].revents & POLLOUT)
 					{
 						// Envoyer des données au client
@@ -145,105 +145,6 @@ int	Server::sondage_poll(void)
 		}
 	}
 	return (0);
-}
-
-void Server::read_data_from_socket(int i, std::vector<struct pollfd> &poll_fds, int *poll_count, int server_socket) {
-
-	char buffer[BUFSIZ];
-    std::string msg_to_send;
-	std::ostringstream oss;
-	std::ostringstream oss_tmp;
-    int bytes_read;
-	// int	found;
-    //int status;
-    int sender_fd;
-	(void)server_socket;
-
-	sender_fd = (poll_fds)[i].fd;
-	memset(&buffer, '\0', sizeof buffer);
-	bytes_read = recv(sender_fd, buffer, BUFSIZ, 0);
-	if (bytes_read <= 0) {
-		if (bytes_read == 0) {
-			std::cout << sender_fd << " Client socket closed connection." << std::endl;
-		}
-		else {
-			std::cerr << "[Server] Recv error: " << strerror(errno);
-		}
-		close(sender_fd); // Ferme la socket
-		del_from_poll_fds(poll_fds, i, poll_count);
-    }
-    else {
-		set_request_type(buffer);
-    }
-}
-
-void Server::send_data_to_socket(int i, std::vector<struct pollfd>& poll_fds){
-
-	int status;
-	std::string msg_to_send;
-	int sender_fd;
-	
-	sender_fd = (poll_fds)[i].fd;
-	msg_to_send = html_request(sender_fd);
-	status = send(sender_fd, msg_to_send.c_str(), strlen(msg_to_send.c_str()), 0);
-	if (status == -1) 
-	{
-		std::cerr << "[Server] Send error to client fd" << sender_fd << strerror(errno);
-	}
-}
-
-void	Server::set_request_type(char buffer[BUFSIZ]) {
-
-	std::ostringstream oss_tmp;
-	std::string sender_msg;
-	std::string full_msg;
-	std::string verbs;
-	int	found;
-
-	oss_tmp << buffer;
-	sender_msg = oss_tmp.str();
-	full_msg.assign(sender_msg);
-	//std::cout << " full_msg is : " << full_msg << std::endl;
-	found = full_msg.find("HTTP/1.1", 0);
-	verbs = full_msg.substr(0, found);
-	// std::cout << "le found : " << found << std::endl;
-	// std::cout << " verbs are : " << verbs << std::endl;
-	found = verbs.find(" ", 0);
-	_Request_type = verbs.substr(0, found);
-	verbs.erase(0, found);
-	_Request_content = verbs.substr(1, verbs.size());
-	// std::cout << " request type is : " << _Request_type << std::endl;
-	// std::cout << " request content is : " << _Request_content << std::endl;
-	//return (verbs);
-}
-
-std::string	Server::html_request(int client_fd)
-{
-	std::string web_page;
-	if (_Request_content.empty())
-		web_page = "index.html";
-	else
-	{
-		//std::cout << "ici <" << std::endl;
-		web_page.assign(_Request_content, 1);
-		//std::cout << "la page web : " << web_page << std::endl;
-	}
-	std::ifstream ifs(web_page.c_str(), std::ios::binary);
-	std::ostringstream oss_html;
-	std::ostringstream oss;
-    oss_html << ifs.rdbuf();
-    std::string content = oss_html.str();
-	std::string res;
-
-	oss << "HTTP/1.1 200 OK\r\n";
-    oss << "Content-Type: text/html\r\n";
-    oss << "Content-Length: " << content.size() << "\r\n";
-	oss << "Connection: keep-alive\r\n";
-    oss << "\r\n";
-	oss << content << client_fd << std::endl;
-	res = oss.str();
-
-	return (res);
 }
 
 int Server::create_server(void)

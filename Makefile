@@ -9,7 +9,7 @@ RM = rm -rf
 SRC_DIR = src/
 OBJ_DIR = obj/
 
-SRC_FILES = Server
+SRC_FILES = Server Read_send
 
 OBJ = $(addprefix $(OBJ_DIR), $(addsuffix .o, $(SRC_FILES)))
 SRC = $(addprefix $(SRC_DIR), $(addsuffix .cpp, $(SRC_FILES)))
