@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 13:35:52 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/04 17:20:27 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/05 17:13:55 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,30 @@ std::string Server::html_error_404(int client_fd) {
     oss << "\r\n";
     oss << content << client_fd << std::endl;
 
+	ifs.close();
     return oss.str();
+}
+
+std::string Server::html_response(int client_fd, std::string web_page) {
+
+	std::ifstream ifs(web_page.c_str(), std::ios::binary);
+	std::ostringstream oss_html;
+	std::ostringstream oss;
+    oss_html << ifs.rdbuf();
+    std::string content = oss_html.str();
+	std::string res;
+
+	oss << "HTTP/1.1 200 OK\r\n";
+    oss << "Content-Type: text/html\r\n";
+    oss << "Content-Length: " << content.size() << "\r\n";
+	oss << "Connection: keep-alive\r\n";
+    oss << "\r\n";
+	oss << content << client_fd << std::endl;
+
+	ifs.close();
+	res = oss.str();
+
+	return (res);
 }
 
 void	Server::set_request_type(char buffer[BUFSIZ]) {
@@ -67,7 +90,7 @@ std::string	Server::html_request(int client_fd)
 		"index.html",
 		"res.html",
 	};
-	if (_Request_content.empty())
+	if (_Request_content.empty() || _Request_content == "/")
 		web_page = "index.html";
 	else
 	{
@@ -84,24 +107,8 @@ std::string	Server::html_request(int client_fd)
 			return (html_error_404(client_fd));
 		//std::cout << "la page web : " << web_page << std::endl;
 	}
-	std::ifstream ifs(web_page.c_str(), std::ios::binary);
-	std::ostringstream oss_html;
-	std::ostringstream oss;
-    oss_html << ifs.rdbuf();
-    std::string content = oss_html.str();
-	std::string res;
-
-	oss << "HTTP/1.1 200 OK\r\n";
-    oss << "Content-Type: text/html\r\n";
-    oss << "Content-Length: " << content.size() << "\r\n";
-	oss << "Connection: keep-alive\r\n";
-    oss << "\r\n";
-	oss << content << client_fd << std::endl;
-	res = oss.str();
 	
-	// _Request_content.clear();
-	ifs.close();
-	return (res);
+	return (html_response(client_fd, web_page));
 }
 void Server::send_data_to_socket(int i, std::vector<struct pollfd>& poll_fds){
 

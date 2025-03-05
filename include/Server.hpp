@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:12 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/04 13:41:32 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/05 15:05:54 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ class Server
 		void send_data_to_socket(int i, std::vector<struct pollfd>& poll_fds);
 		std::string read_html_file(const std::string& file_path);
 		std::string html_error_404(int client_fd);
+		std::string html_response(int client_fd, std::string web_page);
 		void set_request_type(char buffer[BUFSIZ]);
 		std::string	html_request(int client_fd);
 		
