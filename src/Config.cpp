@@ -6,7 +6,7 @@
 /*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:46:38 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/04 17:29:55 by najeuneh         ###   ########.fr       */
+/*   Updated: 2025/03/05 17:03:46 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void	Config::SetServer(std::string str)
 		getline(ss, line, ' ');
 		getline(ss, line, ' ');
 		this->Server[size_serv].error_page_num = line;
-		getline(ss, line, ' ');
+		getline(ss, line, ';');
 		this->Server[size_serv].error_page_loc = line;
 	}
 	else if ((position = str.find("root ")) != std::string::npos)
@@ -96,6 +96,7 @@ void	Config::SetLoc(std::string str)
 
 	if ((position = str.find("location ")) != std::string::npos)
 	{
+
 		ss.str(str);
 		getline(ss, line, ' ');
 		getline(ss, line, '{');
@@ -143,15 +144,26 @@ void	Config::SetLoc(std::string str)
 		getline(ss, line, ';');
 		this->Server[size_serv].Loc[Server[size_serv].size - 1].directory_listening = line;
 	}
-	else if ((position = str.find("allowed_methods ")) != std::string::npos)
+	else if ((position = str.find("allow_methods ")) != std::string::npos)
 	{
-		ss.str(str);
-		getline(ss, line, ' ');
-		getline(ss, line, ';');
-		// this->Server[size_serv].Loc[Server[size_serv].size - 1].methods[] = line;
+		if ((position = str.find("GET")) != std::string::npos)
+			this->Server[size_serv].Loc[Server[size_serv].size - 1].methods.push_back("GET");
+		if((position = str.find("POST")) != std::string::npos)
+			this->Server[size_serv].Loc[Server[size_serv].size - 1].methods.push_back("POST");
+		if((position = str.find("DELETE")) != std::string::npos)
+			this->Server[size_serv].Loc[Server[size_serv].size - 1].methods.push_back("DELETE");
 	}
-	// else if ((i = Checkword(i, str, "cgi_ext")) == 1)
-		// ;
+	else if ((position = str.find("cgi_ext ")) != std::string::npos)
+	{
+		if ((position = str.find(".py")) != std::string::npos)
+			this->Server[size_serv].Loc[Server[size_serv].size - 1].cgi_extonsions.push_back(".py");
+		if ((position = str.find(".php")) != std::string::npos)
+			this->Server[size_serv].Loc[Server[size_serv].size - 1].cgi_extonsions.push_back(".php");
+		if ((position = str.find(".sh")) != std::string::npos)
+			this->Server[size_serv].Loc[Server[size_serv].size - 1].cgi_extonsions.push_back(".sh");
+		if ((position = str.find(".js")) != std::string::npos)
+			this->Server[size_serv].Loc[Server[size_serv].size - 1].cgi_extonsions.push_back(".js");
+	}
 }
 
 Config	Config::Config_file(std::string str2)
@@ -189,7 +201,8 @@ Config	Config::Config_file(std::string str2)
 	return *this;
 }
 
-bool isWhitespace(char c) {
+bool isWhitespace(char c)
+{
     return (c == ' ' || (c >= 9 && c <= 13));
 }
 
@@ -223,9 +236,7 @@ void removeExtraWhitespace(std::string& str)
         }
     }
     if (j > 0 && isWhitespace(str[length - 1]))
-	{
         str[j++] = str[length - 1];
-    }
     str.resize(j);
 }
 
@@ -262,12 +273,11 @@ std::string	parse_file(std::string str)
 	return res;
 }
 
-int	main()
-{
-	Config Conf;
-	std::ifstream fichier("../example.conf");
-	
-	std::string str = parse_file("../example.conf");
-	std::cout << "-----------------------" << std::endl << str << std::endl;
-	// Conf = Conf.Config_file(str);
-}
+// int	main()
+// {
+// 	Config Conf;
+// 	std::string str = parse_file("../example.conf");
+// 	Conf.Config_file(str);
+// 	std::cout << Conf.Server[0].Loc[0].methods[1] << std::endl;
+// 	return 0;
+// }
