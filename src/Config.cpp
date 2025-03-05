@@ -6,7 +6,7 @@
 /*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:46:38 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/05 17:03:46 by najeuneh         ###   ########.fr       */
+/*   Updated: 2025/03/05 17:58:44 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,6 @@ void	Config::SetLoc(std::string str)
 
 	if ((position = str.find("location ")) != std::string::npos)
 	{
-
 		ss.str(str);
 		getline(ss, line, ' ');
 		getline(ss, line, '{');
@@ -240,7 +239,7 @@ void removeExtraWhitespace(std::string& str)
     str.resize(j);
 }
 
-std::string	parse_file(std::string str)
+std::string	pick_file(std::string str)
 {
 	std::string line;
 	std::string res;
@@ -273,11 +272,24 @@ std::string	parse_file(std::string str)
 	return res;
 }
 
-// int	main()
-// {
-// 	Config Conf;
-// 	std::string str = parse_file("../example.conf");
-// 	Conf.Config_file(str);
-// 	std::cout << Conf.Server[0].Loc[0].methods[1] << std::endl;
-// 	return 0;
-// }
+Config	parse_file(Config Conf, std::string str)
+{
+	std::fstream fs;
+	
+	fs.open(str.c_str());
+	if (!fs.is_open())
+	{
+		std::cerr << "Error: " << strerror(errno) << std::endl;
+		return Conf;
+	}
+	std::string str2 = pick_file(str);
+	Conf.Config_file(str2);
+	return Conf;
+}	
+
+int	main()
+{
+	Config Conf;
+	Conf = parse_file(Conf, "config.conf");
+	return 0;
+}
