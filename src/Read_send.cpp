@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 13:35:52 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/05 17:13:55 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/05 20:23:35 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ void	Server::set_request_type(char buffer[BUFSIZ]) {
 	std::cout << " verbs are : " << verbs << std::endl;
 	found = verbs.find(" ", 0);
 	_Request_type = verbs.substr(0, found);
+	if (_Request_type == "POST")
+		set_content_post(full_msg);
 	verbs.erase(0, found);
 	_Request_content = verbs.substr(2, (verbs.size() - 3));
 	std::cout << " request type is : " << _Request_type << std::endl;
@@ -81,34 +83,12 @@ void	Server::set_request_type(char buffer[BUFSIZ]) {
 
 std::string	Server::html_request(int client_fd)
 {
-	std::string web_page;
-	int i;
-	std::string	pages[] = {
-		"page1.html",
-		"page2.html",
-		"page3.html",
-		"index.html",
-		"res.html",
-	};
-	if (_Request_content.empty() || _Request_content == "/")
-		web_page = "index.html";
-	else
-	{
-		std::cout << "ici <" << std::endl;
-		//web_page.assign(_Request_content, 1);
-		for(i = 0; i < 6; i++) {
-			if (_Request_content == pages[i])
-			{
-				web_page = pages[i];
-				break ;
-			}
-		}
-		if (i == 6)
-			return (html_error_404(client_fd));
-		//std::cout << "la page web : " << web_page << std::endl;
-	}
-	
-	return (html_response(client_fd, web_page));
+	if (_Request_type == "GET")
+		return (request_get(client_fd));
+	if (_Request_type == "POST")
+		return (NULL);
+
+	return (request_get(client_fd));
 }
 void Server::send_data_to_socket(int i, std::vector<struct pollfd>& poll_fds){
 
@@ -152,11 +132,11 @@ void Server::read_data_from_socket(int i, std::vector<struct pollfd> &poll_fds, 
     }
     else {
 		set_request_type(buffer);
-		// if (_Request_content == "favicon.ico")
-		// {
-		// 	std::cout << "Flavico !" << std::endl;
-		// 	return ;
-		// }
-		send_data_to_socket(i, poll_fds);
+		if (_Request_content == "favicon.ico")
+		{
+			std::cout << "Flavico !" << std::endl;
+			return ;
+		}
+		//send_data_to_socket(i, poll_fds);
     }
 }

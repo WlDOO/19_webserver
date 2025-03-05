@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:12 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/05 15:05:54 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/05 20:26:31 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ class Server
 		std::string _Request_type;
 		std::string _Request_content;
 		std::string _Request_html;
+		std::string _Post_content;
 		int			_Keep_alive;
 
 	public:
@@ -48,20 +49,23 @@ class Server
 		Server();
 		
 		//Server
-		void accept_new_connection(int server_socket, std::vector<struct pollfd> &oll_fds, int *poll_count, int *poll_size);
-		void add_to_poll_fds(std::vector<struct pollfd> &poll_fds, int new_fd, int *poll_count, int *poll_size);
-		void del_from_poll_fds(std::vector<struct pollfd> &poll_fds, int i, int *poll_count);
-		int	sondage_poll(void);
-		int	create_server(void);
+		void		accept_new_connection(int server_socket, std::vector<struct pollfd> &oll_fds, int *poll_count, int *poll_size);
+		void		add_to_poll_fds(std::vector<struct pollfd> &poll_fds, int new_fd, int *poll_count, int *poll_size);
+		void		del_from_poll_fds(std::vector<struct pollfd> &poll_fds, int i, int *poll_count);
+		int			sondage_poll(void);
+		int			create_server(void);
 		
 		//Read_send
-		void read_data_from_socket(int i, std::vector<struct pollfd> &poll_fds, int *poll_count, int server_socket);
-		void send_data_to_socket(int i, std::vector<struct pollfd>& poll_fds);
+		void		read_data_from_socket(int i, std::vector<struct pollfd> &poll_fds, int *poll_count, int server_socket);
+		void		send_data_to_socket(int i, std::vector<struct pollfd>& poll_fds);
 		std::string read_html_file(const std::string& file_path);
 		std::string html_error_404(int client_fd);
 		std::string html_response(int client_fd, std::string web_page);
-		void set_request_type(char buffer[BUFSIZ]);
+		void		set_request_type(char buffer[BUFSIZ]);
 		std::string	html_request(int client_fd);
+		std::string	request_get(int client_fd);
+		std::string	request_post(int client_fd);
+		void		set_content_post(std::string full_msg);
 		
 		~Server();
 };

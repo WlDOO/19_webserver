@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:31 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/04 14:30:03 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/05 23:27:30 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,20 +128,20 @@ int	Server::sondage_poll(void)
 			if (poll_fds[i].fd == server_socket)
 				accept_new_connection(server_socket, poll_fds, &poll_count, &poll_size);
 			else
+			{
+				if (poll_fds[i].revents & POLLIN)
 				{
-					if (poll_fds[i].revents & POLLIN)
-					{
-						//Lire les données du client
-						read_data_from_socket(i, poll_fds, &poll_count, server_socket);
-					}
-
-					//Vérifie si la socket est prête pour l'écriture (POLLOUT)
-					if (poll_fds[i].revents & POLLOUT)
-					{
-						// Envoyer des données au client
-						send_data_to_socket(i, poll_fds);
-					}
+					//Lire les données du client
+					read_data_from_socket(i, poll_fds, &poll_count, server_socket);
 				}
+
+				//Vérifie si la socket est prête pour l'écriture (POLLOUT)
+				if (poll_fds[i].revents & POLLOUT)
+				{
+					// Envoyer des données au client
+					send_data_to_socket(i, poll_fds);
+				}
+			}
 		}
 	}
 	return (0);
@@ -156,7 +156,7 @@ int Server::create_server(void)
 	memset(&sa, 0, sizeof sa);
 	sa.sin_family = AF_INET;
 	sa.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-	sa.sin_port = htons(4242);
+	sa.sin_port = htons(4241);
 
 	socket_fd = socket(sa.sin_family, SOCK_STREAM, 0);
     if (socket_fd == -1) {
