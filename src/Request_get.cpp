@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 20:10:46 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/05 20:13:22 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/06 17:17:09 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ std::string	Server::request_get(int client_fd) {
 	int i;
 	std::string	pages[] = {
 		"page1.html",
+		"page1_rep.html",
 		"page2.html",
 		"page3.html",
 		"index.html",
@@ -29,14 +30,14 @@ std::string	Server::request_get(int client_fd) {
 	{
 		std::cout << "ici <" << std::endl;
 		//web_page.assign(_Request_content, 1);
-		for(i = 0; i < 6; i++) {
+		for(i = 0; i < 7; i++) {
 			if (_Request_content == pages[i])
 			{
 				web_page = pages[i];
 				break ;
 			}
 		}
-		if (i == 6)
+		if (i == 7)
 			return (html_error_404(client_fd));
 		//std::cout << "la page web : " << web_page << std::endl;
 	}

@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 13:35:52 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/05 20:23:35 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/06 17:23:10 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ std::string	Server::html_request(int client_fd)
 	if (_Request_type == "GET")
 		return (request_get(client_fd));
 	if (_Request_type == "POST")
-		return (NULL);
+		return (request_post(client_fd));
 
 	return (request_get(client_fd));
 }

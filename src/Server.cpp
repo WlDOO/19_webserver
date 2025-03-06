@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:31 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/05 23:27:30 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/06 17:25:26 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,7 @@ int Server::create_server(void)
 	memset(&sa, 0, sizeof sa);
 	sa.sin_family = AF_INET;
 	sa.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-	sa.sin_port = htons(4241);
+	sa.sin_port = htons(4242);
 
 	socket_fd = socket(sa.sin_family, SOCK_STREAM, 0);
     if (socket_fd == -1) {
