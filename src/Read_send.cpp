@@ -6,7 +6,7 @@
 /*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 13:35:52 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/08 04:34:28 by rafnasci         ###   ########.fr       */
+/*   Updated: 2025/03/08 04:58:18 by rafnasci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,8 @@ void	Server::set_request_type(char buffer[BUFSIZ]) {
 	oss_tmp << buffer;
 	sender_msg = oss_tmp.str();
 	full_msg.assign(sender_msg);
+	if (full_msg.find("favicon.ico") != std::string::npos)
+		return ;
 	std::cout << " full_msg is : " << full_msg << std::endl;
 	found = full_msg.find("HTTP/1.1", 0);
 	verbs = full_msg.substr(0, found);
@@ -74,13 +76,8 @@ void	Server::set_request_type(char buffer[BUFSIZ]) {
 	_Request_type = verbs.substr(0, found);
 	if (_Request_type == "POST")
 		set_content_post(full_msg);
-	std::cout << "TESSSSSS : " << verbs.substr(2, (verbs.size() - 3)) << std::endl;
 	verbs.erase(0, found);
-	if (verbs.substr(2, (verbs.size() - 3)).find("flavicon.ico") == std::string::npos)
-		return ;
-	std::cout << "TESSSSSSTTTTTTTTTTTTTTT : " <<verbs.substr(2, (verbs.size() - 3)).find("flavicon.ico") << "npos : " << std::string::npos << std::endl;
 	_Request_content = verbs.substr(2, (verbs.size() - 3));
-	std::cout << "REQUEST CONTENT : " << verbs.substr(2, (verbs.size() - 3)) << std::endl;
 	std::cout << " request type is : " << _Request_type << std::endl;
 	std::cout << " request content is :" << _Request_content << std::endl;
 	//return (verbs);
@@ -143,12 +140,12 @@ void Server::read_data_from_socket(int i, struct epoll_event events[MAX_EVENTS])
     else
 	{
 		set_request_type(buffer);
+		std::cout << "REQUEST CONTENT : " << _Request_content << std::endl;
 		if (_Request_content == "favicon.ico")
 		{
 			std::cout << "Flavico !" << std::endl;
-			std::cout << buffer;
 			return ;
 		}
-		send_data_to_socket(i, events);
+		// send_data_to_socket(i, events);
     }
 }
