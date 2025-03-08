@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 13:35:52 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/06 17:23:10 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/08 16:33:49 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,8 @@ void	Server::set_request_type(char buffer[BUFSIZ]) {
 	oss_tmp << buffer;
 	sender_msg = oss_tmp.str();
 	full_msg.assign(sender_msg);
+	if (full_msg.find("favicon.ico") != std::string::npos)
+		return ;
 	std::cout << " full_msg is : " << full_msg << std::endl;
 	found = full_msg.find("HTTP/1.1", 0);
 	verbs = full_msg.substr(0, found);
@@ -85,18 +87,18 @@ std::string	Server::html_request(int client_fd)
 {
 	if (_Request_type == "GET")
 		return (request_get(client_fd));
-	if (_Request_type == "POST")
-		return (request_post(client_fd));
+	// if (_Request_type == "POST")
+	// 	return (request_post(client_fd));
 
 	return (request_get(client_fd));
 }
-void Server::send_data_to_socket(int i, std::vector<struct pollfd>& poll_fds){
+void Server::send_data_to_socket(int i, struct epoll_event events[MAX_EVENTS]){
 
 	int status;
 	std::string msg_to_send;
 	int sender_fd;
 	
-	sender_fd = (poll_fds)[i].fd;
+	sender_fd = (events)[i].data.fd;
 	msg_to_send = html_request(sender_fd);
 	status = send(sender_fd, msg_to_send.c_str(), strlen(msg_to_send.c_str()), 0);
 	if (status == -1) 
@@ -105,9 +107,9 @@ void Server::send_data_to_socket(int i, std::vector<struct pollfd>& poll_fds){
 	}
 }
 
-void Server::read_data_from_socket(int i, std::vector<struct pollfd> &poll_fds, int *poll_count, int server_socket) {
+void Server::read_data_from_socket(int i, struct epoll_event events[MAX_EVENTS]) {
 
-	char buffer[BUFSIZ];
+	char buffer[BUFFER_SIZE] = {0};
     std::string msg_to_send;
 	std::ostringstream oss;
 	std::ostringstream oss_tmp;
@@ -115,28 +117,36 @@ void Server::read_data_from_socket(int i, std::vector<struct pollfd> &poll_fds, 
 	// int	found;
     //int status;
     int sender_fd;
-	(void)server_socket;
 
-	sender_fd = (poll_fds)[i].fd;
-	memset(&buffer, '\0', sizeof buffer);
-	bytes_read = recv(sender_fd, buffer, BUFSIZ, 0);
-	if (bytes_read <= 0) {
-		if (bytes_read == 0) {
-			std::cout << sender_fd << " Client socket closed connection." << std::endl;
+	sender_fd = (events)[i].data.fd;
+	bytes_read = read(sender_fd, buffer, BUFFER_SIZE - 1);
+	if (bytes_read == -1)
+	{
+		if (errno == EAGAIN || errno == EWOULDBLOCK)  //  no data available yet or socket's buffer is full, try again later
+			return ;
+		else
+		{
+			perror("read failure");
+			close(events[i].data.fd);
+			epoll_ctl(epoll_fd, EPOLL_CTL_DEL, events[i].data.fd, NULL);
 		}
-		else {
-			std::cerr << "[Server] Recv error: " << strerror(errno);
-		}
-		close(sender_fd); // Ferme la socket
-		del_from_poll_fds(poll_fds, i, poll_count);
-    }
-    else {
+	}
+	else if (bytes_read == 0)  // Client has disconnected properly
+	{
+		std::cout << "close fd :" << events[i].data.fd << std::endl;
+		close(events[i].data.fd);
+		epoll_ctl(epoll_fd, EPOLL_CTL_DEL, events[i].data.fd, NULL);
+	}
+    else
+	{	
+		buffer[bytes_read] = '\0';
 		set_request_type(buffer);
+		std::cout << "REQUEST CONTENT : " << _Request_content << std::endl;
 		if (_Request_content == "favicon.ico")
 		{
 			std::cout << "Flavico !" << std::endl;
 			return ;
 		}
-		//send_data_to_socket(i, poll_fds);
+		// send_data_to_socket(i, events);
     }
 }
