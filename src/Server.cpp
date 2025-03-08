@@ -3,202 +3,158 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:31 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/02/24 11:13:26 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/08 04:06:59 by rafnasci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/Server.hpp"
 
-Server::Server() {}
-
-Server::~Server() {}
-
-void	Server::accept_new_connection(int server_socket, std::vector<struct pollfd> &poll_fds, int *poll_count, int *poll_size)
+Server::Server(const std::vector<int>& ports)
 {
-	Server serv;
-	int 	client_fd;
-	char	msg_to_send[BUFSIZ];
-	int		status;
-    std::ostringstream oss;
-
-	client_fd = accept(server_socket, NULL, NULL);
-	if (client_fd == -1)
-	{
-		std::cerr << "[server] Accept error " << strerror(errno) << std::endl;
-		return ;
-	}
-	serv.add_to_poll_fds(poll_fds, client_fd, poll_count, poll_size);
-	std::cout << "[server] Accepted new connection on client socket" << client_fd << std::endl;
-	oss << "Welcome. You are client fd: " << client_fd << std::endl;
-	std::string msg = oss.str();
-	std::strncpy(msg_to_send, msg.c_str(), BUFSIZ - 1);
-	msg_to_send[BUFSIZ - 1] = '\0';	
-	status = send(client_fd, msg_to_send, std::strlen(msg_to_send), 0);
-	if (status == -1)
-		std::cerr << "[Server] Send error to client " << client_fd << ": " << strerror(errno) << std::endl;
+	for (size_t i = 0; i < ports.size(); i++)
+   		setupSocket(ports[i]);
+    setupEpoll();
 }
 
-void Server::add_to_poll_fds(std::vector<struct pollfd> &poll_fds, int new_fd, int *poll_count, int *poll_size)
+Server::~Server()
 {
-	if (*poll_count == *poll_size)
-	{
-		*poll_size *= 2;
-		poll_fds.resize(*poll_size);
-	}
-	poll_fds[*poll_count].fd = new_fd;
-	poll_fds[*poll_count].events = POLLIN;
-	(*poll_count)++;
+	for (size_t i = 0; i < server_fds.size(); i++)
+   		close(server_fds[i]);
+    close(epoll_fd);
 }
 
-void	Server::del_from_poll_fds(std::vector<struct pollfd> &poll_fds, int i, int *poll_count)
-{
-	poll_fds[i] = poll_fds[*poll_count - 1];
-	(*poll_count)--;
-}
-int	Server::sondage_poll(void)
-{
-	Server serv;
-
-	int server_socket;
-	int status;
-
-	std::vector<struct pollfd> poll_fds;
-	int				poll_size;
-	int				poll_count;
-
-	std::cout << "---- SERVER ----" << std::endl << std::endl;
-	server_socket = serv.create_server();
-	if (server_socket == -1)
-	{
-		return 1;
-	} 
-
-	std::cout << "[server] Listening on port: " << 4242 << std::endl;
-	status = listen(server_socket, 10);
-	if (status != 0)
-	{
-		std::cerr << "[server] Listen error: " << strerror(errno) << std::endl;
-		return 3;
-	}
-
-    // Préparation du tableau des descripteurs de fichier pour poll()
-    // On va commencer avec assez de place pour 5 fds dans le tableau,
-    // on réallouera si nécessaire
-
-	poll_size =  5;
-	poll_fds.resize(poll_size);
-
-    // Ajoute la socket du serveur au tableau
-    // avec alerte si la socket peut être lue
-	poll_fds[0].fd = server_socket;
-	poll_fds[0].events = POLLIN;
-	poll_count = 1;
-	
-	std::cout << "[server] set up poll fd array " << strerror(errno) << std::endl;
-	while(1)
-	{
-		status = poll(poll_fds.data() , poll_count, 2000);
-		if (status == -1)
+void Server::handleConnections() {
+    struct epoll_event events[MAX_EVENTS];
+    while (true) {
+        int event_count = epoll_wait(epoll_fd, events, MAX_EVENTS, -1);  //return the number of triggered (new conenctions or data) events
+		// std::cout << "event count" << event_count << std::endl;
+		if (event_count == -1)
 		{
-			std::cerr << "[server] poll error: " << strerror(errno) << std::endl;
-			_exit(1);
+			perror("Epoll wait failled");
+			exit(EXIT_FAILURE);
 		}
-		else if (status == 0)
-		{
-			std::cout << "[server] Waiting... " << poll_count << std::endl;
-			
-			continue;
-		}
-		for (int i = 0; i < poll_count; i++)
-		{
-			if ((poll_fds[i].revents & POLLIN) != 1)
-				continue ;
-			std::cout << poll_fds[i].fd << " ready for I/O operation" << std::endl;
-			if (poll_fds[i].fd == server_socket)
-				accept_new_connection(server_socket, poll_fds, &poll_count, &poll_size);
-			else
-				read_data_from_socket(i, poll_fds, &poll_count, server_socket);
-		}
-	}
-	return (0);
-}
-
-void Server::read_data_from_socket(int i, std::vector<struct pollfd> &poll_fds, int *poll_count, int server_socket) {
-
-	char buffer[BUFSIZ];
-    char msg_to_send[BUFSIZ];
-    int bytes_read;
-    int status;
-    int dest_fd;
-    int sender_fd;
-
-	sender_fd = (poll_fds)[i].fd;
-	memset(&buffer, '\0', sizeof buffer);
-	bytes_read = recv(sender_fd, buffer, BUFSIZ, 0);
-	if (bytes_read <= 0) {
-		if (bytes_read == 0) {
-			std::cout << sender_fd << " Client socket closed connection." << std::endl;
-		}
-		else {
-			std::cerr << "[Server] Recv error: " << strerror(errno);
-		}
-		close(sender_fd); // Ferme la socket
-		del_from_poll_fds(poll_fds, i, poll_count);
-    }
-    else {
-        std::cout << sender_fd << "Got message: " << buffer << std::endl;
-
-        memset(&msg_to_send, '\0', sizeof msg_to_send);
-        sprintf(msg_to_send, "[%d] says: %s", sender_fd, buffer);
-        for (int j = 0; j < *poll_count; j++) {
-            dest_fd = (poll_fds)[j].fd;
-            if (dest_fd != server_socket && dest_fd != sender_fd) {
-                status = send(dest_fd, msg_to_send, strlen(msg_to_send), 0);
-                if (status == -1) {
-                    std::cerr << "[Server] Send error to client fd" << dest_fd << strerror(errno);
+		// std::cout << "event count : " << event_count << std::endl;
+		// if (event_count == 0)
+		// {
+		// 	std::cout << "Waiting ....\n";
+		// 	continue ;
+		// }
+		for (int i = 0; i < event_count; i++) {
+			int event_fd = events[i].data.fd;
+            if (std::find(server_fds.begin(), server_fds.end(), event_fd) != server_fds.end()) {
+                // New connection
+                struct sockaddr_in client_addr; 
+                socklen_t client_len = sizeof(client_addr);
+                int client_fd = accept(event_fd, (struct sockaddr*)&client_addr, &client_len);  // retrieves the new client ocnneciton and open a new socket to communicate
+                if (client_fd < 0)
+				{
+                    perror("Accept failed");
+                    continue;
                 }
-            }
+
+                fcntl(client_fd, F_SETFL, O_NONBLOCK);  // makes the client socket non blocking
+                struct epoll_event client_event;
+                client_event.events = EPOLLIN | EPOLLOUT;  // epoll watches for both reading and writing event
+                client_event.data.fd = client_fd;  // socket of the client
+
+                epoll_ctl(epoll_fd, EPOLL_CTL_ADD, client_fd, &client_event);  // registers the client to the epoll instance
+                std::cout << "New client connected: " << client_fd << std::endl;
+				std::string msg;
+				// int	status;
+				char	msg_to_send[BUFSIZ];
+				msg = html_request(client_fd);
+				std::strncpy(msg_to_send, msg.c_str(), BUFSIZ - 1);
+				msg_to_send[BUFSIZ - 1] = '\0';	
+				send(client_fd, msg_to_send, std::strlen(msg_to_send), 0);
+				// if (status != 0)
+				// {
+				// 	std::cerr << "[server] Listen error: " << strerror(errno) << std::endl;
+				// 	exit(EXIT_FAILURE);
+				// }
+            } else if (events[i].events && EPOLLIN) {  //ici on gere les pollin
+                // Handle client request
+				read_data_from_socket(i, events);
+            } 
+			else if (events[i].events && EPOLLOUT) {  ////ici on gere les POLLOUT
+				send_data_to_socket(i, events);
+			}
         }
     }
 }
 
-
-int Server::create_server(void)
-{
-	struct sockaddr_in	sa;
-	int					socket_fd;
-	int					status;
-	
-	memset(&sa, 0, sizeof sa);
-	sa.sin_family = AF_INET;
-	sa.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-	sa.sin_port = htons(4242);
-
-	socket_fd = socket(sa.sin_family, SOCK_STREAM, 0);
-    if (socket_fd == -1) {
-        std::cerr << "[Server] Socket error: " << strerror(errno) << std::endl;
-        return -1;
+void Server::setupEpoll() {
+    epoll_fd = epoll_create1(0);  // creates epoll instance
+    if (epoll_fd == -1) {
+        perror("Epoll creation failed");
+        exit(EXIT_FAILURE);
     }
-	std::cout << "Server created socket fd:" << socket_fd << std::endl;
-	status = bind(socket_fd, (struct sockaddr *)&sa, sizeof sa);
-	if (status != 0)
+
+	for (size_t i = 0; i < server_fds.size(); i++)
 	{
-		std::cerr << "bind " << strerror(errno);
-		return -1;
+		struct epoll_event event;  // structure to store information about what we want to monitor
+		event.events = EPOLLIN; // watch for incoming data/new connections
+		event.data.fd = server_fds[i];  
+
+		if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, server_fds[i], &event) == -1)  // adds server_fd to the epoll watch list
+		{
+			perror("Epoll add failed");
+			exit(EXIT_FAILURE);
+		}
 	}
-	std::cout << "New connectiom1 socket fd:" << socket_fd << std::endl;
-	return socket_fd;
+}
+
+void Server::setupSocket(int port)
+{
+	int server_fd;
+	sockaddr_in	address;
+	address.sin_family = AF_INET;
+    address.sin_addr.s_addr = INADDR_ANY;
+    address.sin_port = htons(port);
+	
+    server_fd = socket(address.sin_family, SOCK_STREAM, 0);
+    if (server_fd == -1)
+	{
+        perror("Socket creation failed");
+        exit(EXIT_FAILURE);
+    }
+    int opt = 1;
+    setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)); //allows reusin the same address if the server restarts quickly
+
+    if (bind(server_fd, (struct sockaddr*)&address, sizeof(address)) < 0)
+	{
+        perror("Bind failed");
+        exit(EXIT_FAILURE);
+    }
+
+    if (listen(server_fd, SOMAXCONN) < 0)  //socket is ready to accept connections
+	{
+        perror("Listen failed");
+        exit(EXIT_FAILURE);
+    }
+
+    fcntl(server_fd, F_SETFL, O_NONBLOCK); // Make it non-blocking
+	server_fds.push_back(server_fd);  //store the socket for epoll
+	std::cout << "Server created socket fd:" << server_fd << std::endl;
+    std::cout << "Server started on port " << port << std::endl;
+}
+
+void Server::run() {
+    handleConnections();
 }
 
 int main(int ac, char **av)
 {
-	Server serv;
-	
-	int status;
 	(void)av;
 	(void)ac;
-	status = serv.sondage_poll();
+
+	std::vector<int> ports;  // les ports qu'on veut utiliser
+	ports.push_back(4242);
+	ports.push_back(8001);
+	
+	Server serv(ports);
+	serv.run();
+	return (0);
 }
