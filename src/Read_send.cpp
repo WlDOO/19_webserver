@@ -74,12 +74,13 @@ void	Server::set_request_type(char buffer[BUFSIZ]) {
 	std::cout << " verbs are : " << verbs << std::endl;
 	found = verbs.find(" ", 0);
 	_Request_type = verbs.substr(0, found);
+	std::cout << " found ds request_type : " << found << std::endl;
 	if (_Request_type == "POST")
 		set_content_post(full_msg);
 	verbs.erase(0, found);
 	_Request_content = verbs.substr(2, (verbs.size() - 3));
-	std::cout << " request type is : " << _Request_type << std::endl;
-	std::cout << " request content is :" << _Request_content << std::endl;
+	// std::cout << " request type is : " << _Request_type << std::endl;
+	// std::cout << " request content is :" << _Request_content << std::endl;
 	//return (verbs);
 }
 
