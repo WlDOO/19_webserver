@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:12 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/08 16:33:09 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/10 13:58:41 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ class Server
 		void		set_request_type(char buffer[BUFSIZ]);
 		std::string	html_request(int client_fd);
 		std::string	request_get(int client_fd);
-		std::string	request_post(int client_fd, std::string file_name);
+		std::string	request_post(int client_fd);
 		void		set_content_post(std::string full_msg);
 		
 		~Server();

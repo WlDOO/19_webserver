@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 13:35:52 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/08 16:33:49 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/10 16:10:37 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,17 +79,26 @@ void	Server::set_request_type(char buffer[BUFSIZ]) {
 		set_content_post(full_msg);
 	verbs.erase(0, found);
 	_Request_content = verbs.substr(2, (verbs.size() - 3));
+	found = _Request_content.find("cgi", 0);
+	std::cout << " founds cgi :" << found << std::endl;
 	// std::cout << " request type is : " << _Request_type << std::endl;
 	// std::cout << " request content is :" << _Request_content << std::endl;
 	//return (verbs);
 }
 
 std::string	Server::html_request(int client_fd)
-{
+{	
+	std::cout << " request type is : " << _Request_type << std::endl;
+	std::cout << " request content is :" << _Request_content << std::endl;
 	if (_Request_type == "GET")
+	{
+		if (_Request_content.find("cgi", 0) != std::string::npos)
+			std::cout << "Test find cgi" << std::endl;
+			
 		return (request_get(client_fd));
-	// if (_Request_type == "POST")
-	// 	return (request_post(client_fd));
+	}
+	if (_Request_type == "POST")
+		return (html_response(client_fd, "test.html"));
 
 	return (request_get(client_fd));
 }

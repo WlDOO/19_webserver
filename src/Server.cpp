@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:31 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/08 16:01:11 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/10 16:07:44 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void Server::handleConnections() {
 				std::string msg;
 				// int	status;
 				char	msg_to_send[BUFSIZ];
-				msg = request_get(client_fd);
+				msg = html_request(client_fd);
 				std::strncpy(msg_to_send, msg.c_str(), BUFSIZ - 1);
 				msg_to_send[BUFSIZ - 1] = '\0';	
 				send(client_fd, msg_to_send, std::strlen(msg_to_send), 0);

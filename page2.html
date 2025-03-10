@@ -2,59 +2,69 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Recherche de Skin - League of Legends</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page avec boutons GET et POST</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
-            padding: 20px;
-            text-align: center;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
         .container {
-            max-width: 600px;
-            margin: 50px auto;
+            background-color: #fff;
             padding: 20px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        input, button {
-            padding: 10px;
-            margin: 10px 0;
-            width: 80%;
-            border: 1px solid #ccc;
             border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        .button {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 20px;
             font-size: 16px;
-        }
-        button {
-            background-color: #4CAF50;
             color: white;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
+            text-decoration: none;
         }
-        button:hover {
+        .button:hover {
             background-color: #45a049;
+        }
+        .button.get {
+            background-color: #008CBA; /* Bleu pour GET */
+        }
+        .button.post {
+            background-color: #f44336; /* Rouge pour POST */
         }
     </style>
 </head>
 <body>
-    <div class="navbar">
-        <a href="index.html">Page 1</a>
-        <a href="page2.html">Page 2</a>
-        <a href="page3.html">Page 3</a>
+    <div class="container">
+        <h1>Choisissez une méthode</h1>
+        
+        <!-- Bouton GET -->
+        <a href="/cgi-bin/votre_script_cgi.py?param1=valeur1&param2=valeur2" class="button get">
+            Appeler CGI avec GET
+        </a>
+
+        <!-- Bouton POST -->
+        <form action="/cgi-bin/votre_script_cgi.py" method="POST" style="display: inline;">
+            <input type="hidden" name="param1" value="valeur1">
+            <input type="hidden" name="param2" value="valeur2">
+            <button type="submit" class="button post">
+                Appeler CGI avec POST
+            </button>
+        </form>
     </div>
-<div class="container">
-    <h1>Recherche de Skin - League of Legends</h1>
-    <form action="/recherche-skin" method="POST">
-        <label for="champion">Nom du Champion :</label><br>
-        <input type="text" id="champion" name="champion" placeholder="Ex : Ahri" required><br>
-
-        <label for="skin">Nom du Skin :</label><br>
-        <input type="text" id="skin" name="skin" placeholder="Ex : Star Guardian" required><br>
-
-        <button type="submit">Rechercher</button>
-    </form>
-</div>
-
 </body>
 </html>
