@@ -6,12 +6,13 @@
 /*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 14:42:58 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/03 15:10:05 by najeuneh         ###   ########.fr       */
+/*   Updated: 2025/03/10 13:17:09 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
+#include <sys/stat.h>
 #include <iostream>
 #include <unistd.h>  // Pour read(), close()
 #include <fstream>
@@ -20,6 +21,9 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <cerrno>
+#include <cstring>
+#include <fstream>
 
 struct Location
 {
