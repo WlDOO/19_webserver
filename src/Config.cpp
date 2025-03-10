@@ -6,7 +6,7 @@
 /*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:46:38 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/05 17:58:44 by najeuneh         ###   ########.fr       */
+/*   Updated: 2025/03/10 13:15:15 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -272,24 +272,80 @@ std::string	pick_file(std::string str)
 	return res;
 }
 
-Config	parse_file(Config Conf, std::string str)
+bool isDirectory(const std::string& path)
+{
+	struct stat info;
+
+	if (stat(path.c_str(), &info) != 0)
+		return false;
+	else if (info.st_mode & S_IFDIR)
+		return true;
+	return false;
+}
+
+// bool isIp(std::string ip)
+// {
+// 	int point = 0;
+// 	for (int i; ip[i]; i++)
+// 	{
+// 		if (ip[i] == '.')
+// 			point++;
+// 	}
+// 	if (point != 3)
+// 		return false;
+// 	point = 0;
+// 	for (int i = 0; ip[i]; i++)
+// 	{
+// 		if (point == 0 && stoi(ip.substr(point, i),  NULL, 10) < 255)
+// 		{
+// 			std::cout << "nop" << std::endl;
+// 			return false;
+// 		}
+// 		else if (stoi(ip.substr(point, i)) < 255)
+// 		{
+// 			std::cout << "oh non" << std::endl;
+// 			return false;
+// 		}
+// 	}
+// 	return true;
+// }
+
+int	parse_file(Config Conf, std::string str)
 {
 	std::fstream fs;
 	
+	(void)Conf;
 	fs.open(str.c_str());
 	if (!fs.is_open())
 	{
 		std::cerr << "Error: " << strerror(errno) << std::endl;
-		return Conf;
+		return 0;
 	}
-	std::string str2 = pick_file(str);
-	Conf.Config_file(str2);
-	return Conf;
+	for (size_t i = 0; i < Conf.Server.size(); i++)
+	{
+		if (Conf.Server[i].root.empty() || Conf.Server[i].server_name.empty() || Conf.Server[i].listen.empty())
+		{
+			std::cerr << "Error: Missing information in server block" << std::endl;
+			return 0;
+		}
+		if (!isDirectory(Conf.Server[i].root))
+		{
+			std::cerr << "Error: Root directory does not exist" << std::endl;
+			return 0;
+		}
+	}
+	return 1;
 }	
 
 int	main()
 {
-	Config Conf;
-	Conf = parse_file(Conf, "config.conf");
+	// Config Conf;
+	// std::string str = "../example.conf";
+	// std::string str2 = pick_file(str);
+	// Conf = Conf.Config_file(str2);
+	// if (parse_file(Conf, str) == 0)
+	// 	return 0;
+	// std::cout << Conf.Server[0].listen[0] << std::endl;
+	
 	return 0;
 }
