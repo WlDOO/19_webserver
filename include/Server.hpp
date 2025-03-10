@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:12 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/10 13:58:41 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/10 17:07:45 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 #include <vector>
 #include <sys/epoll.h>
 #include <sys/socket.h>
+#include <sys/wait.h>
 #include <netinet/in.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -65,6 +66,8 @@ class Server
 		//Server
 		void run();
 		
+		//Cgi
+		void	cgi_handle(int client_fd);
 		//Read_send
 		void 		read_data_from_socket(int i, struct epoll_event events[MAX_EVENTS]);
 		void		send_data_to_socket(int i, struct epoll_event events[MAX_EVENTS]);

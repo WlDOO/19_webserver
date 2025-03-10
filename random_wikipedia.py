@@ -18,8 +18,8 @@ print()  # Blank line to indicate end of headers
 # Get the random Wikipedia URL
 random_url = get_random_wikipedia_url()
 
-# Generate the HTML response
-html_response = f"""
+# Generate the HTML content
+html_content = f"""
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,5 +35,10 @@ html_response = f"""
 </html>
 """
 
-# Send the HTML response to the client
-print(html_response)
+# Write the HTML content to a file
+file_path = "/home/armitite/Cursus/19_webserver/random_wikipedia.html"  # Chemin où le fichier sera sauvegardé
+with open(file_path, "w") as file:
+    file.write(html_content)
+
+# Send a response to the client
+print(f"<p>HTML file created at <a href='/random_wikipedia.html'>/random_wikipedia.html</a></p>")
