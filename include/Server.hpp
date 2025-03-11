@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:12 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/10 17:07:45 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/11 13:57:10 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,9 @@ class Server
 		std::string _Request_html;
 		std::string _Post_content;
 		std::string _Post_file_name;
+		std::string _Post_cgi_FN;
+		std::string _Post_cgi_LN;
+		
 		int			_Keep_alive;
 
 		//Server
@@ -79,6 +82,8 @@ class Server
 		std::string	request_get(int client_fd);
 		std::string	request_post(int client_fd);
 		void		set_content_post(std::string full_msg);
+		void		content_post_file(std::string full_msg);
+		void		content_post_cgi(std::string full_msg);
 		
 		~Server();
 };

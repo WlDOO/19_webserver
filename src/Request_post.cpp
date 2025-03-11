@@ -6,13 +6,34 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 20:18:50 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/10 14:22:57 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/11 15:20:28 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/Server.hpp"
 
-void		Server::set_content_post(std::string full_msg) {
+void		Server::content_post_cgi(std::string full_msg) {
+
+	int found1;
+
+	found1 = full_msg.find("\r\n\r\n", 0);
+	full_msg.erase(0, found1);
+	found1 = full_msg.find("=", 0);
+	full_msg.erase(0, found1 + 1);
+	found1 = full_msg.find("&", 0);
+	_Post_cgi_LN = full_msg.substr(0, found1);
+	full_msg.erase(0, found1 + 1);
+	found1 = full_msg.find("=", 0);
+	full_msg.erase(0, found1 + 1);
+	found1 = full_msg.find("\r\n", 0);
+	_Post_cgi_FN = full_msg.substr(0, found1);
+	cgi_handle(6);
+	std::cout << "post cgi content : " << full_msg << std::endl;
+	std::cout << "_Post_cgi_LN : " << _Post_cgi_LN << std::endl;
+	std::cout << "_Post_cgi_FN : " << _Post_cgi_FN << std::endl;
+}
+
+void		Server::content_post_file(std::string full_msg) {
 
 	int found1;
 	int found2;
@@ -50,6 +71,23 @@ void		Server::set_content_post(std::string full_msg) {
 	_Post_content = content.substr(0, content.size());
 	found1 = content.find("--", 0);
 	_Post_content = content.substr(0, found1 - 3);
+
+	request_post(6);
+}
+
+void		Server::set_content_post(std::string full_msg) {
+
+	int found1;
+	std::string content_type;
+	std::string content_lenght;
+	std::string boundary;
+	std::string content;
+	
+	found1 = full_msg.find("boundary=", 0);
+	if (found1 >= 0)
+		content_post_file(full_msg);
+	else
+		content_post_cgi(full_msg);
 	//request_post(6);
 	
 	// std::cout << "Le found 1 bis bis bis : " << found1 << std::endl;
@@ -63,8 +101,8 @@ void		Server::set_content_post(std::string full_msg) {
 std::string	Server::request_post(int client_fd) {
 
 	std::string web_page = "page1_res.html";
-	std::string dir = "../tmp/";
-	std::string new_name = _Post_file_name;
+	std::string dir = "/home/armitite/Cursus/19_webserver/tmp/";
+	std::string new_name = dir + _Post_file_name;
 	//std::cout << new_name << std::endl;
 	//std::cout << _Post_content << std::endl;
 

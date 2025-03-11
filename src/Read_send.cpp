@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 13:35:52 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/10 17:09:12 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/11 12:47:08 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ std::string	Server::html_request(int client_fd)
 		{
 			std::cout << "Test find cgi" << std::endl;
 			cgi_handle(client_fd);
-			return (request_get(client_fd));
+			return (html_response(client_fd, "random_wikipedia"));
 		}
 		return (request_get(client_fd));
 	}

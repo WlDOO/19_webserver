@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import cgi
 import cgitb
+import os
 import requests
 
 # Enable debugging for CGI scripts (useful for troubleshooting)
@@ -11,34 +12,70 @@ def get_random_wikipedia_url():
     response = requests.get("https://en.wikipedia.org/wiki/Special:Random")
     return response.url
 
-# CGI script logic
-print("Content-Type: text/html")  # Set the response type to HTML
+# Path where the HTML files will be saved (update to your VSCode workspace directory)
+save_path = "/home/armitite/Cursus/19_webserver/"
+
+# Ensure the save path exists
+os.makedirs(save_path, exist_ok=True)
+
+# Determine the HTTP method (GET or POST)
+request_method = os.environ.get("REQUEST_METHOD", "GET")
+
+# Prepare response header
+print("Content-Type: text/html")
 print()  # Blank line to indicate end of headers
 
-# Get the random Wikipedia URL
-random_url = get_random_wikipedia_url()
+# Handle GET request - Save random Wikipedia page to a file
+if request_method == "GET":
+    random_url = get_random_wikipedia_url()
+    get_html_content = f"""
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Random Wikipedia Page</title>
+    </head>
+    <body>
+        <h1>Here's a random Wikipedia page for you:</h1>
+        <p><a href="{random_url}">{random_url}</a></p>
+        <p><a href="/cgi-bin/random_wikipedia.py">Get another random page</a></p>
+    </body>
+    </html>
+    """
 
-# Generate the HTML content
-html_content = f"""
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random Wikipedia Page</title>
-</head>
-<body>
-    <h1>Here's a random Wikipedia page for you:</h1>
-    <p><a href="{random_url}">{random_url}</a></p>
-    <p><a href="/cgi-bin/random_wikipedia.py">Get another random page</a></p>
-</body>
-</html>
-"""
+    # Save GET page to your VSCode directory
+    with open(os.path.join(save_path, "random_wikipedia.html"), "w") as f:
+        f.write(get_html_content)
 
-# Write the HTML content to a file
-file_path = "/home/armitite/Cursus/19_webserver/random_wikipedia.html"  # Chemin où le fichier sera sauvegardé
-with open(file_path, "w") as file:
-    file.write(html_content)
+    print(f"<h1>GET page saved to random_wikipedia.html in your VSCode workspace.</h1>")
 
-# Send a response to the client
-print(f"<p>HTML file created at <a href='/random_wikipedia.html'>/random_wikipedia.html</a></p>")
+# Handle POST request - Save greeting page to a file
+elif request_method == "POST":
+    form = cgi.FieldStorage()
+    first_name = form.getvalue("FIRST_NAME", "Unknown")
+    last_name = form.getvalue("LAST_NAME", "Unknown")
+
+    post_html_content = f"""
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Greeting Page</title>
+    </head>
+    <body>
+        <h1>Hello {last_name}, {first_name}, how are you?</h1>
+        <p><a href="/cgi-bin/random_wikipedia.py">Back to Random Page</a></p>
+    </body>
+    </html>
+    """
+
+    # Save POST page to your VSCode directory
+    with open(os.path.join(save_path, "greeting_page.html"), "w") as f:
+        f.write(post_html_content)
+
+    print(f"<h1>POST page saved to greeting_page.html in your VSCode workspace.</h1>")
+
+else:
+    print("<h1>405 Method Not Allowed</h1>")
