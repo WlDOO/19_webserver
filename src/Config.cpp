@@ -6,7 +6,7 @@
 /*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:46:38 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/11 15:06:45 by najeuneh         ###   ########.fr       */
+/*   Updated: 2025/03/11 16:30:20 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,8 @@ void	Config::SetLoc(std::string str)
 		ss.str(str);
 		getline(ss, line, ' ');
 		getline(ss, line, '{');
-		this->Server[size_serv].Loc[Server[size_serv].size - 1].Location = line;
+		position = line.find(" ");
+		this->Server[size_serv].Loc[Server[size_serv].size - 1].Location = line.substr(0, position);
 	}
 	else if ((position = str.find("root ")) != std::string::npos)
 	{
@@ -274,8 +275,8 @@ std::string	pick_file(std::string str)
 
 bool isDirectory(const std::string& path)
 {
-	struct stat info;	
-
+	struct stat info;
+	std::cout << "[" << path << "]" << std::endl;
 	if (stat(path.c_str(), &info) != 0)
 		return false;
 	else if (info.st_mode & S_IFDIR)
@@ -332,12 +333,12 @@ int	parse_file(Config Conf)
 		{
 			if (!isDirectory(Conf.Server[i].error_page_loc[y]))
 				return std::cerr << "Error: Error page Localisation directory does not exist" << std::endl, 0;
-			if (atoi(Conf.Server[i].error_page_num[y].c_str()) < 100 || atoi(Conf.Server[i].listen[y].c_str()) > 599)
+			if (atoi(Conf.Server[i].error_page_num[y].c_str()) < 100 || atoi(Conf.Server[i].error_page_num[y].c_str()) > 599)
 				return std::cerr << "Error: Error page number does not exist" << std::endl, 0;
 		}
 		if (!isIp(Conf.Server[i].host))
 			return std::cerr << "Error: host does not exist" << std::endl, 0;
-		for (size_t y = 0; y < Conf.Server[i].listen[y].size(); y++)
+		for (size_t y = 0; y < Conf.Server[i].listen.size(); y++)
 		{
 			if (atoi(Conf.Server[i].listen[y].c_str()) < 1024 || atoi(Conf.Server[i].listen[y].c_str()) > 65535)
 				return std::cerr << "Error: listen does not possible" << std::endl, 0;
@@ -349,13 +350,13 @@ int	parse_file(Config Conf)
 			if (!isDirectory(Conf.Server[i].Loc[y].Location))
 				return std::cerr << "Error: Error page Localisation directory does not exist" << std::endl, 0;
 			if (!isDirectory(Conf.Server[i].Loc[y].root))
-				return std::cerr << "Error: Error page Localisation directory does not exist" << std::endl, 0;
+				return std::cerr << "Error: Error page root directory does not exist" << std::endl, 0;
 			if (!isDirectory(Conf.Server[i].Loc[y].index))
-				return std::cerr << "Error: Error page Localisation directory does not exist" << std::endl, 0;
+				return std::cerr << "Error: Error page index directory does not exist" << std::endl, 0;
 			if (!isDirectory(Conf.Server[i].Loc[y].redirect_url))
-				return std::cerr << "Error: Error page Localisation directory does not exist" << std::endl, 0;
+				return std::cerr << "Error: Error page redirect url directory does not exist" << std::endl, 0;
 			if (!isDirectory(Conf.Server[i].Loc[y].upload_store))
-				return 0;
+				return std::cerr << "Error: Error page upload store directory does not exist" << std::endl ,0;
 			for (size_t x = 0; x < Conf.Server[i].Loc.size(); x++)
 			{
 				if (!isDirectory(Conf.Server[i].Loc[y].cgi_pass[x]))
@@ -374,4 +375,16 @@ int	parse_file(Config Conf)
 		}
 	}
 	return 1;
+}
+
+int	main()
+{
+	Config Conf;
+	std::string str = "../example.conf";
+	std::string str2 = pick_file(str);
+	Conf = Conf.Config_file(str2);
+	if (parse_file(Conf) == 0)
+		return 0;
+
+	return 0;
 }
