@@ -6,7 +6,7 @@
 /*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:46:38 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/10 13:15:15 by najeuneh         ###   ########.fr       */
+/*   Updated: 2025/03/11 15:06:45 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,9 +74,9 @@ void	Config::SetServer(std::string str)
 		ss.str(str);
 		getline(ss, line, ' ');
 		getline(ss, line, ' ');
-		this->Server[size_serv].error_page_num = line;
+		this->Server[size_serv].error_page_num.push_back(line);
 		getline(ss, line, ';');
-		this->Server[size_serv].error_page_loc = line;
+		this->Server[size_serv].error_page_loc.push_back(line);
 	}
 	else if ((position = str.find("root ")) != std::string::npos)
 	{
@@ -134,7 +134,7 @@ void	Config::SetLoc(std::string str)
 		ss.str(str);
 		getline(ss, line, ' ');
 		getline(ss, line, ';');
-		this->Server[size_serv].Loc[Server[size_serv].size - 1].cgi_pass = line;
+		this->Server[size_serv].Loc[Server[size_serv].size - 1].cgi_pass.push_back(line);
 	}
 	else if ((position = str.find("directory_listening ")) != std::string::npos)
 	{
@@ -211,7 +211,7 @@ void removeExtraWhitespace(std::string& str)
     size_t i = 0;
     size_t j = 0;
     size_t length = str.size();
-
+ 
     if (str.empty())
 		return;
     while (i < length)
@@ -274,78 +274,104 @@ std::string	pick_file(std::string str)
 
 bool isDirectory(const std::string& path)
 {
-	struct stat info;
+	struct stat info;	
 
 	if (stat(path.c_str(), &info) != 0)
 		return false;
 	else if (info.st_mode & S_IFDIR)
 		return true;
+	else if (open(path.c_str(), R_OK) != -1)
+		return true;
 	return false;
 }
 
-// bool isIp(std::string ip)
-// {
-// 	int point = 0;
-// 	for (int i; ip[i]; i++)
-// 	{
-// 		if (ip[i] == '.')
-// 			point++;
-// 	}
-// 	if (point != 3)
-// 		return false;
-// 	point = 0;
-// 	for (int i = 0; ip[i]; i++)
-// 	{
-// 		if (point == 0 && stoi(ip.substr(point, i),  NULL, 10) < 255)
-// 		{
-// 			std::cout << "nop" << std::endl;
-// 			return false;
-// 		}
-// 		else if (stoi(ip.substr(point, i)) < 255)
-// 		{
-// 			std::cout << "oh non" << std::endl;
-// 			return false;
-// 		}
-// 	}
-// 	return true;
-// }
-
-int	parse_file(Config Conf, std::string str)
+bool	isIp(std::string ip)
 {
-	std::fstream fs;
-	
-	(void)Conf;
-	fs.open(str.c_str());
-	if (!fs.is_open())
+	int point = 0;
+	int value;
+	for (int i = 0; ip[i]; i++)
 	{
-		std::cerr << "Error: " << strerror(errno) << std::endl;
-		return 0;
+		if (isalpha(ip[i]))
+			return false;
+		if (ip[i] == '.')
+			point++;
 	}
+	if (point != 3)
+		return false;
+	point = 0;
+	for (int i = 0; ip[i]; i++)
+	{
+		if (ip[i] == '.')
+		{
+			if (point == 0)
+				value = atoi(ip.substr(point, i).c_str());
+			else
+				value = atoi(ip.substr(point + 1, ((i - 1) - point)).c_str());
+			if (value == 0)
+			{
+				if (ip.substr(point, i) != "0")
+					value = -1;
+			}
+			point = i;
+		}
+		else if (ip[i + 1] == '\0' && (atoi(ip.substr(point + 1, i - point).c_str()) > 255 || atoi(ip.substr(point + 1, i - point).c_str()) < 0))
+			return false;
+	}
+	return true;
+}
+
+int	parse_file(Config Conf)
+{
 	for (size_t i = 0; i < Conf.Server.size(); i++)
 	{
 		if (Conf.Server[i].root.empty() || Conf.Server[i].server_name.empty() || Conf.Server[i].listen.empty())
-		{
-			std::cerr << "Error: Missing information in server block" << std::endl;
-			return 0;
-		}
+			return std::cerr << "Error: Missing information in server block" << std::endl, 0;
 		if (!isDirectory(Conf.Server[i].root))
+			return std::cerr << "Error: Root directory does not exist" << std::endl, 0;
+		for (size_t y = 0; y < Conf.Server[i].error_page_loc.size(); y++)
 		{
-			std::cerr << "Error: Root directory does not exist" << std::endl;
-			return 0;
+			if (!isDirectory(Conf.Server[i].error_page_loc[y]))
+				return std::cerr << "Error: Error page Localisation directory does not exist" << std::endl, 0;
+			if (atoi(Conf.Server[i].error_page_num[y].c_str()) < 100 || atoi(Conf.Server[i].listen[y].c_str()) > 599)
+				return std::cerr << "Error: Error page number does not exist" << std::endl, 0;
+		}
+		if (!isIp(Conf.Server[i].host))
+			return std::cerr << "Error: host does not exist" << std::endl, 0;
+		for (size_t y = 0; y < Conf.Server[i].listen[y].size(); y++)
+		{
+			if (atoi(Conf.Server[i].listen[y].c_str()) < 1024 || atoi(Conf.Server[i].listen[y].c_str()) > 65535)
+				return std::cerr << "Error: listen does not possible" << std::endl, 0;
+		}
+		if (atoi(Conf.Server[i].client_max_body_size.c_str()) < 0 || atoi(Conf.Server[i].client_max_body_size.c_str()) > (10 * 1024 * 1024))
+			return std::cerr << "Error: client mac body size does not goot" << std::endl, 0;
+		for (size_t y = 0; y < Conf.Server[i].Loc.size(); y++)
+		{
+			if (!isDirectory(Conf.Server[i].Loc[y].Location))
+				return std::cerr << "Error: Error page Localisation directory does not exist" << std::endl, 0;
+			if (!isDirectory(Conf.Server[i].Loc[y].root))
+				return std::cerr << "Error: Error page Localisation directory does not exist" << std::endl, 0;
+			if (!isDirectory(Conf.Server[i].Loc[y].index))
+				return std::cerr << "Error: Error page Localisation directory does not exist" << std::endl, 0;
+			if (!isDirectory(Conf.Server[i].Loc[y].redirect_url))
+				return std::cerr << "Error: Error page Localisation directory does not exist" << std::endl, 0;
+			if (!isDirectory(Conf.Server[i].Loc[y].upload_store))
+				return 0;
+			for (size_t x = 0; x < Conf.Server[i].Loc.size(); x++)
+			{
+				if (!isDirectory(Conf.Server[i].Loc[y].cgi_pass[x]))
+					return std::cerr << "Error: Error page Localisation directory does not exist" << std::endl, 0;
+			}
+			for (size_t x = 0; x < Conf.Server[i].Loc[y].methods.size(); x++)
+			{
+				if (Conf.Server[i].Loc[y].methods[x] != "GET" || Conf.Server[i].Loc[y].methods[x] != "POST" || Conf.Server[i].Loc[y].methods[x] != "DELETE")
+					return std::cerr << "allow method does not exist" << std::endl, 0;
+			}
+			for (size_t x = 0; x < Conf.Server[i].Loc[y].cgi_extonsions.size(); x++)
+			{
+				if (Conf.Server[i].Loc[y].methods[x] != ".py" || Conf.Server[i].Loc[y].methods[x] != ".js" || Conf.Server[i].Loc[y].methods[x] != ".sh")
+					return std::cerr << "allow method does not exist" << std::endl, 0;
+			}
 		}
 	}
 	return 1;
-}	
-
-int	main()
-{
-	// Config Conf;
-	// std::string str = "../example.conf";
-	// std::string str2 = pick_file(str);
-	// Conf = Conf.Config_file(str2);
-	// if (parse_file(Conf, str) == 0)
-	// 	return 0;
-	// std::cout << Conf.Server[0].listen[0] << std::endl;
-	
-	return 0;
 }
