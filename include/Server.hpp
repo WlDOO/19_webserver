@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:12 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/12 13:24:41 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/12 15:40:28 by rafnasci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,9 @@ class Server
 		std::string _Post_cgi_LN;
 		std::string _Post_cgi_content_type;
 		std::string _Post_cgi_content_lenght;
-		
-		int			_Keep_alive;
+		bool		_Keep_alive;
+
+		void				handleKeepAlive(const std::string &request);
 
 		//Server
 		std::vector<int>	server_fds;

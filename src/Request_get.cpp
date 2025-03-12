@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request_get.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 20:10:46 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/12 14:19:07 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/12 15:40:53 by rafnasci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,9 @@ std::string	Server::request_get(int client_fd) {
 		"index.html",
 		"res.html",
 	};
-	if (_Request_content.empty() || _Request_content == "/")
+	if (_Request_content == "favicon.ico")
+		web_page = "favicon.png";
+	else if (_Request_content.empty() || _Request_content == "/")
 		web_page = "index.html";
 	else
 	{

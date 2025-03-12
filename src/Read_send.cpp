@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Read_send.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 13:35:52 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/11 12:47:08 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/12 15:42:25 by rafnasci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,10 @@ std::string Server::html_response(int client_fd, std::string web_page) {
 	std::string res;
 
 	oss << "HTTP/1.1 200 OK\r\n";
-    oss << "Content-Type: text/html\r\n";
+    if (web_page.find(".ico") != std::string::npos)
+		oss << "Content-Type: image/x-icon\r\n";
+	else
+    	oss << "Content-Type: text/html\r\n";
     oss << "Content-Length: " << content.size() << "\r\n";
 	oss << "Connection: keep-alive\r\n";
     oss << "\r\n";
@@ -113,11 +116,50 @@ void Server::send_data_to_socket(int i, struct epoll_event events[MAX_EVENTS]){
 	
 	sender_fd = (events)[i].data.fd;
 	msg_to_send = html_request(sender_fd);
+	// std::cout << "----------------------------\n";
+	// std::cout <<"Request type :" << _Request_type << std::endl;
+	// std::cout <<"Request content :" << _Request_content << std::endl;
+	// std::cout << "MESSAGE TO SENDD :\n" << msg_to_send << std::endl;
+	// std::cout << "----------------------------\n";
 	status = send(sender_fd, msg_to_send.c_str(), strlen(msg_to_send.c_str()), 0);
 	if (status == -1) 
 	{
-		std::cerr << "[Server] Send error to client fd" << sender_fd << strerror(errno);
+		 if (errno == EAGAIN || errno == EWOULDBLOCK)
+		{
+			// Socket buffer is full, wait for EPOLLOUT to retry
+			std::cout << "Socket buffer full, waiting for EPOLLOUT to retry send on fd: " << events[i].data.fd << std::endl;
+			return;
+		}
+		 else
+		{
+			std::cerr << "[Server] Send error to client fd" << sender_fd << strerror(errno);
+			close(sender_fd);
+			epoll_ctl(epoll_fd, EPOLL_CTL_DEL, sender_fd, NULL);
+		}
 	}
+	  // If all data was sent successfully, stop monitoring EPOLLOUT
+    struct epoll_event event;
+    event.events = EPOLLIN; // Only monitor for incoming data
+    event.data.fd = events[i].data.fd;
+    epoll_ctl(epoll_fd, EPOLL_CTL_MOD, events[i].data.fd, &event);
+	if (!_Keep_alive)
+	{
+		std::cout << "COOOUUUUUUUUUUUUTTTTTTTTTTTTTTTTTTTTTTTTTT\n";
+		close(sender_fd);
+		epoll_ctl(epoll_fd, EPOLL_CTL_DEL, sender_fd, NULL);
+	}
+}
+
+void Server::handleKeepAlive(const std::string &request)
+{
+	std::string request_lower;
+
+	request_lower = request;
+	std::transform(request_lower.begin(), request_lower.end(), request_lower.begin(), ::tolower);
+	if (request_lower.find("connection: close") != std::string::npos)
+		_Keep_alive = false;
+	else
+		_Keep_alive = true;
 }
 
 void Server::read_data_from_socket(int i, struct epoll_event events[MAX_EVENTS]) {
@@ -153,13 +195,9 @@ void Server::read_data_from_socket(int i, struct epoll_event events[MAX_EVENTS])
     else
 	{	
 		buffer[bytes_read] = '\0';
+		std::string request(buffer);
+		handleKeepAlive(request);
 		set_request_type(buffer);
-		std::cout << "REQUEST CONTENT : " << _Request_content << std::endl;
-		if (_Request_content == "favicon.ico")
-		{
-			std::cout << "Flavico !" << std::endl;
-			return ;
-		}
-		// send_data_to_socket(i, events);
+		send_data_to_socket(i, events);
     }
 }
