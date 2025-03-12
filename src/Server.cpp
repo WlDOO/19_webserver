@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
+/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:31 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/12 15:39:55 by rafnasci         ###   ########.fr       */
+/*   Updated: 2025/03/12 15:51:24 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,9 @@ void Server::handleConnections() {
                 // Handle client request
 				read_data_from_socket(i, events);
             } 
-			else if (events[i].events & EPOLLOUT) {  ////ici on gere les POLLOUT
-				// send_data_to_socket(i, events);
-			}
+			// else if (events[i].events & EPOLLOUT) {  ////ici on gere les POLLOUT
+			// 	// send_data_to_socket(i, events);
+			// }
         }
     }
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Read_send.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
+/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 13:35:52 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/12 15:42:25 by rafnasci         ###   ########.fr       */
+/*   Updated: 2025/03/12 16:45:44 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ std::string	Server::html_request(int client_fd)
 		return (request_get(client_fd));
 	}
 	if (_Request_type == "POST")
-		return (html_response(client_fd, "test.html"));
+		return (html_response(client_fd, "page1_rep.html"));
 
 	return (request_get(client_fd));
 }
