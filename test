@@ -1,3 +1,41 @@
+Server created socket fd:3
+Server started on port 4242
+Server created socket fd:4
+Server started on port 8001
+New client connected: 6
+ full_msg is : GET /page3.html HTTP/1.1
+Host: localhost:4242
+Connection: keep-alive
+sec-ch-ua: "Not(A:Brand";v="99", "Brave";v="133", "Chromium";v="133"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Windows"
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8
+Sec-GPC: 1
+Accept-Language: fr-FR,fr;q=0.7
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Referer: http://localhost:4242/page3.html
+Accept-Encoding: gzip, deflate, br, zstd
+
+
+le found : 16
+verbs are : GET /page3.html 
+request type is : GET
+request content is :page3.html
+ici <
+----------------------------
+Request type :GET
+Request content :page3.html
+MESSAGE TO SENDD :
+HTTP/1.1
+Content-Type: text/html
+Content-Length: 1514
+Connection: keep-alive
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -56,4 +94,14 @@
     </div>
 
 </body>
-</html>
+</html>6
+
+----------------------------
+request type :GET
+request content :page3.html
+close fd :6
+COOOUUUUUUUUUUUUTTTTTTTTTTTTTTTTTTTTTTTTTT
+New client connected: 6
+request type :GET
+request content :page3.html
+close fd :6

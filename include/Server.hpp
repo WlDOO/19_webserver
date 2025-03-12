@@ -6,7 +6,7 @@
 /*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:12 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/08 03:59:11 by rafnasci         ###   ########.fr       */
+/*   Updated: 2025/03/11 23:54:36 by rafnasci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ class Server
 		std::string _Request_html;
 		std::string _Post_content;
 		std::string _Post_file_name;
-		int			_Keep_alive;
+		bool		_Keep_alive;
 
 		//Server
 		std::vector<int>	server_fds;
@@ -57,6 +57,7 @@ class Server
 		void				setupSocket(int port);
 		void				setupEpoll();
 		void				handleConnections();
+		void				handleKeepAlive(const std::string &request);
 
 	public:
 	

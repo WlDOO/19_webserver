@@ -1,0 +1,201 @@
+Server created socket fd:3
+Server started on port 4242
+Server created socket fd:4
+Server started on port 8001
+New client connected: 6
+ full_msg is : GET /page3.html HTTP/1.1
+Host: localhost:4242
+Connection: keep-alive
+Cache-Control: max-age=0
+sec-ch-ua: "Not(A:Brand";v="99", "Brave";v="133", "Chromium";v="133"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Windows"
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8
+Sec-GPC: 1
+Accept-Language: fr-FR,fr;q=0.7
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Referer: http://localhost:4242/page2.html
+Accept-Encoding: gzip, deflate, br, zstd
+
+
+le found : 16
+verbs are : GET /page3.html 
+request type is : GET
+request content is :page3.html
+ici <
+----------------------------
+Request type :GET
+Request content :page3.html
+MESSAGE TO SENDD :
+HTTP/1.1
+Content-Type: text/html
+Content-Length: 1514
+Connection: keep-alive
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page 2 - Image</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .navbar {
+            background-color: #333;
+            overflow: hidden;
+        }
+        .navbar a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+        }
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        .content {
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="index.html">Page 1</a>
+        <a href="page2.html">Page 2</a>
+        <a href="page3.html">Page 3</a>
+    </div>
+
+    <div class="content">
+        <h1>Bienvenue sur la Page 3</h1>
+        <p>Voici Asa, la femme de raf :</p>
+        <img src="https://pbs.twimg.com/media/GlaX8T6XgAAjo_n?format=jpg&name=large" alt="Belle image">
+    </div>
+
+</body>
+</html>6
+
+----------------------------
+request type :GET
+request content :page3.html
+close fd :6
+New client connected: 6
+ full_msg is : GET /page3.html HTTP/1.1
+Host: localhost:4242
+Connection: keep-alive
+sec-ch-ua: "Not(A:Brand";v="99", "Brave";v="133", "Chromium";v="133"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Windows"
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8
+Sec-GPC: 1
+Accept-Language: fr-FR,fr;q=0.7
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Referer: http://localhost:4242/page3.html
+Accept-Encoding: gzip, deflate, br, zstd
+
+
+le found : 16
+verbs are : GET /page3.html 
+request type is : GET
+request content is :page3.html
+ici <
+----------------------------
+Request type :GET
+Request content :page3.html
+MESSAGE TO SENDD :
+HTTP/1.1
+Content-Type: text/html
+Content-Length: 1514
+Connection: keep-alive
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page 2 - Image</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .navbar {
+            background-color: #333;
+            overflow: hidden;
+        }
+        .navbar a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+        }
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        .content {
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="index.html">Page 1</a>
+        <a href="page2.html">Page 2</a>
+        <a href="page3.html">Page 3</a>
+    </div>
+
+    <div class="content">
+        <h1>Bienvenue sur la Page 3</h1>
+        <p>Voici Asa, la femme de raf :</p>
+        <img src="https://pbs.twimg.com/media/GlaX8T6XgAAjo_n?format=jpg&name=large" alt="Belle image">
+    </div>
+
+</body>
+</html>6
+
+----------------------------
+request type :GET
+request content :page3.html
+close fd :6
