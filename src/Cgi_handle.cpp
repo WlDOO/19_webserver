@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 16:47:34 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/11 14:36:54 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/12 13:36:55 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,15 @@ void	Server::cgi_handle(int client_fd) {
 	
 	ss <<"REQUEST_METHOD=" << _Request_type;
 	std::string REQUEST_METHOD = ss.str();
+	ss.str("");
+
+	ss <<"CONTENT_LENGTH=" << _Post_cgi_content_lenght;
+	std::string CONTENT_LENGTH = ss.str();
+	ss.str("");
+
+	ss <<"CONTENT_TYPE=" << _Post_cgi_content_type;
+	std::string CONTENT_TYPE = ss.str();
+	ss.str("");
 	
     pid_t pid = fork();
 
@@ -36,6 +45,8 @@ void	Server::cgi_handle(int client_fd) {
             const_cast<char *>(LAST_NAME.c_str()),
             const_cast<char *>(FIRST_NAME.c_str()),
 			const_cast<char *>(REQUEST_METHOD.c_str()),
+			const_cast<char *>(CONTENT_LENGTH.c_str()),
+			const_cast<char *>(CONTENT_TYPE.c_str()),
             NULL
     };
 

@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:12 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/11 13:57:10 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/12 13:24:41 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ class Server
 		std::string _Post_file_name;
 		std::string _Post_cgi_FN;
 		std::string _Post_cgi_LN;
+		std::string _Post_cgi_content_type;
+		std::string _Post_cgi_content_lenght;
 		
 		int			_Keep_alive;
 

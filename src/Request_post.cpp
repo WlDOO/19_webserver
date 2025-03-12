@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 20:18:50 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/11 15:20:28 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/12 13:37:37 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,15 @@
 void		Server::content_post_cgi(std::string full_msg) {
 
 	int found1;
-
+	
+	found1 = full_msg.find("Content-Type:", 0);
+	full_msg.erase(0, found1 + 14);
+	found1 = full_msg.find("\r\n", 0);
+	_Post_cgi_content_type = full_msg.substr(0, found1);
+	found1 = full_msg.find("Content-Length:", 0);
+	full_msg.erase(0, found1 + 16);
+	found1 = full_msg.find("\r\n", 0);
+	_Post_cgi_content_lenght = full_msg.substr(0, found1);
 	found1 = full_msg.find("\r\n\r\n", 0);
 	full_msg.erase(0, found1);
 	found1 = full_msg.find("=", 0);
@@ -31,6 +39,8 @@ void		Server::content_post_cgi(std::string full_msg) {
 	std::cout << "post cgi content : " << full_msg << std::endl;
 	std::cout << "_Post_cgi_LN : " << _Post_cgi_LN << std::endl;
 	std::cout << "_Post_cgi_FN : " << _Post_cgi_FN << std::endl;
+	std::cout << "_Post_cgi_content_type : " << _Post_cgi_content_type << std::endl;
+	std::cout << "_Post_cgi_content_lenght : " << _Post_cgi_content_lenght << std::endl;
 }
 
 void		Server::content_post_file(std::string full_msg) {

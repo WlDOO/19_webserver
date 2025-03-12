@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
-import cgi
-import cgitb
 import os
 import requests
 
 # Enable debugging for CGI scripts (useful for troubleshooting)
+import cgitb
 cgitb.enable()
 
 # Function to fetch a random Wikipedia page URL
@@ -50,11 +49,11 @@ if request_method == "GET":
 
     print(f"<h1>GET page saved to random_wikipedia.html in your VSCode workspace.</h1>")
 
-# Handle POST request - Save greeting page to a file
+# Handle POST request - Read data from environment variables
 elif request_method == "POST":
-    form = cgi.FieldStorage()
-    first_name = form.getvalue("FIRST_NAME", "Unknown")
-    last_name = form.getvalue("LAST_NAME", "Unknown")
+    # Retrieve form data from environment variables
+    first_name = os.environ.get("FIRST_NAME", "Unknown")
+    last_name = os.environ.get("LAST_NAME", "Unknown")
 
     post_html_content = f"""
     <!DOCTYPE html>
