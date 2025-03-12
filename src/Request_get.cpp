@@ -6,7 +6,7 @@
 /*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 20:10:46 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/12 00:01:07 by rafnasci         ###   ########.fr       */
+/*   Updated: 2025/03/12 15:28:49 by rafnasci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,8 @@ std::string	Server::request_get(int client_fd) {
 		"index.html",
 		"res.html",
 	};
-	if (_Request_content == "/favicon.ico")
-	{
-		std::cout << "ZZZZZZZZIIIIIIIIIIIIIIIIIIIIIIIII\n";
+	if (_Request_content == "favicon.ico")
 		web_page = "favicon.png";
-	}
 	else if (_Request_content.empty() || _Request_content == "/")
 		web_page = "index.html";
 	else
@@ -46,6 +43,5 @@ std::string	Server::request_get(int client_fd) {
 			return (html_error_404(client_fd));
 		//std::cout << "la page web : " << web_page << std::endl;
 	}
-	
 	return (html_response(client_fd, web_page));
 }

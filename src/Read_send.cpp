@@ -6,7 +6,7 @@
 /*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 13:35:52 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/12 00:12:27 by rafnasci         ###   ########.fr       */
+/*   Updated: 2025/03/12 15:33:33 by rafnasci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,11 +101,11 @@ void Server::send_data_to_socket(int i, struct epoll_event events[MAX_EVENTS]){
 	
 	sender_fd = (events)[i].data.fd;
 	msg_to_send = html_request(sender_fd);
-	std::cout << "----------------------------\n";
-	std::cout <<"Request type :" << _Request_type << std::endl;
-	std::cout <<"Request content :" << _Request_content << std::endl;
-	std::cout << "MESSAGE TO SENDD :\n" << msg_to_send << std::endl;
-	std::cout << "----------------------------\n";
+	// std::cout << "----------------------------\n";
+	// std::cout <<"Request type :" << _Request_type << std::endl;
+	// std::cout <<"Request content :" << _Request_content << std::endl;
+	// std::cout << "MESSAGE TO SENDD :\n" << msg_to_send << std::endl;
+	// std::cout << "----------------------------\n";
 	status = send(sender_fd, msg_to_send.c_str(), strlen(msg_to_send.c_str()), 0);
 	if (status == -1) 
 	{
@@ -171,9 +171,7 @@ void Server::read_data_from_socket(int i, struct epoll_event events[MAX_EVENTS])
 	}
 	else if (bytes_read == 0)  // Client has disconnected properly
 	{
-		std::cout << "request type :" << _Request_type << std::endl << "request content :" << _Request_content << std::endl;
 		std::cout << "close fd :" << events[i].data.fd << std::endl;
-		std::cout << "COOOUUUUUUUUUUUUTTTTTTTTTTTTTTTTTTTTTTTTTT\n";
 		close(sender_fd);
 		epoll_ctl(epoll_fd, EPOLL_CTL_DEL, sender_fd, NULL);
 	}
