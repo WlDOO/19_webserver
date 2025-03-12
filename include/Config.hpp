@@ -6,7 +6,7 @@
 /*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 14:42:58 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/11 15:02:34 by najeuneh         ###   ########.fr       */
+/*   Updated: 2025/03/11 17:44:00 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ struct Location
 	std::string	Location;
 	std::string	root;
 	std::string	index;
+	std::string	autoindex;
 	std::string	redirect_url;
 	std::string	upload_store;
 	std::string	directory_listening;

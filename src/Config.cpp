@@ -6,7 +6,7 @@
 /*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:46:38 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/11 16:30:20 by najeuneh         ###   ########.fr       */
+/*   Updated: 2025/03/11 17:44:44 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,6 @@ void	Config::SetServer(std::string str)
 		getline(ss, line, ';');
 		this->Server[size_serv].root = line;
 	}
-
 }
 
 void	Config::SetLoc(std::string str)
@@ -122,6 +121,13 @@ void	Config::SetLoc(std::string str)
 		getline(ss, line, ' ');
 		getline(ss, line, ';');
 		this->Server[size_serv].Loc[Server[size_serv].size - 1].redirect_url = line;
+	}
+	else if ((position = str.find("autoindex ")) != std::string::npos)
+	{
+		ss.str(str);
+		getline(ss, line, ' ');
+		getline(ss, line, ';');
+		this->Server[size_serv].Loc[Server[size_serv].size - 1].autoindex = line;
 	}
 	else if ((position = str.find("upload_store ")) != std::string::npos)
 	{
@@ -276,7 +282,9 @@ std::string	pick_file(std::string str)
 bool isDirectory(const std::string& path)
 {
 	struct stat info;
-	std::cout << "[" << path << "]" << std::endl;
+
+	if (path.empty())
+		return true;
 	if (stat(path.c_str(), &info) != 0)
 		return false;
 	else if (info.st_mode & S_IFDIR)
@@ -325,7 +333,7 @@ int	parse_file(Config Conf)
 {
 	for (size_t i = 0; i < Conf.Server.size(); i++)
 	{
-		if (Conf.Server[i].root.empty() || Conf.Server[i].server_name.empty() || Conf.Server[i].listen.empty())
+		if (Conf.Server[i].root.empty() || Conf.Server[i].server_name.empty() || Conf.Server[i].listen.size() == 0 || Conf.Server[i].Loc.size() == 0)
 			return std::cerr << "Error: Missing information in server block" << std::endl, 0;
 		if (!isDirectory(Conf.Server[i].root))
 			return std::cerr << "Error: Root directory does not exist" << std::endl, 0;
@@ -365,12 +373,12 @@ int	parse_file(Config Conf)
 			for (size_t x = 0; x < Conf.Server[i].Loc[y].methods.size(); x++)
 			{
 				if (Conf.Server[i].Loc[y].methods[x] != "GET" || Conf.Server[i].Loc[y].methods[x] != "POST" || Conf.Server[i].Loc[y].methods[x] != "DELETE")
-					return std::cerr << "allow method does not exist" << std::endl, 0;
+					return std::cerr << "Error: allow method does not exist" << std::endl, 0;
 			}
 			for (size_t x = 0; x < Conf.Server[i].Loc[y].cgi_extonsions.size(); x++)
 			{
 				if (Conf.Server[i].Loc[y].methods[x] != ".py" || Conf.Server[i].Loc[y].methods[x] != ".js" || Conf.Server[i].Loc[y].methods[x] != ".sh")
-					return std::cerr << "allow method does not exist" << std::endl, 0;
+					return std::cerr << "Error: allow method does not exist" << std::endl, 0;
 			}
 		}
 	}
