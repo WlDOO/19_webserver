@@ -6,7 +6,7 @@
 /*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:46:38 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/11 17:44:44 by najeuneh         ###   ########.fr       */
+/*   Updated: 2025/03/12 16:47:41 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ void	Config::SetServer(std::string str)
 	}
 	else if ((position = str.find("error_page ")) != std::string::npos)
 	{
+		std::cout << str << std::endl;
 		ss.str(str);
 		getline(ss, line, ' ');
 		getline(ss, line, ' ');
@@ -108,8 +109,16 @@ void	Config::SetLoc(std::string str)
 		getline(ss, line, ';');
 		this->Server[size_serv].Loc[Server[size_serv].size - 1].root = line;
 	}
+	else if ((position = str.find("autoindex ")) != std::string::npos)
+	{
+		ss.str(str);
+		getline(ss, line, ' ');
+		getline(ss, line, ';');
+		this->Server[size_serv].Loc[Server[size_serv].size - 1].autoindex = line;
+	}
 	else if ((position = str.find("index ")) != std::string::npos)
 	{
+		
 		ss.str(str);
 		getline(ss, line, ' ');
 		getline(ss, line, ';');
@@ -122,13 +131,6 @@ void	Config::SetLoc(std::string str)
 		getline(ss, line, ';');
 		this->Server[size_serv].Loc[Server[size_serv].size - 1].redirect_url = line;
 	}
-	else if ((position = str.find("autoindex ")) != std::string::npos)
-	{
-		ss.str(str);
-		getline(ss, line, ' ');
-		getline(ss, line, ';');
-		this->Server[size_serv].Loc[Server[size_serv].size - 1].autoindex = line;
-	}
 	else if ((position = str.find("upload_store ")) != std::string::npos)
 	{
 		ss.str(str);
@@ -136,12 +138,25 @@ void	Config::SetLoc(std::string str)
 		getline(ss, line, ';');
 		this->Server[size_serv].Loc[Server[size_serv].size - 1].upload_store = line;
 	}
-	else if ((position = str.find("cgi_pass ")) != std::string::npos)
+	else if ((position = str.find("cgi_path ")) != std::string::npos)
 	{
+		int last_pos = 0;
 		ss.str(str);
 		getline(ss, line, ' ');
 		getline(ss, line, ';');
-		this->Server[size_serv].Loc[Server[size_serv].size - 1].cgi_pass.push_back(line);
+		for (int y = 0; line[y]; y++)
+		{
+			if (line[y] == ' ' || line[y + 1] == '\0')
+			{
+				if (last_pos == 0)
+					this->Server[size_serv].Loc[Server[size_serv].size - 1].cgi_pass.push_back(line.substr(last_pos, y));
+				else if (line[y + 1] == '\0')
+					this->Server[size_serv].Loc[Server[size_serv].size - 1].cgi_pass.push_back(line.substr(last_pos + 1, y - last_pos + 1));
+				else
+					this->Server[size_serv].Loc[Server[size_serv].size - 1].cgi_pass.push_back(line.substr(last_pos + 1, y - last_pos - 1));
+				last_pos = y;
+			}
+		}
 	}
 	else if ((position = str.find("directory_listening ")) != std::string::npos)
 	{
@@ -152,23 +167,41 @@ void	Config::SetLoc(std::string str)
 	}
 	else if ((position = str.find("allow_methods ")) != std::string::npos)
 	{
-		if ((position = str.find("GET")) != std::string::npos)
-			this->Server[size_serv].Loc[Server[size_serv].size - 1].methods.push_back("GET");
-		if((position = str.find("POST")) != std::string::npos)
-			this->Server[size_serv].Loc[Server[size_serv].size - 1].methods.push_back("POST");
-		if((position = str.find("DELETE")) != std::string::npos)
-			this->Server[size_serv].Loc[Server[size_serv].size - 1].methods.push_back("DELETE");
+		int last_pos = 0;
+		ss.str(str);
+		getline(ss, line, ' ');
+		getline(ss, line, ';');
+		for (int y = 0; line[y]; y++)
+		{
+			if (line[y] == ' ' || line[y + 1] == '\0')
+			{
+				if (last_pos == 0)
+					this->Server[size_serv].Loc[Server[size_serv].size - 1].methods.push_back(line.substr(last_pos, y));
+				else
+					this->Server[size_serv].Loc[Server[size_serv].size - 1].methods.push_back(line.substr(last_pos + 1, y - last_pos));
+				last_pos = y;
+			}
+		}
 	}
 	else if ((position = str.find("cgi_ext ")) != std::string::npos)
 	{
-		if ((position = str.find(".py")) != std::string::npos)
-			this->Server[size_serv].Loc[Server[size_serv].size - 1].cgi_extonsions.push_back(".py");
-		if ((position = str.find(".php")) != std::string::npos)
-			this->Server[size_serv].Loc[Server[size_serv].size - 1].cgi_extonsions.push_back(".php");
-		if ((position = str.find(".sh")) != std::string::npos)
-			this->Server[size_serv].Loc[Server[size_serv].size - 1].cgi_extonsions.push_back(".sh");
-		if ((position = str.find(".js")) != std::string::npos)
-			this->Server[size_serv].Loc[Server[size_serv].size - 1].cgi_extonsions.push_back(".js");
+		int last_pos = 0;
+		ss.str(str);
+		getline(ss, line, ' ');
+		getline(ss, line, ';');
+		for (int y = 0; line[y]; y++)
+		{
+			if (line[y] == ' ' || line[y + 1] == '\0')
+			{
+				if (last_pos == 0)
+					this->Server[size_serv].Loc[Server[size_serv].size - 1].cgi_extonsions.push_back(line.substr(last_pos, y));
+				else if (line[y + 1] == '\0')
+					this->Server[size_serv].Loc[Server[size_serv].size - 1].cgi_extonsions.push_back(line.substr(last_pos + 1, y - last_pos + 1));
+				else
+					this->Server[size_serv].Loc[Server[size_serv].size - 1].cgi_extonsions.push_back(line.substr(last_pos + 1, y - last_pos - 1));
+				last_pos = y;
+			}
+		}
 	}
 }
 
@@ -261,6 +294,8 @@ std::string	pick_file(std::string str)
 		y = i;
 		while(line[i])
 		{
+			if (line[i] == '#')
+				break ;
 			if(line[i] == ';' || line[i] == '{' || line[i] == '}')
 			{
 				if (y == 0)
@@ -273,7 +308,7 @@ std::string	pick_file(std::string str)
 				break ;
 			}
 			else
-			i++;
+				i++;
 		}
 	}
 	return res;
@@ -339,6 +374,7 @@ int	parse_file(Config Conf)
 			return std::cerr << "Error: Root directory does not exist" << std::endl, 0;
 		for (size_t y = 0; y < Conf.Server[i].error_page_loc.size(); y++)
 		{
+			std::cout << Conf.Server[i].error_page_loc[y] << std::endl;
 			if (!isDirectory(Conf.Server[i].error_page_loc[y]))
 				return std::cerr << "Error: Error page Localisation directory does not exist" << std::endl, 0;
 			if (atoi(Conf.Server[i].error_page_num[y].c_str()) < 100 || atoi(Conf.Server[i].error_page_num[y].c_str()) > 599)
@@ -359,26 +395,26 @@ int	parse_file(Config Conf)
 				return std::cerr << "Error: Error page Localisation directory does not exist" << std::endl, 0;
 			if (!isDirectory(Conf.Server[i].Loc[y].root))
 				return std::cerr << "Error: Error page root directory does not exist" << std::endl, 0;
-			if (!isDirectory(Conf.Server[i].Loc[y].index))
-				return std::cerr << "Error: Error page index directory does not exist" << std::endl, 0;
 			if (!isDirectory(Conf.Server[i].Loc[y].redirect_url))
 				return std::cerr << "Error: Error page redirect url directory does not exist" << std::endl, 0;
 			if (!isDirectory(Conf.Server[i].Loc[y].upload_store))
 				return std::cerr << "Error: Error page upload store directory does not exist" << std::endl ,0;
-			for (size_t x = 0; x < Conf.Server[i].Loc.size(); x++)
+			if (!Conf.Server[i].Loc[y].autoindex.empty() && Conf.Server[i].Loc[y].autoindex != "on" && Conf.Server[i].Loc[y].autoindex != "off")
+				return std::cerr << "Error: Error autoindex  does not exist" << std::endl, 0;
+			for (size_t x = 0; x < Conf.Server[i].Loc[y].cgi_pass.size(); x++)
 			{
 				if (!isDirectory(Conf.Server[i].Loc[y].cgi_pass[x]))
-					return std::cerr << "Error: Error page Localisation directory does not exist" << std::endl, 0;
+					return std::cerr << "Error: Error page cgi pass directory does not exist" << std::endl, 0;
 			}
 			for (size_t x = 0; x < Conf.Server[i].Loc[y].methods.size(); x++)
 			{
-				if (Conf.Server[i].Loc[y].methods[x] != "GET" || Conf.Server[i].Loc[y].methods[x] != "POST" || Conf.Server[i].Loc[y].methods[x] != "DELETE")
+				if (Conf.Server[i].Loc[y].methods[x] != "GET" && Conf.Server[i].Loc[y].methods[x] != "POST" && Conf.Server[i].Loc[y].methods[x] != "DELETE")
 					return std::cerr << "Error: allow method does not exist" << std::endl, 0;
 			}
 			for (size_t x = 0; x < Conf.Server[i].Loc[y].cgi_extonsions.size(); x++)
 			{
-				if (Conf.Server[i].Loc[y].methods[x] != ".py" || Conf.Server[i].Loc[y].methods[x] != ".js" || Conf.Server[i].Loc[y].methods[x] != ".sh")
-					return std::cerr << "Error: allow method does not exist" << std::endl, 0;
+				if (Conf.Server[i].Loc[y].cgi_extonsions[x] != ".py" && Conf.Server[i].Loc[y].cgi_extonsions[x] != ".js" && Conf.Server[i].Loc[y].cgi_extonsions[x] != ".sh")
+					return std::cerr << "Error: cgi extension does not exist" << std::endl, 0;
 			}
 		}
 	}
