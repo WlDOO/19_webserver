@@ -6,7 +6,7 @@
 /*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 15:39:49 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/13 16:40:29 by najeuneh         ###   ########.fr       */
+/*   Updated: 2025/03/13 19:02:46 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ std::string	pick_file(std::string str)
 	std::string line;
 	std::string res;
 	std::ifstream file(str.c_str());
-	
+
 	while (getline(file, line))
 	{
 		int i = 0;
@@ -142,8 +142,14 @@ int	CheckServer_name(std::string str)
 	
 	while(str[i])
 	{
-		if (str[i] == '.')
+		if (str[i] == '-' && i == 0)
+			return 0;
+		else if (str[i] == '.')
+		{
+			if (str[i + 1] == '.')
+				return 0;
 			i++;
+		}
 		else if(str[i] == '-')
 			i++;
 		else if (str[i] >= 48 && str[i] <= 57)

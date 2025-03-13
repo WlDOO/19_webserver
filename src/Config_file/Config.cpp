@@ -6,7 +6,7 @@
 /*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:46:38 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/13 16:41:01 by najeuneh         ###   ########.fr       */
+/*   Updated: 2025/03/13 17:53:55 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -299,15 +299,4 @@ int	parse_file(Config Conf)
 		}
 	}
 	return 1;
-}
-
-int	main()
-{
-	Config Conf;
-	std::string str = "example.conf";
-	std::string str2 = pick_file(str);
-	Conf = Conf.Config_file(str2);
-	if (parse_file(Conf) == 0)
-		return 0;
-	return 0;
 }
