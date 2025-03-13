@@ -6,7 +6,7 @@
 /*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 14:42:58 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/11 17:44:00 by najeuneh         ###   ########.fr       */
+/*   Updated: 2025/03/13 16:37:51 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,5 +69,9 @@ class Config
 		~Config();
 };
 
-
-
+std::string	pick_file(std::string str);
+void removeExtraWhitespace(std::string& str);
+bool isWhitespace(char c);
+bool	isIp(std::string ip);
+bool isDirectory(const std::string& path);
+int	CheckServer_name(std::string str);
