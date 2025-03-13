@@ -1,0 +1,101 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Set_request.cpp                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/13 16:56:53 by armitite          #+#    #+#             */
+/*   Updated: 2025/03/13 17:33:28 by armitite         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../include/Server.hpp"
+
+int	Server::request_custom_type(std::string full_msg) {
+
+	size_t	found;
+
+	found = full_msg.find("GET", 0);
+	if (found == std::string::npos)
+	{
+		found = full_msg.find("POST", 0);
+		if (found == std::string::npos)
+			return (print_logs("Sender", " no request type", 2), 1);
+		else
+			_Request_type = "POST";
+	}
+	else
+		_Request_type = "GET";
+	
+	return (0);
+}
+
+int	Server::request_custom_content(std::string full_msg) {
+
+	size_t	found;
+	size_t i = 0;
+
+	found = full_msg.find(_Request_type, 0);
+	full_msg.erase(0, found + _Request_type.size());
+	if (!full_msg.empty())
+		return (print_logs("Sender", _Request_type + " full_msg empty", 2), 1);
+	while (i < full_msg.length())
+	{
+		if (full_msg.at(i) == ' ')
+			i++;
+	}
+	full_msg.erase(0, i);
+	_Request_content = full_msg;
+	
+	return (0);
+}
+
+void	Server::set_request_custom(std::string full_msg) {
+
+	std::string verbs;
+	
+	if (request_custom_type(full_msg) == 1)
+		return ;
+	if (request_custom_content(full_msg) == 1)
+		return ;
+	
+	print_logs("Sender", _Request_type, 1);
+}
+
+void	Server::set_request_http(std::string full_msg) {
+
+	std::string verbs;
+	size_t	found;
+	
+	found = full_msg.find("HTTP/1.1", 0);
+	verbs = full_msg.substr(0, found);
+	found = verbs.find(" ", 0);
+	_Request_type = verbs.substr(0, found);
+	if (_Request_type == "POST")
+		set_content_post(full_msg);
+	verbs.erase(0, found);
+	_Request_content = verbs.substr(2, (verbs.size() - 3));
+	print_logs("Sender", _Request_type, 1);
+}
+
+void	Server::set_request_type(char buffer[BUFSIZ]) {
+
+	std::ostringstream oss_tmp;
+	std::string sender_msg;
+	std::string full_msg;
+	std::string verbs;
+	size_t	found;
+
+	oss_tmp << buffer;
+	sender_msg = oss_tmp.str();
+	full_msg.assign(sender_msg);
+	if (full_msg.find("favicon.ico") != std::string::npos)
+		return ;
+	std::cout << " full_msg is : " << full_msg << std::endl;
+	found = full_msg.find("HTTP/1.1", 0);
+	if (found != std::string::npos)
+		set_request_http(full_msg);
+	else
+		set_request_custom(full_msg);
+}

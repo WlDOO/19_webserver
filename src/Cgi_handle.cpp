@@ -6,16 +6,16 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 16:47:34 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/12 13:36:55 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/13 15:36:10 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/Server.hpp"
 
-void	Server::cgi_handle(int client_fd) {
+int	Server::cgi_handle(int client_fd) {
 
 	if (client_fd == -1)
-		return ;
+		return (1);
 	 std::stringstream ss;
 
     ss << "LAST_NAME=" << _Post_cgi_LN;
@@ -53,7 +53,7 @@ void	Server::cgi_handle(int client_fd) {
 	if (pid < 0) {
 		
 		std::cout << "Pid error cgi" << std::endl;
-		_exit(1);
+		return (1);
 	}
 	if (pid == 0) {
 	
@@ -65,8 +65,10 @@ void	Server::cgi_handle(int client_fd) {
 		execve(python_path.c_str(), argv.data(), envp);
 		
 		std::cout << "Execve failed" << std::endl;
-		_exit(1);
+		return (1);
 	}
 
 	waitpid(pid, NULL, 0);
+	
+	return (0);
 }

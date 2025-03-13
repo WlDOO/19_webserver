@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 20:18:50 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/12 16:31:11 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/13 16:41:47 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,39 +43,49 @@ void		Server::content_post_cgi(std::string full_msg) {
 	std::cout << "_Post_cgi_content_lenght : " << _Post_cgi_content_lenght << std::endl;
 }
 
-void		Server::content_post_file(std::string full_msg) {
+std::string		Server::set_params_file(std::string full_msg, std::string to_find) {
 
-	int found1;
-	int found2;
+	size_t found;
+	std::string result;
+	
+	found = full_msg.find(to_find, 0);
+	if (found == std::string::npos)
+		return (NULL);
+	full_msg.erase(0, found);
+	found = full_msg.find("\r\n", 0);
+	if (found == std::string::npos)
+		return (NULL);
+	result = full_msg.substr(to_find.size(), found - to_find.size());
+
+	return (result);
+}
+
+int		Server::content_post_file(std::string full_msg) {
+
+	size_t found1;
+	size_t found2;
 	std::string content_type;
 	std::string content_lenght;
 	std::string boundary;
 	std::string content;
 	
-	found1 = full_msg.find("boundary=", 0);
-	full_msg.erase(0, found1);
-	found1 = full_msg.find("\r\n", 0);
-	boundary = full_msg.substr(10, found1 - 10);
-	//std::cout << "boundary : " << boundary << std::endl;
-	found1 = full_msg.find("Content-Length:", 0);
-	full_msg.erase(0, found1);
-	found1 = full_msg.find("\r\n", 0);
-	content_lenght = full_msg.substr(16, found1 - 16);
-	full_msg.erase(0, found1);
-	std::cout << "full_msg : " << full_msg << std::endl;
+	boundary = set_params_file(full_msg, "boundary=");
+	if (boundary.empty())
+		return (print_logs(NULL, "Boundary not found", 2), 1);
+	content_lenght = set_params_file(full_msg, "Content-Length: ");
+	if (content_lenght.empty())
+		return (print_logs(NULL, "Content lenght not found", 2), 1);
+	found1 = full_msg.find(boundary + "\r\n", 0);
+	full_msg.erase(0, found1 + boundary.size());
 	found1 = full_msg.find(boundary + "\r\n", 0);
 	found2 = full_msg.find(boundary + "--" + "\r\n", 0);
 	content.assign(full_msg, found1, (found2 - found1));
-	found1 = content.find("filename=", 0);
-	content.erase(0, (found1 + 10));
-	found1 = content.find("\"\r\n", 0);
-	_Post_file_name = content.substr(0, found1);
-	//std::cout << "_Post_file_name : " << _Post_file_name << std::endl;
-	found1 = content.find("Content-Type:", 0);
-	content.erase(0, (found1 + 14));
-	found1 = content.find("\r\n", 0);
-	content_type = content.substr(0, found1);
-	//std::cout << "content_type : " << content_type << std::endl;
+	std::cout << "content : " << content << std::endl;
+	_Post_file_name = set_params_file(content, "filename=");
+	_Post_file_name.erase(0, 1);
+	_Post_file_name.erase(_Post_file_name.size() - 1);
+	content_type = set_params_file(content, "Content-Type: ");
+	std::cout << "content_type : " << content_type << std::endl;
 	found1 = content.find("\r\n\r\n", 0);
 	content.erase(0, found1 + 4);
 	_Post_content = content.substr(0, content.size());
@@ -83,9 +93,11 @@ void		Server::content_post_file(std::string full_msg) {
 	_Post_content = content.substr(0, found1 - 3);
 
 	request_post(6);
+	
+	return (0);
 }
 
-void		Server::set_content_post(std::string full_msg) {
+int		Server::set_content_post(std::string full_msg) {
 
 	int found1;
 	std::string content_type;
@@ -98,14 +110,8 @@ void		Server::set_content_post(std::string full_msg) {
 		content_post_file(full_msg);
 	else
 		content_post_cgi(full_msg);
-	//request_post(6);
-	
-	// std::cout << "Le found 1 bis bis bis : " << found1 << std::endl;
-	// std::cout << "content_lenght : " << content_lenght << std::endl;
-	// std::cout << "_Post_content : " << _Post_content << std::endl;
-	//std::cout << "content <><><><><><><><>: " << std::endl << content << std::endl;
 
-	return ;
+	return (0);
 }
 
 std::string	Server::request_post(int client_fd) {

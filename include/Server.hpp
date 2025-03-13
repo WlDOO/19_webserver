@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
+/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:12 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/12 15:40:28 by rafnasci         ###   ########.fr       */
+/*   Updated: 2025/03/13 17:10:36 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,10 @@
 
 #define MAX_EVENTS 30 // nombre de client max
 #define BUFFER_SIZE 1024
+#define RESET   "\033[0m"
+#define RED     "\033[31m"
+#define BLUE    "\033[34m"
+#define GREEN   "\033[32m"
 
 uint32_t htonl(uint32_t hostlong);  //"Host to network long"
 uint16_t htons(uint16_t hostshort); //"Host to network short"
@@ -71,9 +75,10 @@ class Server
 		
 		//Server
 		void run();
-		
+		//Logs
+		void		print_logs(std::string user, std::string message, int code);
 		//Cgi
-		void	cgi_handle(int client_fd);
+		int			cgi_handle(int client_fd);
 		//Read_send
 		void 		read_data_from_socket(int i, struct epoll_event events[MAX_EVENTS]);
 		void		send_data_to_socket(int i, struct epoll_event events[MAX_EVENTS]);
@@ -81,11 +86,17 @@ class Server
 		std::string html_error_404(int client_fd);
 		std::string html_response(int client_fd, std::string web_page);
 		void		set_request_type(char buffer[BUFSIZ]);
+		void		parsing_request_content(void);
 		std::string	html_request(int client_fd);
+		void		set_request_http(std::string sender_msg);
+		void		set_request_custom(std::string sender_msg);
+		int			request_custom_type(std::string full_msg);
+		int			request_custom_content(std::string full_msg);
 		std::string	request_get(int client_fd);
 		std::string	request_post(int client_fd);
-		void		set_content_post(std::string full_msg);
-		void		content_post_file(std::string full_msg);
+		int			set_content_post(std::string full_msg);
+		int			content_post_file(std::string full_msg);
+		std::string	set_params_file(std::string full_msg, std::string to_find);
 		void		content_post_cgi(std::string full_msg);
 		
 		~Server();

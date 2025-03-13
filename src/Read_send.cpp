@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 13:35:52 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/12 18:15:11 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/13 16:57:41 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,48 +57,15 @@ std::string Server::html_response(int client_fd, std::string web_page) {
 	return (res);
 }
 
-void	Server::set_request_type(char buffer[BUFSIZ]) {
-
-	std::ostringstream oss_tmp;
-	std::string sender_msg;
-	std::string full_msg;
-	std::string verbs;
-	int	found;
-
-	oss_tmp << buffer;
-	sender_msg = oss_tmp.str();
-	full_msg.assign(sender_msg);
-	if (full_msg.find("favicon.ico") != std::string::npos)
-		return ;
-	std::cout << " full_msg is : " << full_msg << std::endl;
-	found = full_msg.find("HTTP/1.1", 0);
-	verbs = full_msg.substr(0, found);
-	std::cout << "le found : " << found << std::endl;
-	std::cout << " verbs are : " << verbs << std::endl;
-	found = verbs.find(" ", 0);
-	_Request_type = verbs.substr(0, found);
-	std::cout << " found ds request_type : " << found << std::endl;
-	if (_Request_type == "POST")
-		set_content_post(full_msg);
-	verbs.erase(0, found);
-	_Request_content = verbs.substr(2, (verbs.size() - 3));
-	found = _Request_content.find("cgi", 0);
-	std::cout << " founds cgi :" << found << std::endl;
-	// std::cout << " request type is : " << _Request_type << std::endl;
-	// std::cout << " request content is :" << _Request_content << std::endl;
-	//return (verbs);
-}
-
 std::string	Server::html_request(int client_fd)
 {	
-	std::cout << " request type is : " << _Request_type << std::endl;
-	std::cout << " request content is :" << _Request_content << std::endl;
 	if (_Request_type == "GET")
 	{
 		if (_Request_content.find("cgi", 0) != std::string::npos)
 		{
 			std::cout << "Test find cgi" << std::endl;
-			cgi_handle(client_fd);
+			if (cgi_handle(client_fd) == 1)
+				return (html_error_404(client_fd)); // Ici on doit envoyer error 400, bad request
 			return (html_response(client_fd, "random_wikipedia.html"));
 		}
 		return (request_get(client_fd));
