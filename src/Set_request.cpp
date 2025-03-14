@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 16:56:53 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/13 17:33:28 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/14 13:35:16 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,16 +37,23 @@ int	Server::request_custom_content(std::string full_msg) {
 	size_t i = 0;
 
 	found = full_msg.find(_Request_type, 0);
-	full_msg.erase(0, found + _Request_type.size());
-	if (!full_msg.empty())
+	full_msg.erase(0, found + _Request_type.length());
+	if (full_msg.empty())
 		return (print_logs("Sender", _Request_type + " full_msg empty", 2), 1);
 	while (i < full_msg.length())
 	{
 		if (full_msg.at(i) == ' ')
 			i++;
+		else
+			break ;
 	}
 	full_msg.erase(0, i);
-	_Request_content = full_msg;
+	if (full_msg.at(0) == '/')
+		full_msg.erase(0, 1);
+	found = full_msg.find("\n", 0);
+	_Request_content = full_msg.substr(0, found);
+	if (_Request_content.empty())
+		return (print_logs("Sender", _Request_type + " Request type empty", 2), 1);
 	
 	return (0);
 }
@@ -59,8 +66,10 @@ void	Server::set_request_custom(std::string full_msg) {
 		return ;
 	if (request_custom_content(full_msg) == 1)
 		return ;
+	if (_Request_type == "POST")
+		set_content_post(_Request_content);
 	
-	print_logs("Sender", _Request_type, 1);
+	print_logs("Sender", _Request_type + " " + _Request_content, 1);
 }
 
 void	Server::set_request_http(std::string full_msg) {
@@ -76,7 +85,8 @@ void	Server::set_request_http(std::string full_msg) {
 		set_content_post(full_msg);
 	verbs.erase(0, found);
 	_Request_content = verbs.substr(2, (verbs.size() - 3));
-	print_logs("Sender", _Request_type, 1);
+	
+	print_logs("Sender", _Request_type + " " + _Request_content, 1);
 }
 
 void	Server::set_request_type(char buffer[BUFSIZ]) {
@@ -98,4 +108,6 @@ void	Server::set_request_type(char buffer[BUFSIZ]) {
 		set_request_http(full_msg);
 	else
 		set_request_custom(full_msg);
+	
+	return ;
 }

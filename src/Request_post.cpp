@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 20:18:50 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/13 16:41:47 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/14 16:33:55 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,11 @@ std::string		Server::set_params_file(std::string full_msg, std::string to_find) 
 	
 	found = full_msg.find(to_find, 0);
 	if (found == std::string::npos)
-		return (NULL);
+		return (result);
 	full_msg.erase(0, found);
 	found = full_msg.find("\r\n", 0);
 	if (found == std::string::npos)
-		return (NULL);
+		return (result);
 	result = full_msg.substr(to_find.size(), found - to_find.size());
 
 	return (result);
@@ -71,26 +71,43 @@ int		Server::content_post_file(std::string full_msg) {
 	
 	boundary = set_params_file(full_msg, "boundary=");
 	if (boundary.empty())
-		return (print_logs(NULL, "Boundary not found", 2), 1);
+		return (print_logs("Client", "Boundary not found", 2), 1);
 	content_lenght = set_params_file(full_msg, "Content-Length: ");
 	if (content_lenght.empty())
-		return (print_logs(NULL, "Content lenght not found", 2), 1);
+		return (print_logs("Client", "Content lenght not found", 2), 1);
 	found1 = full_msg.find(boundary + "\r\n", 0);
+	if (found1 == std::string::npos)
+		return (print_logs("Client", "Boundary problem (1)", 2), 1);
 	full_msg.erase(0, found1 + boundary.size());
 	found1 = full_msg.find(boundary + "\r\n", 0);
+	if (found1 == std::string::npos)
+		return (print_logs("Client", "Boundary problem (2)", 2), 1);
 	found2 = full_msg.find(boundary + "--" + "\r\n", 0);
-	content.assign(full_msg, found1, (found2 - found1));
-	std::cout << "content : " << content << std::endl;
+	if (found2 == std::string::npos)
+		return (print_logs("Client", "Boundary problem (3)", 2), 1);
+	content = full_msg.substr(found1, found2 + boundary.length() + 4);
 	_Post_file_name = set_params_file(content, "filename=");
-	_Post_file_name.erase(0, 1);
-	_Post_file_name.erase(_Post_file_name.size() - 1);
+	if (_Post_file_name.empty())
+		return (print_logs("Client", "File name not found", 2), 1);
+	if (_Post_file_name.at(0) == '\"')
+		_Post_file_name.erase(0, 1);
+	if (_Post_file_name.at(_Post_file_name.size() - 1) == '\"')
+		_Post_file_name.erase(_Post_file_name.size() - 1);
 	content_type = set_params_file(content, "Content-Type: ");
+	if (content_type.empty())
+		return (print_logs("Client", "Content type not found", 2), 1);
+	if (content_type != "text/plain")
+		return (print_logs("Client", "Content type wrong format : " + content_type, 2), 1);
 	std::cout << "content_type : " << content_type << std::endl;
+	found1 = content.find("\r\n\r\n\r\n", 0);
+	if (found1 != std::string::npos)
+		return (print_logs("Client", "Empty file", 2), 1); // ici qd c'est empty file on peut return une error code diff
 	found1 = content.find("\r\n\r\n", 0);
+	if (found1 == std::string::npos)
+		return (print_logs("Client", "Incorrect content format", 2), 1);
 	content.erase(0, found1 + 4);
-	_Post_content = content.substr(0, content.size());
-	found1 = content.find("--", 0);
-	_Post_content = content.substr(0, found1 - 3);
+	found1 = content.find(boundary + "--" + "\r\n", 0);
+	_Post_content = content.substr(0, found1 - 5);
 
 	request_post(6);
 	
