@@ -6,44 +6,46 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 20:18:50 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/14 16:33:55 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/14 17:23:20 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/Server.hpp"
 
-void		Server::content_post_cgi(std::string full_msg) {
+int		Server::content_post_cgi(std::string full_msg) {
 
-	int found1;
+	size_t found1;
+	std::string verbs;
 	
-	found1 = full_msg.find("Content-Type:", 0);
-	full_msg.erase(0, found1 + 14);
-	found1 = full_msg.find("\r\n", 0);
-	_Post_cgi_content_type = full_msg.substr(0, found1);
-	found1 = full_msg.find("Content-Length:", 0);
-	full_msg.erase(0, found1 + 16);
-	found1 = full_msg.find("\r\n", 0);
-	_Post_cgi_content_lenght = full_msg.substr(0, found1);
+	_Post_cgi_content_type = set_params_file(full_msg, "Content-Type: ", "\r\n");
+	if (_Post_cgi_content_type.empty())
+		return (print_logs("Client", "Cgi content type not found", 2), 1);
+	_Post_cgi_content_lenght = set_params_file(full_msg, "Content-Length: ", "\r\n");
+	if (_Post_cgi_content_lenght.empty())
+		return (print_logs("Client", "Cgi content lenght not found", 2), 1);
 	found1 = full_msg.find("\r\n\r\n", 0);
 	full_msg.erase(0, found1);
-	found1 = full_msg.find("=", 0);
-	full_msg.erase(0, found1 + 1);
-	found1 = full_msg.find("&", 0);
-	_Post_cgi_LN = full_msg.substr(0, found1);
-	full_msg.erase(0, found1 + 1);
-	found1 = full_msg.find("=", 0);
-	full_msg.erase(0, found1 + 1);
+	found1 = full_msg.find("nom=", 0);
+	full_msg.erase(0, found1);
 	found1 = full_msg.find("\r\n", 0);
-	_Post_cgi_FN = full_msg.substr(0, found1);
+	verbs = full_msg.substr(0, found1);
+	_Post_cgi_LN = set_params_file(verbs, "nom=", "&");
+	found1 = verbs.find("prenom=", 0);
+	verbs.erase(0, found1);
+	_Post_cgi_FN = set_params_file(verbs, "prenom=", "\0");
+
 	cgi_handle(6);
+	
 	std::cout << "post cgi content : " << full_msg << std::endl;
 	std::cout << "_Post_cgi_LN : " << _Post_cgi_LN << std::endl;
 	std::cout << "_Post_cgi_FN : " << _Post_cgi_FN << std::endl;
 	std::cout << "_Post_cgi_content_type : " << _Post_cgi_content_type << std::endl;
 	std::cout << "_Post_cgi_content_lenght : " << _Post_cgi_content_lenght << std::endl;
+
+	return (0);
 }
 
-std::string		Server::set_params_file(std::string full_msg, std::string to_find) {
+std::string		Server::set_params_file(std::string full_msg, std::string to_find, std::string to_find2) {
 
 	size_t found;
 	std::string result;
@@ -52,7 +54,7 @@ std::string		Server::set_params_file(std::string full_msg, std::string to_find) 
 	if (found == std::string::npos)
 		return (result);
 	full_msg.erase(0, found);
-	found = full_msg.find("\r\n", 0);
+	found = full_msg.find(to_find2, 0);
 	if (found == std::string::npos)
 		return (result);
 	result = full_msg.substr(to_find.size(), found - to_find.size());
@@ -69,10 +71,10 @@ int		Server::content_post_file(std::string full_msg) {
 	std::string boundary;
 	std::string content;
 	
-	boundary = set_params_file(full_msg, "boundary=");
+	boundary = set_params_file(full_msg, "boundary=", "\r\n");
 	if (boundary.empty())
 		return (print_logs("Client", "Boundary not found", 2), 1);
-	content_lenght = set_params_file(full_msg, "Content-Length: ");
+	content_lenght = set_params_file(full_msg, "Content-Length: ", "\r\n");
 	if (content_lenght.empty())
 		return (print_logs("Client", "Content lenght not found", 2), 1);
 	found1 = full_msg.find(boundary + "\r\n", 0);
@@ -86,14 +88,14 @@ int		Server::content_post_file(std::string full_msg) {
 	if (found2 == std::string::npos)
 		return (print_logs("Client", "Boundary problem (3)", 2), 1);
 	content = full_msg.substr(found1, found2 + boundary.length() + 4);
-	_Post_file_name = set_params_file(content, "filename=");
+	_Post_file_name = set_params_file(content, "filename=", "\r\n");
 	if (_Post_file_name.empty())
 		return (print_logs("Client", "File name not found", 2), 1);
 	if (_Post_file_name.at(0) == '\"')
 		_Post_file_name.erase(0, 1);
 	if (_Post_file_name.at(_Post_file_name.size() - 1) == '\"')
 		_Post_file_name.erase(_Post_file_name.size() - 1);
-	content_type = set_params_file(content, "Content-Type: ");
+	content_type = set_params_file(content, "Content-Type: ", "\r\n");
 	if (content_type.empty())
 		return (print_logs("Client", "Content type not found", 2), 1);
 	if (content_type != "text/plain")
@@ -101,7 +103,7 @@ int		Server::content_post_file(std::string full_msg) {
 	std::cout << "content_type : " << content_type << std::endl;
 	found1 = content.find("\r\n\r\n\r\n", 0);
 	if (found1 != std::string::npos)
-		return (print_logs("Client", "Empty file", 2), 1); // ici qd c'est empty file on peut return une error code diff
+		return (print_logs("Client", "Empty file", 2), 1); // ici qd c'est empty file on peut return une error code diff 400 bad request
 	found1 = content.find("\r\n\r\n", 0);
 	if (found1 == std::string::npos)
 		return (print_logs("Client", "Incorrect content format", 2), 1);
@@ -124,9 +126,15 @@ int		Server::set_content_post(std::string full_msg) {
 	
 	found1 = full_msg.find("boundary=", 0);
 	if (found1 >= 0)
-		content_post_file(full_msg);
+	{
+		if (content_post_file(full_msg) != 0)
+			return (1);
+	}
 	else
-		content_post_cgi(full_msg);
+	{
+		if (content_post_cgi(full_msg) != 0)
+			return (1);
+	}
 
 	return (0);
 }

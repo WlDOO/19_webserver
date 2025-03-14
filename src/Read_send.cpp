@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 13:35:52 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/13 16:57:41 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/14 16:41:14 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,10 @@ std::string	Server::html_request(int client_fd)
 	}
 	if (_Request_type == "POST")
 	{
-		return (html_response(client_fd, "page1_rep.html"));
+		if (_Error_post == 1)
+			return (html_response(client_fd, "page1_rep_fail.html"));
+		else
+			return (html_response(client_fd, "page1_rep.html"));
 	}
 
 	return (request_get(client_fd));

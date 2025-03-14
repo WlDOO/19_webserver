@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:12 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/13 17:10:36 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/14 17:12:26 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ class Server
 		std::string _Post_cgi_content_lenght;
 		bool		_Keep_alive;
 
+		int			_Error_post;
+
 		void				handleKeepAlive(const std::string &request);
 
 		//Server
@@ -96,8 +98,8 @@ class Server
 		std::string	request_post(int client_fd);
 		int			set_content_post(std::string full_msg);
 		int			content_post_file(std::string full_msg);
-		std::string	set_params_file(std::string full_msg, std::string to_find);
-		void		content_post_cgi(std::string full_msg);
+		std::string	set_params_file(std::string full_msg, std::string to_find, std::string to_find2);
+		int			content_post_cgi(std::string full_msg);
 		
 		~Server();
 };

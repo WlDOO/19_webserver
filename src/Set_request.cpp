@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 16:56:53 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/14 13:35:16 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/14 16:44:42 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	Server::set_request_http(std::string full_msg) {
 	found = verbs.find(" ", 0);
 	_Request_type = verbs.substr(0, found);
 	if (_Request_type == "POST")
-		set_content_post(full_msg);
+		_Error_post = set_content_post(full_msg);
 	verbs.erase(0, found);
 	_Request_content = verbs.substr(2, (verbs.size() - 3));
 	
