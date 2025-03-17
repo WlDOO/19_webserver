@@ -6,11 +6,12 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:31 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/12 15:51:24 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/17 20:53:20 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/Server.hpp"
+#include "../include/Config.hpp"
 
 Server::Server(const std::vector<int>& ports)
 {
@@ -130,10 +131,21 @@ void Server::run() {
 
 int main(int ac, char **av)
 {
+	
 	(void)av;
-	(void)ac;
-
-
+	if (ac != 2)
+	{
+		std::cerr << "Args error" << std::endl;
+		//return (2);
+	}
+	// Config Conf;
+	// std::string str = av[1];
+	// std::string str2;
+	
+	// str2 = pick_file(str);
+	// Conf = Conf.Config_file(str2);
+	// if (parse_file(Conf) == 0)
+	// 	return 0;
 	std::vector<int> ports;  // les ports qu'on veut utiliser
 	ports.push_back(4242);
 	ports.push_back(8001);
