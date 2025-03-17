@@ -1,30 +1,55 @@
-POST /page1_rep.html HTTP/1.1
+Server created socket fd:3
+Server started on port 4242
+Server created socket fd:4
+Server started on port 8001
+New client connected: 6
+ full_msg is : GET /page1.html HTTP/1.1
 Host: localhost:4242
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:134.0) Gecko/20100101 Firefox/134.0
-Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-Accept-Language: en-US,en;q=0.5
-Accept-Encoding: gzip, deflate, br, zstd
-Content-Type: multipart/form-data; boundary=---------------------------41253122555902839163419087528
-Content-Length: 244
-Origin: http://localhost:4242
 Connection: keep-alive
-Referer: http://localhost:4242/page1.html
+sec-ch-ua: "Chromium";v="134", "Not:A-Brand";v="24", "Brave";v="134"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Windows"
 Upgrade-Insecure-Requests: 1
-Sec-Fetch-Dest: document
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8
+Sec-GPC: 1
+Accept-Language: fr-FR,fr;q=0.7
+Sec-Fetch-Site: none
 Sec-Fetch-Mode: navigate
-Sec-Fetch-Site: same-origin
 Sec-Fetch-User: ?1
-Priority: u=0, i
-
------------------------------41253122555902839163419087528
-Content-Disposition: form-data; name="fileUpload"; filename="test.txt"
-Content-Type: text/plain
-
-aalo
-bonjour
+Sec-Fetch-Dest: document
+Accept-Encoding: gzip, deflate, br, zstd
 
 
+[34m[Sender][0m : [32mGET page1.html[0m 
+ici <
+close fd :6
+New client connected: 6
+ici <
+close fd :6
+New client connected: 6
+ full_msg is : GET /index.html HTTP/1.1
+Host: localhost:4242
+Connection: keep-alive
+sec-ch-ua: "Chromium";v="134", "Not:A-Brand";v="24", "Brave";v="134"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Windows"
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8
+Sec-GPC: 1
+Accept-Language: fr-FR,fr;q=0.7
+Sec-Fetch-Site: none
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Accept-Encoding: gzip, deflate, br, zstd
 
-fin
 
------------------------------41253122555902839163419087528--
+[34m[Sender][0m : [32mGET index.html[0m 
+ici <
+close fd :6
+New client connected: 6
+ici <
+close fd :6
+New client connected: 6
