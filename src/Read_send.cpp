@@ -3,34 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   Read_send.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 13:35:52 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/14 16:41:14 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/17 17:11:41 by rafnasci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/Server.hpp"
-
-std::string Server::html_error_404(int client_fd) {
-
-	std::ifstream ifs("404.html", std::ios::binary);
-	std::ostringstream oss_html;
-	std::ostringstream oss;
-    oss_html << ifs.rdbuf();
-    std::string content = oss_html.str();
-	std::string res;
-
-    oss << "HTTP/1.1 404 Not Found\r\n";
-    oss << "Content-Type: text/html\r\n";
-    oss << "Content-Length: " << content.size() << "\r\n";
-    oss << "Connection: keep-alive\r\n";
-    oss << "\r\n";
-    oss << content << client_fd << std::endl;
-
-	ifs.close();
-    return oss.str();
-}
 
 std::string Server::html_response(int client_fd, std::string web_page) {
 
@@ -70,13 +50,15 @@ std::string	Server::html_request(int client_fd)
 		}
 		return (request_get(client_fd));
 	}
-	if (_Request_type == "POST")
+	else if (_Request_type == "POST")
 	{
 		if (_Error_post == 1)
 			return (html_response(client_fd, "page1_rep_fail.html"));
 		else
 			return (html_response(client_fd, "page1_rep.html"));
 	}
+	// else if (_Request_type == "DELETE")
+	// 	return (request_delete(client_fd));
 
 	return (request_get(client_fd));
 }

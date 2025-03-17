@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:12 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/14 17:12:26 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/17 17:33:23 by rafnasci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,13 @@ class Server
 		void 		read_data_from_socket(int i, struct epoll_event events[MAX_EVENTS]);
 		void		send_data_to_socket(int i, struct epoll_event events[MAX_EVENTS]);
 		std::string read_html_file(const std::string& file_path);
+		std::string html_error_400(int client_fd);
+		std::string html_error_403(int client_fd);
 		std::string html_error_404(int client_fd);
+		std::string html_error_405(int client_fd);
+		std::string html_error_408(int client_fd);
+		std::string html_error_413(int client_fd);
+		std::string html_error_500(int client_fd);
 		std::string html_response(int client_fd, std::string web_page);
 		void		set_request_type(char buffer[BUFSIZ]);
 		void		parsing_request_content(void);
@@ -96,6 +102,7 @@ class Server
 		int			request_custom_content(std::string full_msg);
 		std::string	request_get(int client_fd);
 		std::string	request_post(int client_fd);
+		std::string request_delete(int client_fd);
 		int			set_content_post(std::string full_msg);
 		int			content_post_file(std::string full_msg);
 		std::string	set_params_file(std::string full_msg, std::string to_find, std::string to_find2);

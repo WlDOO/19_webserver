@@ -9,7 +9,7 @@ RM = rm -rf
 SRC_DIR = src/
 OBJ_DIR = obj/
 
-SRC_FILES = Server Read_send Request_get Request_post Cgi_handle Logs Set_request
+SRC_FILES = Server Read_send Request_get Request_post Cgi_handle Logs Set_request Request_delete Errors
 
 OBJ = $(addprefix $(OBJ_DIR), $(addsuffix .o, $(SRC_FILES)))
 SRC = $(addprefix $(SRC_DIR), $(addsuffix .cpp, $(SRC_FILES)))
