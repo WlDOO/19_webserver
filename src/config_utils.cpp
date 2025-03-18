@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   config_utils.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 15:39:49 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/17 18:16:54 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/18 17:38:52 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,4 +162,32 @@ int	CheckServer_name(std::string str)
 			return 0;
 	}
 	return 1;
+}
+
+Config	setpath(Config Conf)
+{
+	std::string str;
+	for (size_t i = 0; i < Conf.Server_par.size(); i++)
+	{
+		if (!Conf.Server_par[i].index.empty())
+			Conf.Server_par[i].index = 	Conf.Server_par[i].root + Conf.Server_par[i].index;
+		for (size_t y = 0; y < Conf.Server_par[i].error_page_loc.size(); y++)
+		{
+			Conf.Server_par[i].error_page_loc[y] = Conf.Server_par[i].root + Conf.Server_par[i].error_page_loc[y];
+			std::cout << Conf.Server_par[i].error_page_loc[y] << " aa" <<std::endl;
+		}
+		for (size_t y = 0; y < Conf.Server_par[i].Loc.size(); y++)
+		{
+			std::string root = Conf.Server_par[i].Loc[y].root + Conf.Server_par[i].Loc[y].Location;
+			if (!Conf.Server_par[i].Loc[y].index.empty())
+				Conf.Server_par[i].Loc[y].index = root + Conf.Server_par[i].Loc[y].index;
+			if (!Conf.Server_par[i].Loc[y].redirect_url.empty())
+				Conf.Server_par[i].Loc[y].redirect_url = root + Conf.Server_par[i].Loc[y].redirect_url;
+			if (!Conf.Server_par[i].Loc[y].upload_store.empty())
+				Conf.Server_par[i].Loc[y].upload_store = root + Conf.Server_par[i].Loc[y].upload_store;
+			if (!Conf.Server_par[i].Loc[y].directory_listening.empty())
+				Conf.Server_par[i].Loc[y].directory_listening = root + Conf.Server_par[i].Loc[y].directory_listening;
+		}
+	}
+	return Conf;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:31 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/18 15:15:37 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/18 17:24:09 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,7 @@ int main(int ac, char **av)
 	Conf = Conf.Config_file(str2);
 	if (parse_file(Conf) == 0)
 		return 0;
+	std::cout << Conf.Server_par[0] .Loc[1].index << std::endl;
 	std::vector<int> ports;  // les ports qu'on veut utiliser
 	ports.push_back(4242);
 	ports.push_back(8001);

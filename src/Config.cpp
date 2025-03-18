@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Config.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:46:38 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/17 18:16:50 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/18 19:14:27 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ int	Config::CheckServer(std::string str)
 		return 4;
 	else if ((position = str.find("root ")) != std::string::npos)
 		return 5;
+	else if ((position = str.find("index ")) != std::string::npos)
+		return 6;
 	return -1;
 }
 
@@ -71,7 +73,6 @@ void	Config::SetServer(std::string str)
 	}
 	else if ((position = str.find("error_page ")) != std::string::npos)
 	{
-		std::cout << str << std::endl;
 		ss.str(str);
 		getline(ss, line, ' ');
 		getline(ss, line, ' ');
@@ -84,7 +85,16 @@ void	Config::SetServer(std::string str)
 		ss.str(str);
 		getline(ss, line, ' ');
 		getline(ss, line, ';');
+		if (line[line.size() - 1] != '/')
+			line.append("/");
 		this->Server_par[size_serv].root = line;
+	}
+	else if ((position = str.find("index ")) != std::string::npos)
+	{
+		ss.str(str);
+		getline(ss, line, ' ');
+		getline(ss, line, ';');
+		this->Server_par[size_serv].index = line;
 	}
 }
 
@@ -107,6 +117,8 @@ void	Config::SetLoc(std::string str)
 		ss.str(str);
 		getline(ss, line, ' ');
 		getline(ss, line, ';');
+		if (line[line.size() - 1] != '/')
+			line.append("/");
 		this->Server_par[size_serv].Loc[Server_par[size_serv].size - 1].root = line;
 	}
 	else if ((position = str.find("autoindex ")) != std::string::npos)
@@ -137,6 +149,13 @@ void	Config::SetLoc(std::string str)
 		getline(ss, line, ' ');
 		getline(ss, line, ';');
 		this->Server_par[size_serv].Loc[Server_par[size_serv].size - 1].upload_store = line;
+	}
+	else if ((position = str.find("script ")) != std::string::npos)
+	{
+		ss.str(str);
+		getline(ss, line, ' ');
+		getline(ss, line, ';');
+		this->Server_par[size_serv].Loc[Server_par[size_serv].size - 1].script = line;
 	}
 	else if ((position = str.find("cgi_path ")) != std::string::npos)
 	{
@@ -239,6 +258,7 @@ Config	Config::Config_file(std::string str2)
 				this->Server_par[size_serv].Loc[Server_par[size_serv].size - 1].root = this->Server_par[size_serv].root;
 		}
 	}
+	*this = setpath(*this);
 	return *this;
 }
 
@@ -248,14 +268,15 @@ int	parse_file(Config Conf)
 	{
 		if (CheckServer_name(Conf.Server_par[i].server_name) == 0)
 			return std::cerr << "Error: Server_par name is not good" << std::endl, 0;
-		if (Conf.Server_par[i].root.empty() || Conf.Server_par[i].server_name.empty() || Conf.Server_par[i].listen.size() == 0 || Conf.Server_par[i].Loc.size() == 0)
+		if (Conf.Server_par[i].index.empty() || Conf.Server_par[i].root.empty() || Conf.Server_par[i].server_name.empty() || Conf.Server_par[i].listen.size() == 0 || Conf.Server_par[i].Loc.size() == 0)
 			return std::cerr << "Error: Missing information in server block" << std::endl, 0;
+		std::cout << Conf.Server_par[i].root << std::endl;
 		if (!isDirectory(Conf.Server_par[i].root))
 			return std::cerr << "Error: Root directory does not exist" << std::endl, 0;
 		for (size_t y = 0; y < Conf.Server_par[i].error_page_loc.size(); y++)
 		{
-			std::cout << Conf.Server_par[i].error_page_loc[y] << std::endl;
 			if (!isDirectory(Conf.Server_par[i].error_page_loc[y]))
+
 				return std::cerr << "Error: Error page Localisation directory does not exist" << std::endl, 0;
 			if (atoi(Conf.Server_par[i].error_page_num[y].c_str()) < 100 || atoi(Conf.Server_par[i].error_page_num[y].c_str()) > 599)
 				return std::cerr << "Error: Error page number does not exist" << std::endl, 0;
@@ -276,11 +297,20 @@ int	parse_file(Config Conf)
 			if (!isDirectory(Conf.Server_par[i].Loc[y].root))
 				return std::cerr << "Error: Error page root directory does not exist" << std::endl, 0;
 			if (!isDirectory(Conf.Server_par[i].Loc[y].redirect_url))
+			{
+				std::cout << Conf.Server_par[i].Loc[y].redirect_url << std::endl;
 				return std::cerr << "Error: Error page redirect url directory does not exist" << std::endl, 0;
+			}
 			if (!isDirectory(Conf.Server_par[i].Loc[y].upload_store))
-				return std::cerr << "Error: Error page upload store directory does not exist" << std::endl ,0;
+				return std::cerr << "Error: Error page upload store directory does not exist" << std::endl, 0;
 			if (!Conf.Server_par[i].Loc[y].autoindex.empty() && Conf.Server_par[i].Loc[y].autoindex != "on" && Conf.Server_par[i].Loc[y].autoindex != "off")
 				return std::cerr << "Error: Error autoindex  does not exist" << std::endl, 0;
+			if (Conf.Server_par[i].Loc[y].autoindex == "off" && Conf.Server_par[i].Loc[y].index.empty())
+				return std::cerr << "Error: Error index  does not exist" << std::endl, 0;
+			else if (!isDirectory(Conf.Server_par[i].Loc[y].index))
+				return std::cerr << "Error: Error index  does not exist" << std::endl, 0;
+			if (!isDirectory(Conf.Server_par[i].Loc[y].script))
+					return std::cerr << "Error: Error script does not exist" << std::endl, 0;
 			for (size_t x = 0; x < Conf.Server_par[i].Loc[y].cgi_pass.size(); x++)
 			{
 				if (!isDirectory(Conf.Server_par[i].Loc[y].cgi_pass[x]))
