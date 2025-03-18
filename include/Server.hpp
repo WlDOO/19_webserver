@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
+/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:12 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/17 17:33:23 by rafnasci         ###   ########.fr       */
+/*   Updated: 2025/03/18 14:38:43 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,8 @@ class Server
 		void		print_logs(std::string user, std::string message, int code);
 		//Cgi
 		int			cgi_handle(int client_fd);
+		//Parse_request
+		int			parse_request(void);
 		//Read_send
 		void 		read_data_from_socket(int i, struct epoll_event events[MAX_EVENTS]);
 		void		send_data_to_socket(int i, struct epoll_event events[MAX_EVENTS]);

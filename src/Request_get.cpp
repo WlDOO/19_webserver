@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request_get.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
+/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 20:10:46 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/17 17:50:31 by rafnasci         ###   ########.fr       */
+/*   Updated: 2025/03/18 14:23:28 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,9 @@ std::string	Server::request_get(int client_fd) {
 	std::string web_page;
 	int i;
 	std::string	pages[] = {
+		"post/index_post.html",
+		"post/filepost.html",
+		"tours/index_tours.html",
 		"greeting_page.html",
 		"random_wikipedia.html",
 		"page1.html",
@@ -35,14 +38,14 @@ std::string	Server::request_get(int client_fd) {
 	{
 		std::cout << "ici <" << std::endl;
 		//web_page.assign(_Request_content, 1);
-		for(i = 0; i < 10; i++) {
+		for(i = 0; i < 13; i++) {
 			if (_Request_content == pages[i])
 			{
 				web_page = pages[i];
 				break ;
 			}
 		}
-		if (i == 10)
+		if (i == 13)
 			return (html_error_404(client_fd));
 		//std::cout << "la page web : " << web_page << std::endl;
 	}
