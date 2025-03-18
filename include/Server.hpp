@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:12 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/18 14:38:43 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/18 19:24:29 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 #include <netinet/in.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include "Config.hpp"
 #pragma once
 
 
@@ -48,7 +49,7 @@ uint16_t ntohs(uint16_t netshort);  //"Network to host short"
 class Server
 {
 	private:
-		
+		Config		Conf;
 		std::string _Request_type;
 		std::string _Request_content;
 		std::string _Request_html;
@@ -73,6 +74,7 @@ class Server
 
 	public:
 	
+		Server	SetConf(Config config);
 		Server(const std::vector<int>& ports);
 		
 		//Server

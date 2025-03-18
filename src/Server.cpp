@@ -6,7 +6,7 @@
 /*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:31 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/18 17:24:09 by najeuneh         ###   ########.fr       */
+/*   Updated: 2025/03/18 19:24:42 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,13 @@ void Server::run() {
     handleConnections();
 }
 
+Server	Server::SetConf(Config config)
+{
+	this->Conf = config;
+	return *this; 
+}
+
+
 int main(int ac, char **av)
 {
 	
@@ -152,6 +159,7 @@ int main(int ac, char **av)
 	ports.push_back(8001);
 	
 	Server serv(ports);
+	serv = serv.SetConf(Conf);
 	serv.run();
 	return (0);
 }
