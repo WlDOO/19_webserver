@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:12 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/19 13:38:48 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/19 15:12:26 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 #include <netinet/in.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include "Config.hpp"
 #pragma once
 
 
@@ -50,6 +51,7 @@ class Server
 	private:
 		
 		std::string _Script_path;
+		Config		Conf;
 		std::string _Request_type;
 		std::string _Request_content;
 		std::string _Request_html;
@@ -76,7 +78,8 @@ class Server
 
 	public:
 	
-		Server(const std::vector<int>& ports);
+		void	SetConf(Config config);
+		Server(const std::vector<int>& ports, Config conf);
 		
 		//Server
 		void run();

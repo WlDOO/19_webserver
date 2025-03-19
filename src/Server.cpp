@@ -6,18 +6,19 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:31 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/18 15:28:35 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/19 15:15:28 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/Server.hpp"
 #include "../include/Config.hpp"
 
-Server::Server(const std::vector<int>& ports)
+Server::Server(const std::vector<int>& ports, Config conf)
 {
 	for (size_t i = 0; i < ports.size(); i++)
    		setupSocket(ports[i]);
     setupEpoll();
+	SetConf(conf);
 }
 
 Server::~Server()
@@ -126,8 +127,15 @@ void Server::setupSocket(int port)
 }
 
 void Server::run() {
+	std::cout << Conf.Server_par[0].index << std::endl;
     handleConnections();
 }
+
+void	Server::SetConf(Config config)
+{
+	this->Conf = config;
+}
+
 
 int main(int ac, char **av)
 {
@@ -138,19 +146,20 @@ int main(int ac, char **av)
 		std::cerr << "Args error" << std::endl;
 		//return (2);
 	}
-	// Config Conf;
-	// std::string str = av[1];
-	// std::string str2;
+	Config Conf;
+	std::string str = av[1];
+	std::string str2;
 	
-	// str2 = pick_file(str);
-	// Conf = Conf.Config_file(str2);
-	// if (parse_file(Conf) == 0)
-	// 	return 0;
+	str2 = pick_file(str);
+	Conf = Conf.Config_file(str2);
+	if (parse_file(Conf) == 0)
+		return 0;
+	std::cout << Conf.Server_par[0] .Loc[1].index << std::endl;
 	std::vector<int> ports;  // les ports qu'on veut utiliser
 	ports.push_back(4242);
 	ports.push_back(8001);
 	
-	Server serv(ports);
+	Server serv(ports, Conf);
 	serv.run();
 	return (0);
 }
