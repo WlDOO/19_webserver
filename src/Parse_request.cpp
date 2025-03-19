@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:35:41 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/19 16:13:28 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/19 17:09:33 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,8 @@ int		Server::parse_request(void) {
 	}
 	if (index_loc == -1)
 		return (1);
+	if (!Conf.Server_par[0].Loc[index_loc].redirect_url.empty())
+		std::cout << Conf.Server_par[0].Loc[index_loc].redirect_url.empty() << std::endl;
 	std::cout << "la methode :" << Conf.Server_par[0].Loc[index_loc].methods[0] << std::endl;
 	std::cout << "la loc :" << loc << std::endl;
 	if (loc == "cgi-bin")
