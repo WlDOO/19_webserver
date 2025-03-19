@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 20:10:46 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/18 14:23:28 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/19 13:08:00 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,40 +15,15 @@
 std::string	Server::request_get(int client_fd) {
 
 	std::string web_page;
-	int i;
-	std::string	pages[] = {
-		"post/index_post.html",
-		"post/filepost.html",
-		"tours/index_tours.html",
-		"greeting_page.html",
-		"random_wikipedia.html",
-		"page1.html",
-		"page1_rep.html",
-		"page2.html",
-		"page3.html",
-		"page4.html",
-		"index.html",
-		"res.html",
-	};
 	if (_Request_content == "favicon.ico")
 		web_page = "favicon.png";
 	else if (_Request_content.empty() || _Request_content == "/")
 		web_page = "index.html";
 	else
-	{
-		std::cout << "ici <" << std::endl;
-		//web_page.assign(_Request_content, 1);
-		for(i = 0; i < 13; i++) {
-			if (_Request_content == pages[i])
-			{
-				web_page = pages[i];
-				break ;
-			}
-		}
-		if (i == 13)
-			return (html_error_404(client_fd));
-		//std::cout << "la page web : " << web_page << std::endl;
-	}
-	
+		web_page = _Request_content;
+	std::ifstream ifs(web_page.c_str(), std::ios::binary);
+	if (!ifs.is_open())
+		return (html_error_404(client_fd));
+
 	return (html_response(client_fd, web_page));
 }

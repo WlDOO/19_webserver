@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 20:18:50 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/14 17:23:20 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/19 14:40:51 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int		Server::content_post_file(std::string full_msg) {
 		return (print_logs("Client", "Boundary problem (2)", 2), 1);
 	found2 = full_msg.find(boundary + "--" + "\r\n", 0);
 	if (found2 == std::string::npos)
-		return (print_logs("Client", "Boundary problem (3)", 2), 1);
+		return (print_logs("Client", "Boundary problem (3, maybe curl)", 2), 1);
 	content = full_msg.substr(found1, found2 + boundary.length() + 4);
 	_Post_file_name = set_params_file(content, "filename=", "\r\n");
 	if (_Post_file_name.empty())
@@ -130,11 +130,13 @@ int		Server::set_content_post(std::string full_msg) {
 		if (content_post_file(full_msg) != 0)
 			return (1);
 	}
-	else
+	else if (_Is_cgi == 1)
 	{
 		if (content_post_cgi(full_msg) != 0)
 			return (1);
 	}
+	else
+		return (1);
 
 	return (0);
 }

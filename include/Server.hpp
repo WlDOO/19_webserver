@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:12 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/18 17:31:00 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/19 13:38:48 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ class Server
 {
 	private:
 		
+		std::string _Script_path;
 		std::string _Request_type;
 		std::string _Request_content;
 		std::string _Request_html;
@@ -61,6 +62,8 @@ class Server
 		bool		_Keep_alive;
 
 		int			_Error_post;
+		int			_Error_flag;
+		int			_Is_cgi;
 
 		void				handleKeepAlive(const std::string &request);
 
@@ -97,11 +100,11 @@ class Server
 		std::string html_error_413(int client_fd);
 		std::string html_error_500(int client_fd);
 		std::string html_response(int client_fd, std::string web_page);
-		void		set_request_type(char buffer[BUFSIZ]);
+		int			set_request_type(char buffer[BUFSIZ]);
 		void		parsing_request_content(void);
 		std::string	html_request(int client_fd);
-		void		set_request_http(std::string sender_msg);
-		void		set_request_custom(std::string sender_msg);
+		int			set_request_http(std::string sender_msg);
+		int			set_request_custom(std::string sender_msg);
 		int			request_custom_type(std::string full_msg);
 		int			request_custom_content(std::string full_msg);
 		std::string	request_get(int client_fd);

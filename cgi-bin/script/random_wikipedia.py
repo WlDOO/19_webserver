@@ -12,7 +12,7 @@ def get_random_wikipedia_url():
     return response.url
 
 # Path where the HTML files will be saved (update to your VSCode workspace directory)
-save_path = "/home/armitite/Cursus/19_webserver/"
+save_path = "/home/armitite/Cursus/19_webserver/cgi-bin/"
 
 # Ensure the save path exists
 os.makedirs(save_path, exist_ok=True)

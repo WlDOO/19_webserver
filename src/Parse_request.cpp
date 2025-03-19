@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:35:41 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/18 17:39:04 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/19 12:35:47 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,15 @@ int		Server::check_cgi(void) {
 	ext = _Request_content.substr(found, _Request_content.size() - found);
 	std::cout << "ext_tmp : " << ext_tmp << std::endl;
 	std::cout << "ext : " << ext << std::endl;
-	if (ext != ext_tmp)
+	if (ext == ext_tmp)
+	{
+		_Script_path = _Request_content;
+		_Is_cgi = 1;
+		std::cout << "alors : " << _Is_cgi << " + " << _Script_path << std::endl;
 		return (1);
+	}
+	if (ext == ".html")
+		return (2);
 	
 	return (0);
 }

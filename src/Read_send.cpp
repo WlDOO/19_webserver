@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Read_send.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
+/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 13:35:52 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/17 17:11:41 by rafnasci         ###   ########.fr       */
+/*   Updated: 2025/03/19 15:04:05 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,20 @@ std::string Server::html_response(int client_fd, std::string web_page) {
 
 std::string	Server::html_request(int client_fd)
 {	
+	if (_Error_flag == 1)
+	{
+		_Error_flag = 0;
+		return (html_response(client_fd, "page1_rep_fail.html"));
+	}
 	if (_Request_type == "GET")
 	{
-		if (_Request_content.find("cgi", 0) != std::string::npos)
+		if (_Is_cgi == 1)
 		{
+			_Is_cgi = 0;
 			std::cout << "Test find cgi" << std::endl;
 			if (cgi_handle(client_fd) == 1)
 				return (html_error_404(client_fd)); // Ici on doit envoyer error 400, bad request
-			return (html_response(client_fd, "random_wikipedia.html"));
+			return (html_response(client_fd, "cgi-bin/random_wikipedia.html"));
 		}
 		return (request_get(client_fd));
 	}
@@ -151,7 +157,8 @@ void Server::read_data_from_socket(int i, struct epoll_event events[MAX_EVENTS])
 		buffer[bytes_read] = '\0';
 		std::string request(buffer);
 		handleKeepAlive(request);
-		set_request_type(buffer);
+		if (set_request_type(buffer) == 1)
+			_Error_flag = 1;
 		send_data_to_socket(i, events);
     }
 }
