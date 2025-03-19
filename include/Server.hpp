@@ -6,7 +6,7 @@
 /*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:12 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/18 19:24:29 by najeuneh         ###   ########.fr       */
+/*   Updated: 2025/03/19 14:07:18 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,8 @@ class Server
 
 	public:
 	
-		Server	SetConf(Config config);
-		Server(const std::vector<int>& ports);
+		void	SetConf(Config config);
+		Server(const std::vector<int>& ports, Config conf);
 		
 		//Server
 		void run();

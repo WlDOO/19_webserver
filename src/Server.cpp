@@ -6,18 +6,19 @@
 /*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:31 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/18 19:24:42 by najeuneh         ###   ########.fr       */
+/*   Updated: 2025/03/19 14:10:06 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/Server.hpp"
 #include "../include/Config.hpp"
 
-Server::Server(const std::vector<int>& ports)
+Server::Server(const std::vector<int>& ports, Config conf)
 {
 	for (size_t i = 0; i < ports.size(); i++)
    		setupSocket(ports[i]);
     setupEpoll();
+	SetConf(conf);
 }
 
 Server::~Server()
@@ -129,10 +130,9 @@ void Server::run() {
     handleConnections();
 }
 
-Server	Server::SetConf(Config config)
+void	Server::SetConf(Config config)
 {
 	this->Conf = config;
-	return *this; 
 }
 
 
@@ -158,8 +158,7 @@ int main(int ac, char **av)
 	ports.push_back(4242);
 	ports.push_back(8001);
 	
-	Server serv(ports);
-	serv = serv.SetConf(Conf);
+	Server serv(ports, Conf);
 	serv.run();
 	return (0);
 }
