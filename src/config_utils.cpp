@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   config_utils.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
+/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 15:39:49 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/18 17:38:52 by najeuneh         ###   ########.fr       */
+/*   Updated: 2025/03/19 15:37:09 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,6 +187,8 @@ Config	setpath(Config Conf)
 				Conf.Server_par[i].Loc[y].upload_store = root + Conf.Server_par[i].Loc[y].upload_store;
 			if (!Conf.Server_par[i].Loc[y].directory_listening.empty())
 				Conf.Server_par[i].Loc[y].directory_listening = root + Conf.Server_par[i].Loc[y].directory_listening;
+			if (!Conf.Server_par[i].Loc[y].alias.empty())
+				Conf.Server_par[i].Loc[y].alias =  Conf.Server_par[i].root + Conf.Server_par[i].Loc[y].alias;
 		}
 	}
 	return Conf;

@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:31 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/19 15:15:28 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:16:33 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,6 @@ void Server::setupSocket(int port)
 }
 
 void Server::run() {
-	std::cout << Conf.Server_par[0].index << std::endl;
     handleConnections();
 }
 
@@ -144,7 +143,7 @@ int main(int ac, char **av)
 	if (ac != 2)
 	{
 		std::cerr << "Args error" << std::endl;
-		//return (2);
+		return (2);
 	}
 	Config Conf;
 	std::string str = av[1];
@@ -154,7 +153,7 @@ int main(int ac, char **av)
 	Conf = Conf.Config_file(str2);
 	if (parse_file(Conf) == 0)
 		return 0;
-	std::cout << Conf.Server_par[0] .Loc[1].index << std::endl;
+	std::cout << Conf.Server_par[0].Loc[1].index << std::endl;
 	std::vector<int> ports;  // les ports qu'on veut utiliser
 	ports.push_back(4242);
 	ports.push_back(8001);

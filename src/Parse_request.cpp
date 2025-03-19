@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:35:41 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/19 12:35:47 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:13:28 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int		Server::check_cgi(void) {
 	{
 		_Script_path = _Request_content;
 		_Is_cgi = 1;
-		std::cout << "alors : " << _Is_cgi << " + " << _Script_path << std::endl;
+		std::cout << "alos :" << _Is_cgi << "+ " << _Script_path << std::endl;
 		return (1);
 	}
 	if (ext == ".html")
@@ -59,24 +59,30 @@ int		Server::parse_request(void) {
 	std::string loc;
 	std::vector<std::string> myloc;
 	std::vector<std::string> methods;
+	size_t i;
+	int index_loc = -1;
 	
-	myloc.push_back("test");
-	myloc.push_back("alo");
-	myloc.push_back("post");
-	myloc.push_back("cgi-bin");
 	found = _Request_content.find("/");
 	if (found == std::string::npos)
 		return (1);
-	loc = _Request_content.substr(0, found);
-	if (check_vectors(myloc, loc) != 1)
-		return (print_logs("Client", "Location not found", 2), 404);
+	loc = _Request_content.substr(0, found + 1);
+	for (i = 0; i < Conf.Server_par[0].Loc.size(); i++) {
+
+		if (loc == Conf.Server_par[0].Loc[i].Location)
+		{
+			std::cout << "ok" << std::endl;
+			index_loc = i;
+		}
+		std::cout << "les loc" << Conf.Server_par[0].Loc[i].Location << std::endl;
+	}
+	if (index_loc == -1)
+		return (1);
+	std::cout << "la methode :" << Conf.Server_par[0].Loc[index_loc].methods[0] << std::endl;
 	std::cout << "la loc :" << loc << std::endl;
 	if (loc == "cgi-bin")
 		check_cgi();
 	//if (autoindex == "on") a faire
-	methods.push_back("GET");
-	methods.push_back("POST");
-	if (check_vectors(methods, _Request_type) != 1)
+	if (check_vectors(Conf.Server_par[0].Loc[index_loc].methods, _Request_type) != 1)
 		return (print_logs("Client", "Unothorized method", 2), 404);
 
 	return (0);

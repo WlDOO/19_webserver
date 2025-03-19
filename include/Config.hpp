@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Config.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
+/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 14:42:58 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/18 17:19:25 by najeuneh         ###   ########.fr       */
+/*   Updated: 2025/03/19 15:29:50 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ struct Location
 	std::string	autoindex;
 	std::string	redirect_url;
 	std::string	upload_store;
+	std::string	alias;
 	std::string	directory_listening; //
 	std::vector<std::string>	cgi_pass;
 	std::vector<std::string>	methods;

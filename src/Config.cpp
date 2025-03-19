@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Config.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
+/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:46:38 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/18 19:14:27 by najeuneh         ###   ########.fr       */
+/*   Updated: 2025/03/19 15:37:43 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,15 @@ void	Config::SetLoc(std::string str)
 		if (line[line.size() - 1] != '/')
 			line.append("/");
 		this->Server_par[size_serv].Loc[Server_par[size_serv].size - 1].root = line;
+	}
+	else if ((position = str.find("alias ")) != std::string::npos)
+	{
+		ss.str(str);
+		getline(ss, line, ' ');
+		getline(ss, line, ';');
+		if (line[line.size() - 1] != '/')
+			line.append("/");
+		this->Server_par[size_serv].Loc[Server_par[size_serv].size - 1].alias = line;
 	}
 	else if ((position = str.find("autoindex ")) != std::string::npos)
 	{
@@ -309,6 +318,8 @@ int	parse_file(Config Conf)
 				return std::cerr << "Error: Error index  does not exist" << std::endl, 0;
 			else if (!isDirectory(Conf.Server_par[i].Loc[y].index))
 				return std::cerr << "Error: Error index  does not exist" << std::endl, 0;
+			if (!isDirectory(Conf.Server_par[i].Loc[y].alias))
+					return std::cerr << "Error: Error alias does not exist" << std::endl, 0;			
 			if (!isDirectory(Conf.Server_par[i].Loc[y].script))
 					return std::cerr << "Error: Error script does not exist" << std::endl, 0;
 			for (size_t x = 0; x < Conf.Server_par[i].Loc[y].cgi_pass.size(); x++)
