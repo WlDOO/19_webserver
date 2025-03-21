@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:12 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/21 16:18:15 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/21 17:11:37 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ class Server
 		int			parse_request(void);
 		int			check_vectors(std::vector<std::string> vector, std::string to_find);
 		int			check_cgi(void);
-		std::string		handle_alias(std::string alias, std::string loc);
+		std::string	handle_alias(std::string alias, std::string loc);
 		//Read_send
 		void 		read_data_from_socket(int i, struct epoll_event events[MAX_EVENTS]);
 		void		send_data_to_socket(int i, struct epoll_event events[MAX_EVENTS]);

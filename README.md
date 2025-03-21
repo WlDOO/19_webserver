@@ -16,3 +16,18 @@ requete depuis le terminal + complete dans le nouveau file set_request, parsing 
 'cmd du file request.txt' > "text.txt", ensuite se co avec nc ip < "text.txt"
 
 Raf du coup si tu peux rajouter le delete, les pages html automatise en cas d'erreur et si t'as pas la flm peut etre faire les folders sinon je fais lundi
+
+------ 21 mars 2025 
+
+- En ce qui concerne le merge, on peut check du coup les locations. Si la loc existe, on peut checker les mthodes mais a voir encore qqes bugs je crois qd ca commence par GET seulement. 
+
+- Peut etre rajouter la fonction alias, deja fonctionelle mais besoin de rajouter les protections.
+
+- Ce que j'ai fais pour la cgi, si elle s'execute elle donne son output dans une pipe au lieu du stdout(1), execution comme dans Minishell.
+du coup je stock un file html + des header dans une std::string, je parse seulement le content type et je stock une reponse html dans une string qui est dans le .hpp --> std::string _Cgi_output;
+
+J'envoie donc cet output dans un html_response personnalise afin d'envoyer la reponse du cgi au client.
+
+- Besoin des reponses automatiques en cas de reponse ou d'erreur et je dois securiser le parser de la requete en fonction du config file (Cgi_parse.cpp)
+
+Peut etre pour les connexion avec nc ou bien avec curl, juste faire une securite pour qu'on les fasses pas et qu'on fasse tout via notre site et les requetes http classique.
