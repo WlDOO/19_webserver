@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 13:35:52 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/21 15:21:36 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/21 16:47:17 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,10 @@ std::string	Server::html_request(int client_fd)
 		if (_Error_post == 1)
 			return (html_response(client_fd, "page1_rep_fail.html"));
 		else if (_Is_cgi == 1)
+		{
+			_Is_cgi = 0;
 			return (html_response_cgi(client_fd));
+		}
 		else
 			return (html_response(client_fd, "page1_rep.html"));
 	}

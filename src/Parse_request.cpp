@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:35:41 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/21 14:01:05 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/21 16:27:38 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ int		Server::check_vectors(std::vector<std::string> vector, std::string to_find)
 	
 	for (i = 0; i < vector.size(); i++) {
 
-		//std::cout << vector[i] << std::endl;
 		if (to_find == vector[i])
 		{
 			std::cout << "ok" << std::endl;
@@ -49,6 +48,20 @@ int		Server::check_vectors(std::vector<std::string> vector, std::string to_find)
 	}
 
 	return (0);
+}
+
+std::string	Server::handle_alias(std::string alias, std::string loc) {
+
+	std::string res;
+	
+	res = _Request_content;
+	res.erase(0, loc.size());
+	std::cout << "le content : " << _Request_content << std::endl;
+	res = alias + res;
+	std::cout << "le res : " << res << std::endl;
+
+	return (res);
+
 }
 
 int		Server::parse_request(void) {
@@ -60,6 +73,11 @@ int		Server::parse_request(void) {
 	size_t i;
 	int index_loc = -1;
 	
+	if (_Request_content == "index.html" || _Request_content.empty())
+	{	
+		_Request_content = Conf.Server_par[0].index;
+		return (0);
+	}
 	found = _Request_content.find("/");
 	if (found == std::string::npos)
 		return (1);
@@ -79,7 +97,12 @@ int		Server::parse_request(void) {
 	// 	std::cout << Conf.Server_par[0].Loc[index_loc].redirect_url.empty() << std::endl;
 	//std::cout << "la methode :" << Conf.Server_par[0].Loc[index_loc].methods[0] << std::endl;
 	std::cout << "la loc :" << loc << std::endl;
-	if (loc == "cgi-bin/")
+	if (!Conf.Server_par[0].Loc[index_loc].alias.empty())
+	{
+		std::cout << Conf.Server_par[0].Loc[index_loc].alias << std::endl;
+		_Request_content = handle_alias(Conf.Server_par[0].Loc[index_loc].alias, loc);
+	}
+	if (loc == "cgi-bin/" || _Request_content.find("cgi-bin/") >= 0)
 		check_cgi();
 	//if (autoindex == "on") a faire
 	// if (check_vectors(Conf.Server_par[0].Loc[index_loc].methods, _Request_type) != 1)
