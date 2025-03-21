@@ -12,7 +12,7 @@ def get_random_wikipedia_url():
     return response.url
 
 # Path where the HTML files will be saved (update to your VSCode workspace directory)
-save_path = "/home/armitite/Cursus/19_webserver/cgi-bin/"
+save_path = "/home/armitite/Cursus/19_webserver/"
 
 # Ensure the save path exists
 os.makedirs(save_path, exist_ok=True)
@@ -20,11 +20,9 @@ os.makedirs(save_path, exist_ok=True)
 # Determine the HTTP method (GET or POST)
 request_method = os.environ.get("REQUEST_METHOD", "GET")
 
-# Prepare response headerprint("Content-Type: loakak")
-print("HTTP ")
-print("Content-Type: loakak")
-print("10000 status")
-print("\n\r\n\r")  # Blank line to indicate end of headers
+# Prepare response header
+print("Content-Type: text/html")
+print()  # Blank line to indicate end of headers
 
 # Handle GET request - Save random Wikipedia page to a file
 if request_method == "GET":
