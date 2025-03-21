@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:35:41 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/19 17:09:33 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/21 14:01:05 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,9 @@ int		Server::check_cgi(void) {
 	{
 		_Script_path = _Request_content;
 		_Is_cgi = 1;
-		std::cout << "alos :" << _Is_cgi << "+ " << _Script_path << std::endl;
+		std::cout << "alors :" << _Is_cgi << " + " << _Script_path << std::endl;
 		return (1);
 	}
-	if (ext == ".html")
-		return (2);
 	
 	return (0);
 }
@@ -73,19 +71,19 @@ int		Server::parse_request(void) {
 			std::cout << "ok" << std::endl;
 			index_loc = i;
 		}
-		std::cout << "les loc" << Conf.Server_par[0].Loc[i].Location << std::endl;
+		std::cout << "les loc : " << Conf.Server_par[0].Loc[i].Location << std::endl;
 	}
 	if (index_loc == -1)
 		return (1);
-	if (!Conf.Server_par[0].Loc[index_loc].redirect_url.empty())
-		std::cout << Conf.Server_par[0].Loc[index_loc].redirect_url.empty() << std::endl;
-	std::cout << "la methode :" << Conf.Server_par[0].Loc[index_loc].methods[0] << std::endl;
+	// if (!Conf.Server_par[0].Loc[index_loc].redirect_url.empty())
+	// 	std::cout << Conf.Server_par[0].Loc[index_loc].redirect_url.empty() << std::endl;
+	//std::cout << "la methode :" << Conf.Server_par[0].Loc[index_loc].methods[0] << std::endl;
 	std::cout << "la loc :" << loc << std::endl;
-	if (loc == "cgi-bin")
+	if (loc == "cgi-bin/")
 		check_cgi();
 	//if (autoindex == "on") a faire
-	if (check_vectors(Conf.Server_par[0].Loc[index_loc].methods, _Request_type) != 1)
-		return (print_logs("Client", "Unothorized method", 2), 404);
+	// if (check_vectors(Conf.Server_par[0].Loc[index_loc].methods, _Request_type) != 1)
+	// 	return (print_logs("Client", "Unothorized method", 2), 404);
 
 	return (0);
 }

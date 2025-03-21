@@ -6,11 +6,29 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 13:35:52 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/19 15:04:05 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/21 15:21:36 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/Server.hpp"
+
+std::string Server::html_response_cgi(int client_fd) {
+
+    std::string content = _Cgi_output;
+	std::string res;
+	std::ostringstream oss;
+
+	oss << "HTTP/1.1 200 OK\r\n";
+    oss << "Content-Type: text/html\r\n";
+    oss << "Content-Length: " << content.size() << "\r\n";
+	oss << "Connection: keep-alive\r\n";
+    oss << "\r\n";
+	oss << content << client_fd << std::endl;
+
+	res = oss.str();
+
+	return (res);
+}
 
 std::string Server::html_response(int client_fd, std::string web_page) {
 
@@ -52,7 +70,7 @@ std::string	Server::html_request(int client_fd)
 			std::cout << "Test find cgi" << std::endl;
 			if (cgi_handle(client_fd) == 1)
 				return (html_error_404(client_fd)); // Ici on doit envoyer error 400, bad request
-			return (html_response(client_fd, "cgi-bin/random_wikipedia.html"));
+			return (html_response_cgi(client_fd));
 		}
 		return (request_get(client_fd));
 	}
@@ -60,6 +78,8 @@ std::string	Server::html_request(int client_fd)
 	{
 		if (_Error_post == 1)
 			return (html_response(client_fd, "page1_rep_fail.html"));
+		else if (_Is_cgi == 1)
+			return (html_response_cgi(client_fd));
 		else
 			return (html_response(client_fd, "page1_rep.html"));
 	}

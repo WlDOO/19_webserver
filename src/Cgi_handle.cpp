@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 16:47:34 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/18 16:47:18 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/21 14:35:26 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ int	Server::cgi_handle(int client_fd) {
 	if (client_fd == -1)
 		return (1);
 	 std::stringstream ss;
+	 int fd[2];
 
     ss << "LAST_NAME=" << _Post_cgi_LN;
     std::string LAST_NAME = ss.str();
@@ -38,6 +39,8 @@ int	Server::cgi_handle(int client_fd) {
 	std::string CONTENT_TYPE = ss.str();
 	ss.str("");
 	
+	if (pipe(fd) == -1)
+		return (1);
     pid_t pid = fork();
 
     char *envp[] = 
@@ -56,7 +59,10 @@ int	Server::cgi_handle(int client_fd) {
 		return (1);
 	}
 	if (pid == 0) {
-	
+		
+		dup2(fd[1], 1);
+		close(fd[1]);
+		close(fd[0]);
 		std::string python_path = "/usr/bin/python3";
 		std::vector<char *> argv;
 		argv.push_back(const_cast<char *>(python_path.c_str()));
@@ -66,6 +72,30 @@ int	Server::cgi_handle(int client_fd) {
 		
 		std::cout << "Execve failed" << std::endl;
 		return (1);
+	}
+	else
+	{	
+		int bytes_read;
+		std::string output;
+		char buffer[BUFFER_SIZE] = {0};
+		dup2(fd[0], 0);
+		bytes_read = read(fd[0], buffer, BUFFER_SIZE - 1);
+		if (bytes_read == -1)
+		{
+			close(fd[1]);
+			close(fd[0]);
+			std::cout << "Probleme read de cgi" << std::endl;
+			return (1);
+		}
+		buffer[bytes_read] = '\0';
+		close(fd[1]);
+		close(fd[0]);
+		std::ostringstream oss_tmp;
+		oss_tmp << buffer;
+		output = oss_tmp.str();
+		std::cout << "Output du script : " << output << std::endl;
+
+		cgi_parse(output);
 	}
 
 	waitpid(pid, NULL, 0);

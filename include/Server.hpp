@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:12 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/19 15:12:26 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/21 14:56:23 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ class Server
 		std::string _Post_cgi_LN;
 		std::string _Post_cgi_content_type;
 		std::string _Post_cgi_content_lenght;
+		std::string _Cgi_output;
 		bool		_Keep_alive;
 
 		int			_Error_post;
@@ -87,6 +88,7 @@ class Server
 		void		print_logs(std::string user, std::string message, int code);
 		//Cgi
 		int			cgi_handle(int client_fd);
+		int			cgi_parse(std::string output);
 		//Parse_request
 		int			parse_request(void);
 		int			check_vectors(std::vector<std::string> vector, std::string to_find);
@@ -117,6 +119,7 @@ class Server
 		int			content_post_file(std::string full_msg);
 		std::string	set_params_file(std::string full_msg, std::string to_find, std::string to_find2);
 		int			content_post_cgi(std::string full_msg);
+		std::string html_response_cgi(int client_fd);
 		
 		~Server();
 };
