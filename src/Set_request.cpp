@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 16:56:53 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/21 15:39:47 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/22 12:42:44 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ int	Server::set_request_type(char buffer[BUFSIZ]) {
 	std::string full_msg;
 	std::string verbs;
 	size_t	found;
+	_Error_flag = 0;
 
 	oss_tmp << buffer;
 	sender_msg = oss_tmp.str();

@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:35:41 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/21 16:27:38 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/22 12:40:53 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ int		Server::check_cgi(void) {
 	
 	ext_tmp = ".py";
 	found = _Request_content.rfind(".");
+	if (found == std::string::npos)
+		return (1);
 	ext = _Request_content.substr(found, _Request_content.size() - found);
 	std::cout << "ext_tmp : " << ext_tmp << std::endl;
 	std::cout << "ext : " << ext << std::endl;
@@ -68,8 +70,6 @@ int		Server::parse_request(void) {
 
 	size_t found;
 	std::string loc;
-	std::vector<std::string> myloc;
-	std::vector<std::string> methods;
 	size_t i;
 	int index_loc = -1;
 	
@@ -79,8 +79,10 @@ int		Server::parse_request(void) {
 		return (0);
 	}
 	found = _Request_content.find("/");
+	std::cout << _Request_content << std::endl;
 	if (found == std::string::npos)
 		return (1);
+	std::cout << "ici" << std::endl;
 	loc = _Request_content.substr(0, found + 1);
 	for (i = 0; i < Conf.Server_par[0].Loc.size(); i++) {
 

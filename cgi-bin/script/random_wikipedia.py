@@ -51,7 +51,6 @@ elif request_method == "POST":
     </head>
     <body>
         <h1>Hello {last_name}, {first_name}, how are you?</h1>
-        <p><a href="/cgi-bin/random_wikipedia.py">Back to Random Page</a></p>
     </body>
     </html>
     """)

@@ -31,3 +31,9 @@ J'envoie donc cet output dans un html_response personnalise afin d'envoyer la re
 - Besoin des reponses automatiques en cas de reponse ou d'erreur et je dois securiser le parser de la requete en fonction du config file (Cgi_parse.cpp)
 
 Peut etre pour les connexion avec nc ou bien avec curl, juste faire une securite pour qu'on les fasses pas et qu'on fasse tout via notre site et les requetes http classique.
+
+---- 22 mars 2025
+
+https://hackmd.io/@laian/SJZHcOsmT?utm_source=preview-mode&utm_medium=rec
+
+Ca peut aider pour le server

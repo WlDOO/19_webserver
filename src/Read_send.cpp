@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 13:35:52 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/21 16:47:17 by armitite         ###   ########.fr       */
+/*   Updated: 2025/03/22 12:41:30 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,14 +60,13 @@ std::string	Server::html_request(int client_fd)
 	if (_Error_flag == 1)
 	{
 		_Error_flag = 0;
-		return (html_response(client_fd, "page1_rep_fail.html"));
+		return (html_error_404(client_fd));
 	}
 	if (_Request_type == "GET")
 	{
 		if (_Is_cgi == 1)
 		{
 			_Is_cgi = 0;
-			std::cout << "Test find cgi" << std::endl;
 			if (cgi_handle(client_fd) == 1)
 				return (html_error_404(client_fd)); // Ici on doit envoyer error 400, bad request
 			return (html_response_cgi(client_fd));
@@ -76,7 +75,7 @@ std::string	Server::html_request(int client_fd)
 	}
 	else if (_Request_type == "POST")
 	{
-		if (_Error_post == 1)
+		if (_Error_flag == 1)
 			return (html_response(client_fd, "page1_rep_fail.html"));
 		else if (_Is_cgi == 1)
 		{
@@ -84,7 +83,7 @@ std::string	Server::html_request(int client_fd)
 			return (html_response_cgi(client_fd));
 		}
 		else
-			return (html_response(client_fd, "page1_rep.html"));
+			return (request_get(client_fd));
 	}
 	// else if (_Request_type == "DELETE")
 	// 	return (request_delete(client_fd));
@@ -182,6 +181,7 @@ void Server::read_data_from_socket(int i, struct epoll_event events[MAX_EVENTS])
 		handleKeepAlive(request);
 		if (set_request_type(buffer) == 1)
 			_Error_flag = 1;
+		std::cout << "Error flag  : " << _Error_flag << std::endl;
 		send_data_to_socket(i, events);
     }
 }
