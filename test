@@ -3,25 +3,77 @@ Server started on port 4242
 Server created socket fd:4
 Server started on port 8001
 New client connected: 6
- full_msg is : GET /500.html HTTP/1.1
+ full_msg is : POST /delete HTTP/1.1
 Host: localhost:4242
 Connection: keep-alive
+Content-Length: 27
+Cache-Control: max-age=0
 sec-ch-ua: "Chromium";v="134", "Not:A-Brand";v="24", "Brave";v="134"
 sec-ch-ua-mobile: ?0
 sec-ch-ua-platform: "Windows"
+Origin: http://localhost:4242
+Content-Type: application/x-www-form-urlencoded
 Upgrade-Insecure-Requests: 1
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
 Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8
 Sec-GPC: 1
 Accept-Language: fr-FR,fr;q=0.7
-Sec-Fetch-Site: none
+Sec-Fetch-Site: same-origin
 Sec-Fetch-Mode: navigate
 Sec-Fetch-User: ?1
 Sec-Fetch-Dest: document
+Referer: http://localhost:4242/page4.html
 Accept-Encoding: gzip, deflate, br, zstd
 
+_method=DELETE&filename=DFS
+Request type: POST
+FULL MEsSAFE: POST /delete HTTP/1.1
+Host: localhost:4242
+Connection: keep-alive
+Content-Length: 27
+Cache-Control: max-age=0
+sec-ch-ua: "Chromium";v="134", "Not:A-Brand";v="24", "Brave";v="134"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Windows"
+Origin: http://localhost:4242
+Content-Type: application/x-www-form-urlencoded
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8
+Sec-GPC: 1
+Accept-Language: fr-FR,fr;q=0.7
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Referer: http://localhost:4242/page4.html
+Accept-Encoding: gzip, deflate, br, zstd
 
-[34m[Sender][0m : [32mGET 500.html[0m 
-ici <
+_method=DELETE&filename=DFSFULL MEsSAFE: POST /delete HTTP/1.1
+Host: localhost:4242
+Connection: keep-alive
+Content-Length: 27
+Cache-Control: max-age=0
+sec-ch-ua: "Chromium";v="134", "Not:A-Brand";v="24", "Brave";v="134"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Windows"
+Origin: http://localhost:4242
+Content-Type: application/x-www-form-urlencoded
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8
+Sec-GPC: 1
+Accept-Language: fr-FR,fr;q=0.7
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Referer: http://localhost:4242/page4.html
+Accept-Encoding: gzip, deflate, br, zstd
+
+_method=DELETE&filename=DFSFULL MEsSAFE: 
+
+_method=DELETE&filename=DFSTHE _REQUEST: DFS
+[34m[Sender][0m : [32mDELETE DFS[0m 
 close fd :6
 New client connected: 6

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request_post.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 20:18:50 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/14 17:23:20 by armitite         ###   ########.fr       */
+/*   Updated: 2025/04/02 19:02:03 by rafnasci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ std::string		Server::set_params_file(std::string full_msg, std::string to_find, 
 	std::string result;
 	
 	found = full_msg.find(to_find, 0);
+	std::cout << "FULL MEsSAFE: " << full_msg;
 	if (found == std::string::npos)
 		return (result);
 	full_msg.erase(0, found);

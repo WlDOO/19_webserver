@@ -6,7 +6,7 @@
 /*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 13:35:52 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/17 17:11:41 by rafnasci         ###   ########.fr       */
+/*   Updated: 2025/04/02 18:58:46 by rafnasci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,8 @@ std::string	Server::html_request(int client_fd)
 		else
 			return (html_response(client_fd, "page1_rep.html"));
 	}
-	// else if (_Request_type == "DELETE")
-	// 	return (request_delete(client_fd));
+	else if (_Request_type == "DELETE")
+		return (request_delete(client_fd));
 
 	return (request_get(client_fd));
 }
