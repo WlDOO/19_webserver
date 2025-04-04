@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:12 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/21 17:11:37 by armitite         ###   ########.fr       */
+/*   Updated: 2025/04/04 02:18:18 by rafnasci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,7 @@ class Server
 		std::string	request_get(int client_fd);
 		std::string	request_post(int client_fd);
 		std::string request_delete(int client_fd);
+		int			content_del(std::string full_msg);
 		int			set_content_post(std::string full_msg);
 		int			content_post_file(std::string full_msg);
 		std::string	set_params_file(std::string full_msg, std::string to_find, std::string to_find2);

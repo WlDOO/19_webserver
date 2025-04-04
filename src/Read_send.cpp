@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Read_send.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 13:35:52 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/22 12:41:30 by armitite         ###   ########.fr       */
+/*   Updated: 2025/04/04 02:40:15 by rafnasci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ std::string	Server::html_request(int client_fd)
 {	
 	if (_Error_flag == 1)
 	{
+		std::cout << "OUIOUI\n";
 		_Error_flag = 0;
 		return (html_error_404(client_fd));
 	}
@@ -85,8 +86,8 @@ std::string	Server::html_request(int client_fd)
 		else
 			return (request_get(client_fd));
 	}
-	// else if (_Request_type == "DELETE")
-	// 	return (request_delete(client_fd));
+	else if (_Request_type == "DELETE")
+		return (request_delete(client_fd));
 
 	return (request_get(client_fd));
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Set_request.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 16:56:53 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/22 12:42:44 by armitite         ###   ########.fr       */
+/*   Updated: 2025/04/04 03:14:43 by rafnasci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,13 @@ int	Server::request_custom_type(std::string full_msg) {
 	{
 		found = full_msg.find("POST", 0);
 		if (found == std::string::npos)
-			return (print_logs("Sender", " no request type", 2), 1);
+		{
+			found = full_msg.find("DELETE", 0);
+			if (found == std::string::npos)
+				return (print_logs("Sender", " no request type", 2), 1);
+			else
+				_Request_type = "DELETE";
+		}
 		else
 			_Request_type = "POST";
 	}
@@ -74,13 +80,28 @@ int	Server::set_request_http(std::string full_msg) {
 
 	std::string verbs;
 	size_t	found;
+	size_t del_method;
 	
 	found = full_msg.find("HTTP/1.1", 0);
 	verbs = full_msg.substr(0, found);
 	found = verbs.find(" ", 0);
 	_Request_type = verbs.substr(0, found);
-	verbs.erase(0, found);
-	_Request_content = verbs.substr(2, (verbs.size() - 3));
+	std::cout << "Request type: " << _Request_type << std::endl;
+	if (_Request_type == "POST")
+	{
+		del_method = full_msg.find("_method=DELETE");
+		if (del_method != std::string::npos)
+			_Error_post = content_del(full_msg);
+		else
+			_Error_post = set_content_post(full_msg);
+	}
+	if (_Request_type == "GET")
+	{
+		verbs.erase(0, found);
+		std::cout <<"SCHOUUUTTTT\n";
+		_Request_content = verbs.substr(2, (verbs.size() - 3));
+	}
+	std::cout << "THE _REQUEST: " << _Request_content << "ERRORRRRR: " << _Error_flag << std::endl;
 	
 	return (0);
 }

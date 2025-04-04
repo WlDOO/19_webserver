@@ -1,16 +1,19 @@
-Server created socket fd:3
+/home/rafnasci/Projects/19_webserver/errors/404.html aa
+/home/rafnasci/Projects/19_webserver/
+
+Server created socket fd:7
 Server started on port 4242
-Server created socket fd:4
+Server created socket fd:8
 Server started on port 8001
-New client connected: 6
- full_msg is : GET /500.html HTTP/1.1
+New client connected: 10
+ full_msg is : GET / HTTP/1.1
 Host: localhost:4242
 Connection: keep-alive
-sec-ch-ua: "Chromium";v="134", "Not:A-Brand";v="24", "Brave";v="134"
+sec-ch-ua: "Brave";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
 sec-ch-ua-mobile: ?0
 sec-ch-ua-platform: "Windows"
 Upgrade-Insecure-Requests: 1
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
 Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8
 Sec-GPC: 1
 Accept-Language: fr-FR,fr;q=0.7
@@ -21,7 +24,77 @@ Sec-Fetch-Dest: document
 Accept-Encoding: gzip, deflate, br, zstd
 
 
-[34m[Sender][0m : [32mGET 500.html[0m 
-ici <
-close fd :6
-New client connected: 6
+Request type: GET
+SCHOUUUTTTT
+THE _REQUEST: ERRORRRRR: 0
+[34m[Sender][0m : [32mGET [0m 
+Error flag  : 0
+SALAM 
+--------------------------------
+Request content:
+
+--------------------------------
+close fd :10
+New client connected: 10
+ full_msg is : GET /reve.html HTTP/1.1
+Host: localhost:4242
+Connection: keep-alive
+sec-ch-ua: "Brave";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Windows"
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8
+Sec-GPC: 1
+Accept-Language: fr-FR,fr;q=0.7
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Referer: http://localhost:4242/
+Accept-Encoding: gzip, deflate, br, zstd
+
+
+Request type: GET
+SCHOUUUTTTT
+THE _REQUEST: reve.htmlERRORRRRR: 0
+[34m[Sender][0m : [32mGET reve.html[0m 
+Error flag  : 0
+SALAM 
+--------------------------------
+Request content:
+reve.html
+--------------------------------
+close fd :10
+New client connected: 10
+ full_msg is : GET /index.html HTTP/1.1
+Host: localhost:4242
+Connection: keep-alive
+sec-ch-ua: "Brave";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Windows"
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8
+Sec-GPC: 1
+Accept-Language: fr-FR,fr;q=0.7
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Referer: http://localhost:4242/reve.html
+Accept-Encoding: gzip, deflate, br, zstd
+
+
+Request type: GET
+SCHOUUUTTTT
+THE _REQUEST: index.htmlERRORRRRR: 0
+[34m[Sender][0m : [32mGET /home/rafnasci/Projects/19_webserver/index.html[0m 
+Error flag  : 0
+SALAM 
+--------------------------------
+Request content:
+/home/rafnasci/Projects/19_webserver/index.html
+--------------------------------
+close fd :10
+New client connected: 10

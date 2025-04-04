@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Parse_request.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:35:41 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/22 12:40:53 by armitite         ###   ########.fr       */
+/*   Updated: 2025/04/04 04:33:41 by rafnasci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,21 +69,34 @@ std::string	Server::handle_alias(std::string alias, std::string loc) {
 int		Server::parse_request(void) {
 
 	size_t found;
+	// size_t start;
 	std::string loc;
 	size_t i;
 	int index_loc = -1;
 	
+
+	if (_Request_content == "asa.html" || _Request_content == "reve.html" || _Request_content.empty())
+		return (0);
 	if (_Request_content == "index.html" || _Request_content.empty())
 	{	
 		_Request_content = Conf.Server_par[0].index;
 		return (0);
 	}
+	if (_Request_type == "DELETE")
+		return (0);
 	found = _Request_content.find("/");
 	std::cout << _Request_content << std::endl;
 	if (found == std::string::npos)
 		return (1);
-	std::cout << "ici" << std::endl;
+	// start = found;
+	// found = _Request_content.substr(start + 1).find("/");
+	// std::cout << "Error flaggggggggggggg  : " << _Request_content.substr(start + 1) << std::endl;
+	// if (found != std::string::npos)
+	// 	loc = _Request_content.substr(start + 1, found + 1);
+	// else
+	// 	loc = _Request_content.substr(0, start + 1);
 	loc = _Request_content.substr(0, found + 1);
+	std::cout << "ici : " << loc << std::endl;
 	for (i = 0; i < Conf.Server_par[0].Loc.size(); i++) {
 
 		if (loc == Conf.Server_par[0].Loc[i].Location)
@@ -95,6 +108,9 @@ int		Server::parse_request(void) {
 	}
 	if (index_loc == -1)
 		return (1);
+	// if (found != std::string::npos)
+	// 	_Request_content = _Request_content.substr(start + 1);
+	// std::cout << "PECPEC: " << _Request_content << std::endl;
 	// if (!Conf.Server_par[0].Loc[index_loc].redirect_url.empty())
 	// 	std::cout << Conf.Server_par[0].Loc[index_loc].redirect_url.empty() << std::endl;
 	//std::cout << "la methode :" << Conf.Server_par[0].Loc[index_loc].methods[0] << std::endl;
@@ -104,7 +120,7 @@ int		Server::parse_request(void) {
 		std::cout << Conf.Server_par[0].Loc[index_loc].alias << std::endl;
 		_Request_content = handle_alias(Conf.Server_par[0].Loc[index_loc].alias, loc);
 	}
-	if (loc == "cgi-bin/" || _Request_content.find("cgi-bin/") >= 0)
+	if (loc == "cgi-bin/") // || _Request_content.find("cgi-bin/") >= 0)
 		check_cgi();
 	//if (autoindex == "on") a faire
 	// if (check_vectors(Conf.Server_par[0].Loc[index_loc].methods, _Request_type) != 1)

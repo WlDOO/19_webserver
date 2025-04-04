@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Config.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 14:42:58 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/19 15:29:50 by armitite         ###   ########.fr       */
+/*   Updated: 2025/04/04 02:28:39 by rafnasci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ struct Location
 	std::string					script;
 };
 
-struct Server_par
+struct Server_pars
 {
 	std::string index;
 	std::string	root;
@@ -63,7 +63,7 @@ class Config
 	private:
 		int	size_serv;
 	public:
-		std::vector<Server_par> Server_par;
+		std::vector<Server_pars> Server_par;
 		Config	Config_file(std::string str2);
 		int		CheckServer(std::string str);
 		void	SetServer(std::string str);
