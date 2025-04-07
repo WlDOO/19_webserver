@@ -144,10 +144,11 @@ int		Server::set_content_post(std::string full_msg) {
 std::string	Server::request_post(int client_fd) {
 
 	std::string web_page = "page1_res.html";
-	std::string dir = "/home/armitite/Cursus/19_webserver/tmp/";
+	std::string dir = "/home/adduser/WEbserv/tmp/";
 	std::string new_name = dir + _Post_file_name;
-	//std::cout << new_name << std::endl;
-	//std::cout << _Post_content << std::endl;
+	std::cout << "ici" << std::endl;
+	std::cout << new_name << std::endl;
+	std::cout << _Post_content << std::endl;
 
 	std::ofstream	ofs(new_name.c_str());
 	ofs << _Post_content;

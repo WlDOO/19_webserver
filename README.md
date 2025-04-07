@@ -62,7 +62,7 @@ ReadMe 07/04, ce qu'il reste a faire :
 
 - 6 :
 
-	Gerer la requete flavico, le truc du logo parce que a chaque fois qu'une requete se passe, il y a une requete flavico donc c'est bizarre. Je vais essayer de patch ca.
+	Gerer la requete flavico, le truc du logo parce que a chaque fois qu'une requete se passe, il y a une requete flavico donc c'est bizarre. Je vais essayer de patch ca. //Update, je pense avoire regle, pas besoin de check mtn
 
 Donc voila, le point 1 est surement le plus long, je vais essayer de m'occuper du point 3 et 4, en ce qui concerne les autres points, pour merge sans se marcher sur les pieds, je vais faire un espace dans le .hpp reserve pour les fonctions que qqn va rajouter et svp mettez des nouveaux fichiers histoire de merge de maniere rapide. 
 
