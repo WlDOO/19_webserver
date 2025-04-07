@@ -6,7 +6,7 @@
 /*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 16:56:53 by armitite          #+#    #+#             */
-/*   Updated: 2025/04/04 03:14:43 by rafnasci         ###   ########.fr       */
+/*   Updated: 2025/04/07 23:13:20 by rafnasci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,16 +137,16 @@ int	Server::set_request_type(char buffer[BUFSIZ]) {
 	// 	if (set_request_custom(full_msg) == 1)
 	// 		return (1);
 	// }
-	if (parse_request() == 1)
-		return (1);
 	if (_Request_type == "POST")
 	{
 		del_method = full_msg.find("_method=DELETE");
 		if (del_method != std::string::npos)
 			_Error_post = content_del(full_msg);
-		else
-			_Error_post = set_content_post(full_msg);
 	}
+	if (parse_request() == 1)
+		return (1);
+	if (_Request_type == "POST")
+		_Error_post = set_content_post(full_msg);
 	
 	print_logs("Sender", _Request_type + " " + _Request_content, 1);
 	

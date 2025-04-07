@@ -6,7 +6,7 @@
 /*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:12 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/04/07 22:11:50 by rafnasci         ###   ########.fr       */
+/*   Updated: 2025/04/07 22:58:59 by rafnasci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ class Server
 		std::string html_error(int code);
 		std::string	html_error_gen(int error_code, const std::string& msg);
 		std::string	get_msg(int code);
+		std::string	check_error_dir(int code);
 		//Flavico
 
 		//Server

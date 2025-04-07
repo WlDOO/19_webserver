@@ -6,7 +6,7 @@
 /*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 20:39:35 by rafnasci          #+#    #+#             */
-/*   Updated: 2025/04/07 21:58:51 by rafnasci         ###   ########.fr       */
+/*   Updated: 2025/04/07 23:14:31 by rafnasci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,11 @@ std::string Server::html_success(int code, const std::string& web_page) {
 }
 
 std::string Server::html_error(int code) {
-
-    std::string content = html_error_gen(code, get_msg(code));
+	
+	std::string content;
 	std::ostringstream oss;
 
+	content = check_error_dir(code);
 	oss << "HTTP/1.1 "<< code <<" OK\r\n";
     oss << "Content-Type: text/html\r\n";
     oss << "Content-Length: " << content.size() << "\r\n";
@@ -42,6 +43,26 @@ std::string Server::html_error(int code) {
 	oss << content;
 
 	return (oss.str());
+}
+
+std::string	Server::check_error_dir(int code) {
+	size_t				i;
+	std::ostringstream	oss;
+	std::ostringstream	tmp;
+	
+	tmp << code;
+	i = -1;
+	while (++i < Conf.Server_par[0].error_page_num.size()) {
+		if (Conf.Server_par[0].error_page_num[i] == tmp.str())
+			break;
+	}
+	if ((Conf.Server_par[0].error_page_num[i] == tmp.str())) {
+		std::ifstream ifs(Conf.Server_par[0].error_page_loc[i].c_str(), std::ios::binary);
+		oss << ifs.rdbuf();
+		return (oss.str());
+	}
+	else
+		return (html_error_gen(code, get_msg(code)));
 }
 
 std::string	Server::get_msg(int code) {

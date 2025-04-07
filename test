@@ -1,2 +1,41 @@
-/home/adduser/WEbserv/errors/404.html aa
-/home/adduser/WEbserv/
+/home/rafnasci/Projects/19_webserver/errors/404.html aa
+/home/rafnasci/Projects/19_webserver/errors/405.html aa
+/home/rafnasci/Projects/19_webserver/
+
+Server created socket fd:8
+Server started on port 4242
+Server created socket fd:9
+Server started on port 8001
+New client connected: 11
+ full_msg is : POST /delete HTTP/1.1
+Host: localhost:4242
+Connection: keep-alive
+Content-Length: 25
+Cache-Control: max-age=0
+sec-ch-ua: "Brave";v="135", "Not-A.Brand";v="8", "Chromium";v="135"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Windows"
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+Origin: http://localhost:4242
+Content-Type: application/x-www-form-urlencoded
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8
+Sec-GPC: 1
+Accept-Language: fr-FR,fr;q=0.7
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Referer: http://localhost:4242/post/filedel.html
+Accept-Encoding: gzip, deflate, br, zstd
+
+_method=DELETE&filename=f
+Request type: POST
+SCHOUUUTTTT
+THE _REQUEST: deleteERRORRRRR: 0
+[34m[Sender][0m : [32mDELETE tmp/f[0m 
+Error flag  : 0
+[34m[Client][0m : [31mDelete failed: No such file or directory[0m 
+SLDFKDSFDSF
+code : 500
+New client connected: 12
