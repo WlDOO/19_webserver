@@ -82,6 +82,12 @@ class Server
 		void	SetConf(Config config);
 		Server(const std::vector<int>& ports, Config conf);
 		
+		//Autoindex
+
+		//HtmlAuto
+
+		//Flavico
+
 		//Server
 		void run();
 		//Logs
