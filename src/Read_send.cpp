@@ -6,7 +6,7 @@
 /*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 13:35:52 by armitite          #+#    #+#             */
-/*   Updated: 2025/04/04 02:40:15 by rafnasci         ###   ########.fr       */
+/*   Updated: 2025/04/07 22:12:14 by rafnasci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ std::string	Server::html_request(int client_fd)
 	{
 		std::cout << "OUIOUI\n";
 		_Error_flag = 0;
-		return (html_error_404(client_fd));
+		return (html_error(404));
 	}
 	if (_Request_type == "GET")
 	{
@@ -69,7 +69,7 @@ std::string	Server::html_request(int client_fd)
 		{
 			_Is_cgi = 0;
 			if (cgi_handle(client_fd) == 1)
-				return (html_error_404(client_fd)); // Ici on doit envoyer error 400, bad request
+				return (html_error(404)); // Ici on doit envoyer error 400, bad request
 			return (html_response_cgi(client_fd));
 		}
 		return (request_get(client_fd));
@@ -99,11 +99,6 @@ void Server::send_data_to_socket(int i, struct epoll_event events[MAX_EVENTS]){
 	
 	sender_fd = (events)[i].data.fd;
 	msg_to_send = html_request(sender_fd);
-	// std::cout << "----------------------------\n";
-	// std::cout <<"Request type :" << _Request_type << std::endl;
-	// std::cout <<"Request content :" << _Request_content << std::endl;
-	// std::cout << "MESSAGE TO SENDD :\n" << msg_to_send << std::endl;
-	// std::cout << "----------------------------\n";
 	status = send(sender_fd, msg_to_send.c_str(), strlen(msg_to_send.c_str()), 0);
 	if (status == -1) 
 	{
@@ -127,7 +122,6 @@ void Server::send_data_to_socket(int i, struct epoll_event events[MAX_EVENTS]){
     epoll_ctl(epoll_fd, EPOLL_CTL_MOD, events[i].data.fd, &event);
 	if (!_Keep_alive)
 	{
-		std::cout << "COOOUUUUUUUUUUUUTTTTTTTTTTTTTTTTTTTTTTTTTT\n";
 		close(sender_fd);
 		epoll_ctl(epoll_fd, EPOLL_CTL_DEL, sender_fd, NULL);
 	}

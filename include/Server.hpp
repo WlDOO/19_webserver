@@ -6,7 +6,7 @@
 /*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:12 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/04/04 02:18:18 by rafnasci         ###   ########.fr       */
+/*   Updated: 2025/04/07 22:11:50 by rafnasci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,10 @@ class Server
 		//Autoindex
 
 		//HtmlAuto
-
+		std::string html_success(int code, const std::string& web_page);
+		std::string html_error(int code);
+		std::string	html_error_gen(int error_code, const std::string& msg);
+		std::string	get_msg(int code);
 		//Flavico
 
 		//Server
@@ -104,13 +107,6 @@ class Server
 		void 		read_data_from_socket(int i, struct epoll_event events[MAX_EVENTS]);
 		void		send_data_to_socket(int i, struct epoll_event events[MAX_EVENTS]);
 		std::string read_html_file(const std::string& file_path);
-		std::string html_error_400(int client_fd);
-		std::string html_error_403(int client_fd);
-		std::string html_error_404(int client_fd);
-		std::string html_error_405(int client_fd);
-		std::string html_error_408(int client_fd);
-		std::string html_error_413(int client_fd);
-		std::string html_error_500(int client_fd);
 		std::string html_response(int client_fd, std::string web_page);
 		int			set_request_type(char buffer[BUFSIZ]);
 		void		parsing_request_content(void);

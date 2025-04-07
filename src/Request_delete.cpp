@@ -6,7 +6,7 @@
 /*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:58:09 by rafnasci          #+#    #+#             */
-/*   Updated: 2025/04/04 03:38:07 by rafnasci         ###   ########.fr       */
+/*   Updated: 2025/04/07 21:53:30 by rafnasci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,13 @@ std::string Server::request_delete(int client_fd)
 		else
 		{
 			print_logs("Client", "Delete failed: " + std::string(strerror(errno)), 2);
-			return (html_error_500(client_fd));
+			return (html_error(403));
 		}
 	}
 	else
 	{
 		print_logs("Client", "Delete failed: " + std::string(strerror(errno)), 2);
-		return (html_error_404(client_fd));
+		return (html_error(404));
 	}
 }
 
