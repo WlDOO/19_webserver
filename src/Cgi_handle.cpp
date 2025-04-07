@@ -66,7 +66,7 @@ int	Server::cgi_handle(int client_fd) {
 		std::string python_path = "/usr/bin/python3";
 		std::vector<char *> argv;
 		argv.push_back(const_cast<char *>(python_path.c_str()));
-		argv.push_back(const_cast<char *>("/home/armitite/Cursus/19_webserver/cgi-bin/script/random_wikipedia.py"));
+		argv.push_back(const_cast<char *>("/home/adduser/WEbserv/cgi-bin/script/random_wikipedia.py"));
         argv.push_back(NULL);
 		execve(python_path.c_str(), argv.data(), envp);
 		
