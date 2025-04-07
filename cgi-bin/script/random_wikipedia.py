@@ -6,7 +6,7 @@ import requests
 import cgitb
 cgitb.enable()
 
-# Function to fetch a random Wikipedia page URL
+# Function to fetch a random Wikipedia page URL'
 def get_random_wikipedia_url():
     response = requests.get("https://en.wikipedia.org/wiki/Special:Random")
     return response.url
