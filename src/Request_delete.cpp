@@ -6,7 +6,7 @@
 /*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:58:09 by rafnasci          #+#    #+#             */
-/*   Updated: 2025/04/07 21:53:30 by rafnasci         ###   ########.fr       */
+/*   Updated: 2025/04/07 22:20:02 by rafnasci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ std::string Server::request_delete(int client_fd)
 	std::string file_path;
 	std::string send;
 	
-	if (_Request_content.find("html/") == std::string::npos)
-		file_path = "html/" + _Request_content;  // changer "html/" par le nom du repertoire ou seront les trucs a delete
+	if (_Request_content.find("tmp/") == std::string::npos)
+		file_path = "tmp/" + _Request_content;  // changer "html/" par le nom du repertoire ou seront les trucs a delete
 	else
 		file_path = _Request_content;
 	
@@ -57,8 +57,8 @@ int		Server::content_del(std::string full_msg) {
 	found1 = full_msg.find("\r\n\r\n", 0);
 	full_msg.erase(0, found1);
 	_Request_content = set_params_file(full_msg, "filename=", "\0");
-	if (_Request_content.find("html/") == std::string::npos)
-		_Request_content = "html/" + _Request_content;  // changer "html/" par le nom du repertoire ou seront les trucs a delete
+	if (_Request_content.find("tmp/") == std::string::npos)
+		_Request_content = "tmp/" + _Request_content;  // changer "html/" par le nom du repertoire ou seront les trucs a delete
 		
 	
 	return (0);
