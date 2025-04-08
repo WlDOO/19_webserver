@@ -12,9 +12,10 @@
 
 #include "../include/Server.hpp"
 
-std::string	Server::request_get(int client_fd) {
+std::string	Server::request_get(int client_fd, int code) {
 
 	std::string web_page;
+	std::cout << client_fd << std::endl;
 	if (_Request_content == "favicon.ico")
 		web_page = "favicon.png";
 	else if (_Request_content.empty() || _Request_content == "/")
@@ -25,5 +26,5 @@ std::string	Server::request_get(int client_fd) {
 	if (!ifs.is_open())
 		return (html_error(404));
 
-	return (html_response(client_fd, web_page));
+	return (html_success(code, web_page));
 }

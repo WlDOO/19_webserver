@@ -73,47 +73,45 @@ int		Server::content_post_file(std::string full_msg) {
 	
 	boundary = set_params_file(full_msg, "boundary=", "\r\n");
 	if (boundary.empty())
-		return (print_logs("Client", "Boundary not found", 2), 1);
+		return (print_logs("Client", "Boundary not found", 2), 400);
 	content_lenght = set_params_file(full_msg, "Content-Length: ", "\r\n");
 	if (content_lenght.empty())
-		return (print_logs("Client", "Content lenght not found", 2), 1);
+		return (print_logs("Client", "Content lenght not found", 2), 411);
 	found1 = full_msg.find(boundary + "\r\n", 0);
 	if (found1 == std::string::npos)
-		return (print_logs("Client", "Boundary problem (1)", 2), 1);
+		return (print_logs("Client", "Boundary problem (1)", 2), 400);
 	full_msg.erase(0, found1 + boundary.size());
 	found1 = full_msg.find(boundary + "\r\n", 0);
 	if (found1 == std::string::npos)
-		return (print_logs("Client", "Boundary problem (2)", 2), 1);
+		return (print_logs("Client", "Boundary problem (2)", 2), 400);
 	found2 = full_msg.find(boundary + "--" + "\r\n", 0);
 	if (found2 == std::string::npos)
-		return (print_logs("Client", "Boundary problem (3, maybe curl)", 2), 1);
+		return (print_logs("Client", "Boundary problem (3, maybe curl)", 2), 400);
 	content = full_msg.substr(found1, found2 + boundary.length() + 4);
 	_Post_file_name = set_params_file(content, "filename=", "\r\n");
 	if (_Post_file_name.empty())
-		return (print_logs("Client", "File name not found", 2), 1);
+		return (print_logs("Client", "File name not found", 2), 400);
 	if (_Post_file_name.at(0) == '\"')
 		_Post_file_name.erase(0, 1);
 	if (_Post_file_name.at(_Post_file_name.size() - 1) == '\"')
 		_Post_file_name.erase(_Post_file_name.size() - 1);
 	content_type = set_params_file(content, "Content-Type: ", "\r\n");
 	if (content_type.empty())
-		return (print_logs("Client", "Content type not found", 2), 1);
+		return (print_logs("Client", "Content type not found", 2), 400);
 	if (content_type != "text/plain")
-		return (print_logs("Client", "Content type wrong format : " + content_type, 2), 1);
+		return (print_logs("Client", "Content type wrong format : " + content_type, 2), 415);
 	std::cout << "content_type : " << content_type << std::endl;
 	found1 = content.find("\r\n\r\n\r\n", 0);
 	if (found1 != std::string::npos)
-		return (print_logs("Client", "Empty file", 2), 1); // ici qd c'est empty file on peut return une error code diff 400 bad request
+		return (print_logs("Client", "Empty file", 2), 400); // ici qd c'est empty file on peut return une error code diff 400 bad request
 	found1 = content.find("\r\n\r\n", 0);
 	if (found1 == std::string::npos)
-		return (print_logs("Client", "Incorrect content format", 2), 1);
+		return (print_logs("Client", "Incorrect content format", 2), 400);
 	content.erase(0, found1 + 4);
 	found1 = content.find(boundary + "--" + "\r\n", 0);
 	_Post_content = content.substr(0, found1 - 5);
 
-	request_post(6);
-	
-	return (0);
+	return (request_post());
 }
 
 int		Server::set_content_post(std::string full_msg) {
@@ -127,8 +125,7 @@ int		Server::set_content_post(std::string full_msg) {
 	found1 = full_msg.find("boundary=", 0);
 	if (found1 >= 0)
 	{
-		if (content_post_file(full_msg) != 0)
-			return (1);
+		return (content_post_file(full_msg));
 	}
 	else if (_Is_cgi == 1)
 	{
@@ -141,9 +138,8 @@ int		Server::set_content_post(std::string full_msg) {
 	return (0);
 }
 
-std::string	Server::request_post(int client_fd) {
+int	Server::request_post(void) {
 
-	std::string web_page = "page1_res.html";
 	std::string dir = "/home/adduser/WEbserv/tmp/";
 	std::string new_name = dir + _Post_file_name;
 	std::cout << "ici" << std::endl;
@@ -154,5 +150,5 @@ std::string	Server::request_post(int client_fd) {
 	ofs << _Post_content;
 	ofs.close();
 	
-	return (html_response(client_fd, web_page));
+	return (201);
 }

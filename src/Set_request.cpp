@@ -80,29 +80,13 @@ int	Server::set_request_http(std::string full_msg) {
 
 	std::string verbs;
 	size_t	found;
-	//size_t del_method;
 	
 	found = full_msg.find("HTTP/1.1", 0);
 	verbs = full_msg.substr(0, found);
 	found = verbs.find(" ", 0);
 	_Request_type = verbs.substr(0, found);
 	std::cout << "Request type: " << _Request_type << std::endl;
-	// if (_Request_type == "POST")
-	// {
-	// 	del_method = full_msg.find("_method=DELETE");
-	// 	if (del_method != std::string::npos)
-	// 		_Error_post = content_del(full_msg);
-	// 	else
-	// 		_Error_post = set_content_post(full_msg);
-	// }
-	// if (_Request_type == "GET")
-	// {
-	// 	verbs.erase(0, found);
-	// 	std::cout <<"SCHOUUUTTTT\n";
-	// 	_Request_content = verbs.substr(2, (verbs.size() - 3));
-	// }
 	verbs.erase(0, found);
-	std::cout <<"SCHOUUUTTTT\n";
 	_Request_content = verbs.substr(2, (verbs.size() - 3));
 	std::cout << "THE _REQUEST: " << _Request_content << "ERRORRRRR: " << _Error_flag << std::endl;
 	
@@ -127,9 +111,7 @@ int	Server::set_request_type(char buffer[BUFSIZ]) {
 	std::cout << " full_msg is : " << full_msg << std::endl;
 	found = full_msg.find("HTTP/1.1", 0);
 	if (found == std::string::npos)
-	{
 		return (1);
-	}
 	if (set_request_http(full_msg) == 1)
 		return (1);
 	if (_Request_type == "POST")
@@ -141,7 +123,7 @@ int	Server::set_request_type(char buffer[BUFSIZ]) {
 	if (parse_request() == 1)
 		return (1);
 	if (_Request_type == "POST")
-		_Error_post = set_content_post(full_msg);
+		_Error_flag = set_content_post(full_msg);
 	
 	print_logs("Sender", _Request_type + " " + _Request_content, 1);
 	

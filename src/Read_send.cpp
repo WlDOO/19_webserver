@@ -57,7 +57,7 @@ std::string Server::html_response(int client_fd, std::string web_page) {
 
 std::string	Server::html_request(int client_fd)
 {	
-	if (_Error_flag == 1)
+	if (_Error_flag > 0)
 	{
 		std::cout << "OUIOUI\n";
 		_Error_flag = 0;
@@ -72,24 +72,24 @@ std::string	Server::html_request(int client_fd)
 				return (html_error(404)); // Ici on doit envoyer error 400, bad request
 			return (html_response_cgi(client_fd));
 		}
-		return (request_get(client_fd));
+		return (request_get(client_fd, 200));
 	}
 	else if (_Request_type == "POST")
 	{
-		if (_Error_flag == 1)
-			return (html_response(client_fd, "page1_rep_fail.html"));
+		if (_Error_flag > 201)
+			return (html_error(400));
 		else if (_Is_cgi == 1)
 		{
 			_Is_cgi = 0;
 			return (html_response_cgi(client_fd));
 		}
 		else
-			return (request_get(client_fd));
+			return (request_get(client_fd, 201));
 	}
 	else if (_Request_type == "DELETE")
 		return (request_delete(client_fd));
 
-	return (request_get(client_fd));
+	return (request_get(client_fd, 200));
 }
 void Server::send_data_to_socket(int i, struct epoll_event events[MAX_EVENTS]){
 

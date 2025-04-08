@@ -118,8 +118,8 @@ class Server
 		int			set_request_custom(std::string sender_msg);
 		int			request_custom_type(std::string full_msg);
 		int			request_custom_content(std::string full_msg);
-		std::string	request_get(int client_fd);
-		std::string	request_post(int client_fd);
+		std::string	request_get(int client_fd, int code);
+		int			request_post(void);
 		std::string request_delete(int client_fd);
 		int			content_del(std::string full_msg);
 		int			set_content_post(std::string full_msg);

@@ -14,17 +14,24 @@
 
 std::string Server::html_success(int code, const std::string& web_page) {
 	
+	std::ifstream ifs(web_page.c_str(), std::ios::binary);
+	std::ostringstream oss_html;
 	std::ostringstream oss;
+    oss_html << ifs.rdbuf();
+    std::string content = oss_html.str();
+	std::string res;
 
 	if (code == 200)
 		oss << "HTTP/1.1 "<< code <<" OK\r\n";
-	else
-	oss << "HTTP/1.1 "<< code <<" Created\r\n";
+	if (code == 201)
+		oss << "HTTP/1.1 "<< code <<" Created\r\n";
+	// else
+	// oss << "HTTP/1.1 "<< code <<" Created\r\n";
     oss << "Content-Type: text/html\r\n";
-    oss << "Content-Length: " << web_page.size() << "\r\n";
+    oss << "Content-Length: " << content.size() << "\r\n";
 	oss << "Connection: keep-alive\r\n";
     oss << "\r\n";
-	oss << web_page;
+	oss << content;
 
 	return (oss.str());
 }
