@@ -32,7 +32,7 @@ if request_method == "GET":
     <body>
         <h1>Here's a random Wikipedia page for you:</h1>
         <p><a href="{random_url}">{random_url}</a></p>
-        <p><a href="/cgi-bin/random_wikipedia.py">Get another random page</a></p>
+        <p><a href="/cgi-bin/script/random_wikipedia.py">Get another random page</a></p>
     </body>
     </html>
     """)

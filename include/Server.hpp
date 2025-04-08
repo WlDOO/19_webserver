@@ -50,6 +50,7 @@ class Server
 {
 	private:
 		
+		std::string _Script;
 		std::string _Script_path;
 		Config		Conf;
 		std::string _Request_type;

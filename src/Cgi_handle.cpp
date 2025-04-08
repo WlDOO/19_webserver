@@ -64,12 +64,12 @@ int	Server::cgi_handle(int client_fd) {
 		dup2(fd[1], 1);
 		close(fd[1]);
 		close(fd[0]);
-		std::string python_path = "/usr/bin/pytho3";
+		//std::string python_path = "/usr/bin/python3";
 		std::vector<char *> argv;
-		argv.push_back(const_cast<char *>(python_path.c_str()));
 		argv.push_back(const_cast<char *>(_Script_path.c_str()));
+		argv.push_back(const_cast<char *>(_Script.c_str()));
         argv.push_back(NULL);
-		if (execve(python_path.c_str(), argv.data(), envp) == -1)
+		if (execve(_Script_path.c_str(), argv.data(), envp) == -1)
 		{
 			std::cout << "Execve failed" << std::endl;
 			_exit(1);
