@@ -23,8 +23,8 @@ int		Server::check_cgi(int index_loc) {
 	ext = _Request_content.substr(found, _Request_content.size() - found);
 	if (check_vectors(Conf.Server_par[0].Loc[index_loc].cgi_extonsions, ext) == 1) {
 
-		_Script_path = Conf.Server_par[0].root + _Request_content;
-		//_Script_path = "Bad";
+		//_Script_path = Conf.Server_par[0].root + _Request_content;
+		_Script_path = "Bad";
 		_Is_cgi = 1;
 		std::cout << "alors :" << _Is_cgi << " + " << _Script_path << std::endl;
 		return (1);

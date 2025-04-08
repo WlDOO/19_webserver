@@ -16,8 +16,9 @@ int	Server::cgi_handle(int client_fd) {
 
 	if (client_fd == -1)
 		return (1);
-	 std::stringstream ss;
-	 int fd[2];
+	int status = 0;
+	std::stringstream ss;
+	int fd[2];
 
     ss << "LAST_NAME=" << _Post_cgi_LN;
     std::string LAST_NAME = ss.str();
@@ -63,18 +64,25 @@ int	Server::cgi_handle(int client_fd) {
 		dup2(fd[1], 1);
 		close(fd[1]);
 		close(fd[0]);
-		std::string python_path = "/usr/bin/python3";
+		std::string python_path = "/usr/bin/pytho3";
 		std::vector<char *> argv;
 		argv.push_back(const_cast<char *>(python_path.c_str()));
 		argv.push_back(const_cast<char *>(_Script_path.c_str()));
         argv.push_back(NULL);
-		execve(python_path.c_str(), argv.data(), envp);
-		
-		std::cout << "Execve failed" << std::endl;
-		return (1);
+		if (execve(python_path.c_str(), argv.data(), envp) == -1)
+		{
+			std::cout << "Execve failed" << std::endl;
+			_exit(1);
+		}
 	}
 	else
 	{	
+		waitpid(pid, &status, 0);
+		if (status != 0)
+		{
+			std::cout << "Status cgi : " << status << std::endl;
+			return (1);
+		}
 		int bytes_read;
 		std::string output;
 		char buffer[BUFFER_SIZE] = {0};
@@ -98,7 +106,6 @@ int	Server::cgi_handle(int client_fd) {
 		cgi_parse(output);
 	}
 
-	waitpid(pid, NULL, 0);
 	
 	return (0);
 }
