@@ -132,16 +132,11 @@ int	Server::set_request_type(char buffer[BUFSIZ]) {
 	}
 	if (set_request_http(full_msg) == 1)
 		return (1);
-	// else
-	// {
-	// 	if (set_request_custom(full_msg) == 1)
-	// 		return (1);
-	// }
 	if (_Request_type == "POST")
 	{
 		del_method = full_msg.find("_method=DELETE");
 		if (del_method != std::string::npos)
-			_Error_post = content_del(full_msg);
+			_Request_type = "DELETE";
 	}
 	if (parse_request() == 1)
 		return (1);

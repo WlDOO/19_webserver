@@ -102,7 +102,8 @@ class Server
 		//Parse_request
 		int			parse_request(void);
 		int			check_vectors(std::vector<std::string> vector, std::string to_find);
-		int			check_cgi(void);
+		int			check_cgi(int index_loc);
+		int			allowed_method(int index_loc);
 		std::string	handle_alias(std::string alias, std::string loc);
 		//Read_send
 		void 		read_data_from_socket(int i, struct epoll_event events[MAX_EVENTS]);

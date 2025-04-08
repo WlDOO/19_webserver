@@ -12,22 +12,19 @@
 
 #include "../include/Server.hpp"
 
-int		Server::check_cgi(void) {
+int		Server::check_cgi(int index_loc) {
 
 	std::size_t found;
 	std::string ext;
-	std::string ext_tmp;
 	
-	ext_tmp = ".py";
 	found = _Request_content.rfind(".");
 	if (found == std::string::npos)
 		return (1);
 	ext = _Request_content.substr(found, _Request_content.size() - found);
-	std::cout << "ext_tmp : " << ext_tmp << std::endl;
-	std::cout << "ext : " << ext << std::endl;
-	if (ext == ext_tmp)
-	{
-		_Script_path = _Request_content;
+	if (check_vectors(Conf.Server_par[0].Loc[index_loc].cgi_extonsions, ext) == 1) {
+
+		_Script_path = Conf.Server_par[0].root + _Request_content;
+		//_Script_path = "Bad";
 		_Is_cgi = 1;
 		std::cout << "alors :" << _Is_cgi << " + " << _Script_path << std::endl;
 		return (1);
@@ -66,6 +63,17 @@ std::string	Server::handle_alias(std::string alias, std::string loc) {
 
 }
 
+int		Server::allowed_method(int index_loc) {
+
+	if (check_vectors(Conf.Server_par[0].Loc[index_loc].methods, _Request_type) == 1)
+	{
+		std::cout << "Good method" << std::endl;
+		return (0);
+	}
+	std::cout << "Bad Method" << std::endl;
+	return (1);
+}
+
 int		Server::parse_request(void) {
 
 	size_t found;
@@ -88,13 +96,6 @@ int		Server::parse_request(void) {
 	std::cout << _Request_content << std::endl;
 	if (found == std::string::npos)
 		return (1);
-	// start = found;
-	// found = _Request_content.substr(start + 1).find("/");
-	// std::cout << "Error flaggggggggggggg  : " << _Request_content.substr(start + 1) << std::endl;
-	// if (found != std::string::npos)
-	// 	loc = _Request_content.substr(start + 1, found + 1);
-	// else
-	// 	loc = _Request_content.substr(0, start + 1);
 	loc = _Request_content.substr(0, found + 1);
 	std::cout << "ici : " << loc << std::endl;
 	for (i = 0; i < Conf.Server_par[0].Loc.size(); i++) {
@@ -103,10 +104,13 @@ int		Server::parse_request(void) {
 		{
 			std::cout << "ok" << std::endl;
 			index_loc = i;
+			break ;
 		}
 		std::cout << "les loc : " << Conf.Server_par[0].Loc[i].Location << std::endl;
 	}
 	if (index_loc == -1)
+		return (1);
+	if (allowed_method(index_loc) == 1)
 		return (1);
 	// if (found != std::string::npos)
 	// 	_Request_content = _Request_content.substr(start + 1);
@@ -121,7 +125,7 @@ int		Server::parse_request(void) {
 		_Request_content = handle_alias(Conf.Server_par[0].Loc[index_loc].alias, loc);
 	}
 	if (loc == "cgi-bin/") // || _Request_content.find("cgi-bin/") >= 0)
-		check_cgi();
+		check_cgi(index_loc);
 	//if (autoindex == "on") a faire
 	// if (check_vectors(Conf.Server_par[0].Loc[index_loc].methods, _Request_type) != 1)
 	// 	return (print_logs("Client", "Unothorized method", 2), 404);
