@@ -4,7 +4,7 @@ UPDATE 08/04 :
 
 - 2 : Problewme config file, Quand je mets au'une methode, par exemple : GET, et rien d'autre, ca ne se lance pas
 + dans cgi bin, si cgi_ext est vide ca lance, on devrait avoir une erreur pour ca
-
++ on a besoin par location, dans cgi pass et cgi extension, que 1 valeur, si 2 ou plus / 0 on lance pas
 
 ReadMe 07/04, ce qu'il reste a faire :
 
