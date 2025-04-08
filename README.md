@@ -1,3 +1,11 @@
+UPDATE 08/04 :
+
+- 1 : Je bosse sur le parsing de la requete ds une branche qui s'appelle lock in, je vais essayer de finir pour ce soir.
+
+- 2 : Problewme config file, Quand je mets au'une methode, par exemple : GET, et rien d'autre, ca ne se lance pas
++ dans cgi bin, si cgi_ext est vide ca lance, on devrait avoir une erreur pour ca
+
+
 ReadMe 07/04, ce qu'il reste a faire :
 
 - 1 :
