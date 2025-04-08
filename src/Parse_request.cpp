@@ -96,7 +96,7 @@ int		Server::parse_request(void) {
 	found = _Request_content.find("/");
 	std::cout << _Request_content << std::endl;
 	if (found == std::string::npos)
-		return (1);
+		return (404);
 	loc = _Request_content.substr(0, found + 1);
 	std::cout << "ici : " << loc << std::endl;
 	for (i = 0; i < Conf.Server_par[0].Loc.size(); i++) {

@@ -57,7 +57,7 @@ std::string Server::html_response(int client_fd, std::string web_page) {
 
 std::string	Server::html_request(int client_fd)
 {	
-	if (_Error_flag > 0)
+	if (_Error_flag > 201)
 	{
 		std::cout << "OUIOUI\n";
 		_Error_flag = 0;
@@ -174,8 +174,7 @@ void Server::read_data_from_socket(int i, struct epoll_event events[MAX_EVENTS])
 		buffer[bytes_read] = '\0';
 		std::string request(buffer);
 		handleKeepAlive(request);
-		if (set_request_type(buffer) == 1)
-			_Error_flag = 1;
+		_Error_flag = set_request_type(buffer);
 		std::cout << "Error flag  : " << _Error_flag << std::endl;
 		send_data_to_socket(i, events);
     }

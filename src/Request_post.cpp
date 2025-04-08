@@ -19,22 +19,35 @@ int		Server::content_post_cgi(std::string full_msg) {
 	
 	_Post_cgi_content_type = set_params_file(full_msg, "Content-Type: ", "\r\n");
 	if (_Post_cgi_content_type.empty())
-		return (print_logs("Client", "Cgi content type not found", 2), 1);
+		return (print_logs("Client", "Cgi content type not found", 2), 400);
 	_Post_cgi_content_lenght = set_params_file(full_msg, "Content-Length: ", "\r\n");
 	if (_Post_cgi_content_lenght.empty())
-		return (print_logs("Client", "Cgi content lenght not found", 2), 1);
+		return (print_logs("Client", "Cgi content lenght not found", 2), 411);
 	found1 = full_msg.find("\r\n\r\n", 0);
+	if (found1 == std::string::npos)
+		return (print_logs("Client", "Bad request (1)", 2), 400);
 	full_msg.erase(0, found1);
 	found1 = full_msg.find("nom=", 0);
+	if (found1 == std::string::npos)
+		return (print_logs("Client", "Bad data, missing 'nom'", 2), 400);
 	full_msg.erase(0, found1);
 	found1 = full_msg.find("\r\n", 0);
+	// if (found1 == std::string::npos)
+	// 	return (print_logs("Client", "Bad request (2)", 2), 400);
 	verbs = full_msg.substr(0, found1);
 	_Post_cgi_LN = set_params_file(verbs, "nom=", "&");
+	if (_Post_cgi_LN.empty())
+		return (print_logs("Client", "Cgi last name not found", 2), 400);
 	found1 = verbs.find("prenom=", 0);
+	if (found1 == std::string::npos)
+		return (print_logs("Client", "Bad request (3)", 2), 400);
 	verbs.erase(0, found1);
 	_Post_cgi_FN = set_params_file(verbs, "prenom=", "\0");
+	if (_Post_cgi_LN.empty())
+		return (print_logs("Client", "Cgi first name not found", 2), 400);
 
-	cgi_handle(6);
+	if (cgi_handle(6) != 0)
+		return (print_logs("Server", "Cgi failed execution", 2), 500);
 	
 	std::cout << "post cgi content : " << full_msg << std::endl;
 	std::cout << "_Post_cgi_LN : " << _Post_cgi_LN << std::endl;
@@ -42,7 +55,7 @@ int		Server::content_post_cgi(std::string full_msg) {
 	std::cout << "_Post_cgi_content_type : " << _Post_cgi_content_type << std::endl;
 	std::cout << "_Post_cgi_content_lenght : " << _Post_cgi_content_lenght << std::endl;
 
-	return (0);
+	return (201);
 }
 
 std::string		Server::set_params_file(std::string full_msg, std::string to_find, std::string to_find2) {
@@ -129,13 +142,10 @@ int		Server::set_content_post(std::string full_msg) {
 	}
 	else if (_Is_cgi == 1)
 	{
-		if (content_post_cgi(full_msg) != 0)
-			return (1);
+		return (content_post_cgi(full_msg));
 	}
-	else
-		return (1);
 
-	return (0);
+	return (400);
 }
 
 int	Server::request_post(void) {
@@ -147,6 +157,8 @@ int	Server::request_post(void) {
 	std::cout << _Post_content << std::endl;
 
 	std::ofstream	ofs(new_name.c_str());
+	if (!ofs.is_open())
+		return (500);
 	ofs << _Post_content;
 	ofs.close();
 	

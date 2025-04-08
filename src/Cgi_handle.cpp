@@ -106,6 +106,5 @@ int	Server::cgi_handle(int client_fd) {
 		cgi_parse(output);
 	}
 
-	
 	return (0);
 }

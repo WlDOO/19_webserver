@@ -82,9 +82,15 @@ int	Server::set_request_http(std::string full_msg) {
 	size_t	found;
 	
 	found = full_msg.find("HTTP/1.1", 0);
+	if (found == std::string::npos)
+		return (print_logs("Client", "Incorrect content format", 2), 400);
 	verbs = full_msg.substr(0, found);
 	found = verbs.find(" ", 0);
+	if (found == std::string::npos)
+		return (print_logs("Client", "Incorrect content format", 2), 400);
 	_Request_type = verbs.substr(0, found);
+	if (_Request_type != "GET" && _Request_type != "POST") 
+		return (print_logs("Client", "Unsupported method: " + _Request_type, 2), 405);
 	std::cout << "Request type: " << _Request_type << std::endl;
 	verbs.erase(0, found);
 	_Request_content = verbs.substr(2, (verbs.size() - 3));
@@ -100,20 +106,19 @@ int	Server::set_request_type(char buffer[BUFSIZ]) {
 	std::string full_msg;
 	std::string verbs;
 	size_t del_method;
-	size_t	found;
+	int		error;
 	_Error_flag = 0;
-
+	
+	error = 0;
 	oss_tmp << buffer;
 	sender_msg = oss_tmp.str();
 	full_msg.assign(sender_msg);
 	if (full_msg.find("favicon.ico") != std::string::npos)
 		return (0);
 	std::cout << " full_msg is : " << full_msg << std::endl;
-	found = full_msg.find("HTTP/1.1", 0);
-	if (found == std::string::npos)
-		return (1);
-	if (set_request_http(full_msg) == 1)
-		return (1);
+	error = set_request_http(full_msg);
+	if (set_request_http(full_msg) != 0)
+		return (error);
 	if (_Request_type == "POST")
 	{
 		del_method = full_msg.find("_method=DELETE");
@@ -121,11 +126,11 @@ int	Server::set_request_type(char buffer[BUFSIZ]) {
 			_Request_type = "DELETE";
 	}
 	if (parse_request() == 1)
-		return (1);
+		return (404);
 	if (_Request_type == "POST")
 		_Error_flag = set_content_post(full_msg);
 	
 	print_logs("Sender", _Request_type + " " + _Request_content, 1);
 	
-	return (0);
+	return (_Error_flag);
 }
