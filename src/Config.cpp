@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Config.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:46:38 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/19 15:37:43 by armitite         ###   ########.fr       */
+/*   Updated: 2025/04/09 15:18:48 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,15 +199,23 @@ void	Config::SetLoc(std::string str)
 		ss.str(str);
 		getline(ss, line, ' ');
 		getline(ss, line, ';');
+		int i = 0;
 		for (int y = 0; line[y]; y++)
 		{
 			if (line[y] == ' ' || line[y + 1] == '\0')
 			{
-				if (last_pos == 0)
-					this->Server_par[size_serv].Loc[Server_par[size_serv].size - 1].methods.push_back(line.substr(last_pos, y));
+				std::cout << "la" << std::endl;
+				if (line[y + 1] == '\0')
+				{
+					if (last_pos == 0)
+						this->Server_par[size_serv].Loc[Server_par[size_serv].size - 1].methods.push_back(line.substr(last_pos, y - last_pos + 1));
+					else
+						this->Server_par[size_serv].Loc[Server_par[size_serv].size - 1].methods.push_back(line.substr(last_pos + 1, y - last_pos));
+				}
 				else
-					this->Server_par[size_serv].Loc[Server_par[size_serv].size - 1].methods.push_back(line.substr(last_pos + 1, y - last_pos));
+					this->Server_par[size_serv].Loc[Server_par[size_serv].size - 1].methods.push_back(line.substr(last_pos, y - last_pos));
 				last_pos = y;
+				i++;
 			}
 		}
 	}
@@ -279,10 +287,11 @@ int	parse_file(Config Conf)
 			return std::cerr << "Error: Server_par name is not good" << std::endl, 0;
 		if (Conf.Server_par[i].index.empty() || Conf.Server_par[i].root.empty() || Conf.Server_par[i].server_name.empty() || Conf.Server_par[i].listen.size() == 0 || Conf.Server_par[i].Loc.size() == 0)
 			return std::cerr << "Error: Missing information in server block" << std::endl, 0;
-		std::cout << Conf.Server_par[i].root << std::endl;
-		if (!isDirectory(Conf.Server_par[i].root))
+		if (!isDirectory(Conf.Server_par[i].root)) {
+			std::cout << Conf.Server_par[i].root << std::endl;
 			return std::cerr << "Error: Root directory does not exist" << std::endl, 0;
-		for (size_t y = 0; y < Conf.Server_par[i].error_page_loc.size(); y++)
+		}
+			for (size_t y = 0; y < Conf.Server_par[i].error_page_loc.size(); y++)
 		{
 			if (!isDirectory(Conf.Server_par[i].error_page_loc[y]))
 
@@ -330,7 +339,9 @@ int	parse_file(Config Conf)
 			for (size_t x = 0; x < Conf.Server_par[i].Loc[y].methods.size(); x++)
 			{
 				if (Conf.Server_par[i].Loc[y].methods[x] != "GET" && Conf.Server_par[i].Loc[y].methods[x] != "POST" && Conf.Server_par[i].Loc[y].methods[x] != "DELETE")
+				{
 					return std::cerr << "Error: allow method does not exist" << std::endl, 0;
+				}
 			}
 			for (size_t x = 0; x < Conf.Server_par[i].Loc[y].cgi_extonsions.size(); x++)
 			{

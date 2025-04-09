@@ -4,7 +4,7 @@ Ton bloc location gère les requêtes faites sur /tours/ et applique plusieurs d
 
 location tours/ {
 	autoindex on;
-	allow_methods POST 	GET;
+	allow_methods GET;
 	index index.html;
 	alias docs/fusion_web;
 	return    abc/index1.html;
