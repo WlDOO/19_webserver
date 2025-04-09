@@ -6,7 +6,7 @@
 /*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:46:38 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/04/09 15:18:48 by najeuneh         ###   ########.fr       */
+/*   Updated: 2025/04/09 17:38:24 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,11 +177,11 @@ void	Config::SetLoc(std::string str)
 			if (line[y] == ' ' || line[y + 1] == '\0')
 			{
 				if (last_pos == 0)
-					this->Server_par[size_serv].Loc[Server_par[size_serv].size - 1].cgi_pass.push_back(line.substr(last_pos, y));
+					this->Server_par[size_serv].Loc[Server_par[size_serv].size - 1].cgi_pass = line.substr(last_pos, y);
 				else if (line[y + 1] == '\0')
-					this->Server_par[size_serv].Loc[Server_par[size_serv].size - 1].cgi_pass.push_back(line.substr(last_pos + 1, y - last_pos + 1));
+					this->Server_par[size_serv].Loc[Server_par[size_serv].size - 1].cgi_pass = line.substr(last_pos + 1, y - last_pos + 1);
 				else
-					this->Server_par[size_serv].Loc[Server_par[size_serv].size - 1].cgi_pass.push_back(line.substr(last_pos + 1, y - last_pos - 1));
+					this->Server_par[size_serv].Loc[Server_par[size_serv].size - 1].cgi_pass = line.substr(last_pos + 1, y - last_pos - 1);
 				last_pos = y;
 			}
 		}
@@ -199,7 +199,6 @@ void	Config::SetLoc(std::string str)
 		ss.str(str);
 		getline(ss, line, ' ');
 		getline(ss, line, ';');
-		int i = 0;
 		for (int y = 0; line[y]; y++)
 		{
 			if (line[y] == ' ' || line[y + 1] == '\0')
@@ -215,7 +214,6 @@ void	Config::SetLoc(std::string str)
 				else
 					this->Server_par[size_serv].Loc[Server_par[size_serv].size - 1].methods.push_back(line.substr(last_pos, y - last_pos));
 				last_pos = y;
-				i++;
 			}
 		}
 	}
@@ -230,11 +228,11 @@ void	Config::SetLoc(std::string str)
 			if (line[y] == ' ' || line[y + 1] == '\0')
 			{
 				if (last_pos == 0)
-					this->Server_par[size_serv].Loc[Server_par[size_serv].size - 1].cgi_extonsions.push_back(line.substr(last_pos, y));
+					this->Server_par[size_serv].Loc[Server_par[size_serv].size - 1].cgi_extonsions = line.substr(last_pos, y);
 				else if (line[y + 1] == '\0')
-					this->Server_par[size_serv].Loc[Server_par[size_serv].size - 1].cgi_extonsions.push_back(line.substr(last_pos + 1, y - last_pos + 1));
+					this->Server_par[size_serv].Loc[Server_par[size_serv].size - 1].cgi_extonsions = line.substr(last_pos + 1, y - last_pos + 1);
 				else
-					this->Server_par[size_serv].Loc[Server_par[size_serv].size - 1].cgi_extonsions.push_back(line.substr(last_pos + 1, y - last_pos - 1));
+					this->Server_par[size_serv].Loc[Server_par[size_serv].size - 1].cgi_extonsions = line.substr(last_pos + 1, y - last_pos - 1);
 				last_pos = y;
 			}
 		}
@@ -331,11 +329,8 @@ int	parse_file(Config Conf)
 					return std::cerr << "Error: Error alias does not exist" << std::endl, 0;			
 			if (!isDirectory(Conf.Server_par[i].Loc[y].script))
 					return std::cerr << "Error: Error script does not exist" << std::endl, 0;
-			for (size_t x = 0; x < Conf.Server_par[i].Loc[y].cgi_pass.size(); x++)
-			{
-				if (!isDirectory(Conf.Server_par[i].Loc[y].cgi_pass[x]))
-					return std::cerr << "Error: Error page cgi pass directory does not exist" << std::endl, 0;
-			}
+			if (!isDirectory(Conf.Server_par[i].Loc[y].cgi_pass))
+				return std::cerr << "Error: Error page cgi pass directory does not exist" << std::endl, 0;
 			for (size_t x = 0; x < Conf.Server_par[i].Loc[y].methods.size(); x++)
 			{
 				if (Conf.Server_par[i].Loc[y].methods[x] != "GET" && Conf.Server_par[i].Loc[y].methods[x] != "POST" && Conf.Server_par[i].Loc[y].methods[x] != "DELETE")
@@ -343,11 +338,8 @@ int	parse_file(Config Conf)
 					return std::cerr << "Error: allow method does not exist" << std::endl, 0;
 				}
 			}
-			for (size_t x = 0; x < Conf.Server_par[i].Loc[y].cgi_extonsions.size(); x++)
-			{
-				if (Conf.Server_par[i].Loc[y].cgi_extonsions[x] != ".py" && Conf.Server_par[i].Loc[y].cgi_extonsions[x] != ".js" && Conf.Server_par[i].Loc[y].cgi_extonsions[x] != ".sh")
-					return std::cerr << "Error: cgi extension does not exist" << std::endl, 0;
-			}
+			if (Conf.Server_par[i].Loc[y].cgi_extonsions != ".py" && Conf.Server_par[i].Loc[y].cgi_extonsions != ".js" && Conf.Server_par[i].Loc[y].cgi_extonsions != ".sh")
+				return std::cerr << "Error: cgi extension does not exist" << std::endl, 0;
 		}
 	}
 	return 1;
