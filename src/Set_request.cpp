@@ -44,6 +44,8 @@ int	Server::set_request_type(char buffer[BUFSIZ]) {
 	size_t del_method;
 	int		error;
 	_Http_code = 0;
+	_Is_autoindex = 0;
+	_Is_cgi = 0;
 	
 	error = 0;
 	oss_tmp << buffer;

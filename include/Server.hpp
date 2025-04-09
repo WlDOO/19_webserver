@@ -29,6 +29,7 @@
 #include <netinet/in.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <dirent.h>
 #include "Config.hpp"
 #pragma once
 
@@ -62,11 +63,13 @@ class Server
 		std::string _Post_cgi_LN;
 		std::string _Post_cgi_content_type;
 		std::string _Post_cgi_content_lenght;
+		std::string _Autoindex_output;
 		std::string _Cgi_output;
 		bool		_Keep_alive;
 
 		int			_Error_post;
 		int			_Http_code;
+		int			_Is_autoindex;
 		int			_Is_cgi;
 
 		void				handleKeepAlive(const std::string &request);
@@ -105,6 +108,7 @@ class Server
 		int			check_vectors(std::vector<std::string> vector, std::string to_find);
 		int			check_cgi(int index_loc);
 		int			check_autoindex(int index_loc, std::string loc);
+		int			generate_autoindex(std::string loc);
 		int			allowed_method(int index_loc);
 		std::string	handle_alias(std::string alias, std::string loc);
 		//Read_send
@@ -127,7 +131,7 @@ class Server
 		int			content_post_file(std::string full_msg);
 		std::string	set_params_file(std::string full_msg, std::string to_find, std::string to_find2);
 		int			content_post_cgi(std::string full_msg);
-		std::string html_response_cgi(int client_fd);
+		std::string html_outputs(int client_fd);
 		
 		~Server();
 };

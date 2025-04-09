@@ -12,6 +12,40 @@
 
 #include "../include/Server.hpp"
 
+int		Server::generate_autoindex(std::string loc) {
+
+	DIR *dir = opendir(loc.c_str());
+	if (!dir)
+		return (1);
+	std::string output;
+	output += "<!DOCTYPE html>\r\n";
+    output += "<html>\r\n<head>\r\n";
+    output += "<title>Index of " + loc + "</title>\r\n";
+    output += "<style>\r\n";
+    output += "body { font-family: sans-serif; margin: 2em; }\r\n";
+    output += "pre { background: #f8f8f8; padding: 1em; border-radius: 4px; }\r\n";
+    output += "a { text-decoration: none; color: #0366d6; }\r\n";
+    output += "a:hover { text-decoration: underline; }\r\n";
+    output += "</style>\r\n</head>\r\n";
+    output += "<body>\r\n";
+    output += "<h1>Index of " + loc + "</h1>\r\n<hr>\r\n<pre>\r\n";
+    output += "<a href=\"../\">../</a>\r\n";
+	struct dirent *entry;
+	while ((entry = readdir(dir)) != NULL) 
+	{
+    	if (!(strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0))
+		{
+			output += "<a href=\"" + loc + "\">" + entry->d_name + "</a>\r\n";
+		}
+	}
+	closedir(dir);
+	output += "</pre>\r\n<hr>\r\n</body>\r\n</html>\r\n";
+	_Autoindex_output = output;
+	std::cout << "html du autoindex : " << _Autoindex_output << std::endl;
+	
+	return (0);
+}
+
 int		Server::check_autoindex(int index_loc, std::string loc) {
 
 	if (_Request_content == loc)
@@ -24,7 +58,8 @@ int		Server::check_autoindex(int index_loc, std::string loc) {
 		}
 		if (Conf.Server_par[0].Loc[index_loc].autoindex == "on") {
 	
-			return (0); // ici generer la page autoindex
+			generate_autoindex(loc);
+			_Is_autoindex = 1;
 		}
 		else
 			return (403);

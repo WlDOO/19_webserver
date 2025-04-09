@@ -12,9 +12,14 @@
 
 #include "../include/Server.hpp"
 
-std::string Server::html_response_cgi(int client_fd) {
+std::string Server::html_outputs(int client_fd) {
 
-    std::string content = _Cgi_output;
+	std::string content;
+	if (_Is_autoindex == 1)
+		content = _Autoindex_output;
+	else
+    	content = _Cgi_output;
+	std::cout << "Cet output marche ? " << _Autoindex_output << std::endl;
 	std::string res;
 	std::ostringstream oss;
 
@@ -63,6 +68,10 @@ std::string	Server::html_request(int client_fd)
 		_Http_code = 0;
 		return (html_error(404));
 	}
+	if (_Is_autoindex == 1)
+	{
+		return (html_outputs(client_fd));
+	}
 	if (_Request_type == "GET")
 	{
 		if (_Is_cgi == 1)
@@ -70,7 +79,7 @@ std::string	Server::html_request(int client_fd)
 			_Is_cgi = 0;
 			if (cgi_handle(client_fd) == 1)
 				return (html_error(404)); // Ici on doit envoyer error 400, bad request
-			return (html_response_cgi(client_fd));
+			return (html_outputs(client_fd));
 		}
 		return (request_get(client_fd, 200));
 	}
@@ -81,7 +90,7 @@ std::string	Server::html_request(int client_fd)
 		else if (_Is_cgi == 1)
 		{
 			_Is_cgi = 0;
-			return (html_response_cgi(client_fd));
+			return (html_outputs(client_fd));
 		}
 		else
 			return (request_get(client_fd, 201));
