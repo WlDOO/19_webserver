@@ -66,7 +66,7 @@ class Server
 		bool		_Keep_alive;
 
 		int			_Error_post;
-		int			_Error_flag;
+		int			_Http_code;
 		int			_Is_cgi;
 
 		void				handleKeepAlive(const std::string &request);
@@ -104,6 +104,7 @@ class Server
 		int			parse_request(void);
 		int			check_vectors(std::vector<std::string> vector, std::string to_find);
 		int			check_cgi(int index_loc);
+		int			check_autoindex(int index_loc, std::string loc);
 		int			allowed_method(int index_loc);
 		std::string	handle_alias(std::string alias, std::string loc);
 		//Read_send

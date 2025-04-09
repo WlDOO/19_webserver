@@ -12,6 +12,27 @@
 
 #include "../include/Server.hpp"
 
+int		Server::check_autoindex(int index_loc, std::string loc) {
+
+	if (_Request_content == loc)
+	{
+		if (!(Conf.Server_par[0].Loc[index_loc].index.empty()))
+		{
+			_Request_content = Conf.Server_par[0].Loc[index_loc].index;
+			std::cout << "Req content dans autoindex : " << _Request_content << std::endl;
+			return (0);
+		}
+		if (Conf.Server_par[0].Loc[index_loc].autoindex == "on") {
+	
+			return (0); // ici generer la page autoindex
+		}
+		else
+			return (403);
+	}
+
+	return (0);
+}
+
 int		Server::check_cgi(int index_loc) {
 
 	std::size_t found;
@@ -78,7 +99,6 @@ int		Server::allowed_method(int index_loc) {
 int		Server::parse_request(void) {
 
 	size_t found;
-	// size_t start;
 	std::string loc;
 	size_t i;
 	int index_loc = -1;
@@ -110,15 +130,9 @@ int		Server::parse_request(void) {
 		std::cout << "les loc : " << Conf.Server_par[0].Loc[i].Location << std::endl;
 	}
 	if (index_loc == -1)
-		return (1);
+		return (404);
 	if (allowed_method(index_loc) == 1)
-		return (1);
-	// if (found != std::string::npos)
-	// 	_Request_content = _Request_content.substr(start + 1);
-	// std::cout << "PECPEC: " << _Request_content << std::endl;
-	// if (!Conf.Server_par[0].Loc[index_loc].redirect_url.empty())
-	// 	std::cout << Conf.Server_par[0].Loc[index_loc].redirect_url.empty() << std::endl;
-	//std::cout << "la methode :" << Conf.Server_par[0].Loc[index_loc].methods[0] << std::endl;
+		return (405);
 	std::cout << "la loc :" << loc << std::endl;
 	if (!Conf.Server_par[0].Loc[index_loc].alias.empty())
 	{
@@ -127,7 +141,7 @@ int		Server::parse_request(void) {
 	}
 	if (loc == "cgi-bin/") // || _Request_content.find("cgi-bin/") >= 0)
 		check_cgi(index_loc);
-	//if (autoindex == "on") a faire
+	check_autoindex(index_loc, loc);
 	// if (check_vectors(Conf.Server_par[0].Loc[index_loc].methods, _Request_type) != 1)
 	// 	return (print_logs("Client", "Unothorized method", 2), 404);
 

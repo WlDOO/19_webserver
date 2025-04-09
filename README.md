@@ -1,3 +1,10 @@
+UPDATE 09/04 :
+
+- 1 : Gros changement car on approche de la fin, _Error_flag devient _Html_code, car on va l'utiliser de maniere globales, c'est a dire qu'il aura la code http a envoyer au client, celui-ci est add durant le parsing en general et utilise dans Read_send
+
+- 2 : Rajout du check autoindex, je vais essayer de faire la page html si autoindex est off
+
+
 UPDATE 08/04 :
 
 - 1 : Je bosse sur le parsing de la requete ds une branche qui s'appelle lock in, je vais essayer de finir pour ce soir.

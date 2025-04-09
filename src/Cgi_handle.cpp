@@ -103,7 +103,8 @@ int	Server::cgi_handle(int client_fd) {
 		output = oss_tmp.str();
 		std::cout << "Output du script : " << output << std::endl;
 
-		cgi_parse(output);
+		if (cgi_parse(output) == 1)
+			return (500);
 	}
 
 	return (0);

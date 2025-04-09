@@ -57,10 +57,10 @@ std::string Server::html_response(int client_fd, std::string web_page) {
 
 std::string	Server::html_request(int client_fd)
 {	
-	if (_Error_flag > 201)
+	if (_Http_code > 201)
 	{
 		std::cout << "OUIOUI\n";
-		_Error_flag = 0;
+		_Http_code = 0;
 		return (html_error(404));
 	}
 	if (_Request_type == "GET")
@@ -76,7 +76,7 @@ std::string	Server::html_request(int client_fd)
 	}
 	else if (_Request_type == "POST")
 	{
-		if (_Error_flag > 201)
+		if (_Http_code > 201)
 			return (html_error(400));
 		else if (_Is_cgi == 1)
 		{
@@ -174,8 +174,8 @@ void Server::read_data_from_socket(int i, struct epoll_event events[MAX_EVENTS])
 		buffer[bytes_read] = '\0';
 		std::string request(buffer);
 		handleKeepAlive(request);
-		_Error_flag = set_request_type(buffer);
-		std::cout << "Error flag  : " << _Error_flag << std::endl;
+		_Http_code = set_request_type(buffer);
+		std::cout << "Error flag  : " << _Http_code << std::endl;
 		send_data_to_socket(i, events);
     }
 }
