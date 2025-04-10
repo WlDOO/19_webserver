@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Config.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
+/*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 14:42:58 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/04/04 02:28:39 by rafnasci         ###   ########.fr       */
+/*   Updated: 2025/04/09 16:02:54 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ struct Location
 	std::string	upload_store;
 	std::string	alias;
 	std::string	directory_listening; //
-	std::vector<std::string>	cgi_pass;
+	std::string	cgi_pass;
 	std::vector<std::string>	methods;
-	std::vector<std::string>	cgi_extonsions;
+	std::string	cgi_extonsions;
 	std::string					script;
 };
 

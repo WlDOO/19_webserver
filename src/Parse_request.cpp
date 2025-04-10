@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:35:41 by armitite          #+#    #+#             */
-/*   Updated: 2025/04/10 14:35:06 by armitite         ###   ########.fr       */
+/*   Updated: 2025/04/10 15:03:14 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,9 +77,9 @@ int		Server::check_cgi(int index_loc) {
 	if (found == std::string::npos)
 		return (1);
 	ext = _Request_content.substr(found, _Request_content.size() - found);
-	if (check_vectors(Conf.Server_par[0].Loc[index_loc].cgi_extonsions, ext) == 1) {
+	if (Conf.Server_par[0].Loc[index_loc].cgi_extonsions == ext) {
 
-		_Script_path = Conf.Server_par[0].Loc[index_loc].cgi_pass[0];
+		_Script_path = Conf.Server_par[0].Loc[index_loc].cgi_pass;
 		_Script = Conf.Server_par[0].root + _Request_content;
 		//_Script = "Bad";
 		_Is_cgi = 1;
@@ -176,7 +176,8 @@ int		Server::parse_request(void) {
 	}
 	if (loc == "cgi-bin/") // || _Request_content.find("cgi-bin/") >= 0)
 		check_cgi(index_loc);
-	check_autoindex(index_loc, loc);
+	if (check_autoindex(index_loc, loc) != 0)
+		return (403);
 	// if (check_vectors(Conf.Server_par[0].Loc[index_loc].methods, _Request_type) != 1)
 	// 	return (print_logs("Client", "Unothorized method", 2), 404);
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   config_utils.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 15:39:49 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/03/19 15:37:09 by armitite         ###   ########.fr       */
+/*   Updated: 2025/04/09 14:26:44 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,7 +174,6 @@ Config	setpath(Config Conf)
 		for (size_t y = 0; y < Conf.Server_par[i].error_page_loc.size(); y++)
 		{
 			Conf.Server_par[i].error_page_loc[y] = Conf.Server_par[i].root + Conf.Server_par[i].error_page_loc[y];
-			std::cout << Conf.Server_par[i].error_page_loc[y] << " aa" <<std::endl;
 		}
 		for (size_t y = 0; y < Conf.Server_par[i].Loc.size(); y++)
 		{
