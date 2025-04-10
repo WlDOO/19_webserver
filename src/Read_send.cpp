@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Read_send.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
+/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 13:35:52 by armitite          #+#    #+#             */
-/*   Updated: 2025/04/07 22:12:14 by rafnasci         ###   ########.fr       */
+/*   Updated: 2025/04/10 14:26:04 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,15 @@ std::string Server::html_outputs(int client_fd) {
 
 	std::string content;
 	if (_Is_autoindex == 1)
+	{
 		content = _Autoindex_output;
+		_Autoindex_output.clear();
+	}
 	else
+	{
     	content = _Cgi_output;
-	std::cout << "Cet output marche ? " << _Autoindex_output << std::endl;
+		_Cgi_output.clear();
+	}
 	std::string res;
 	std::ostringstream oss;
 
@@ -62,11 +67,13 @@ std::string Server::html_response(int client_fd, std::string web_page) {
 
 std::string	Server::html_request(int client_fd)
 {	
+
+	int error_cgi;
+	
+	error_cgi = 0;
 	if (_Http_code > 201)
 	{
-		std::cout << "OUIOUI\n";
-		_Http_code = 0;
-		return (html_error(404));
+		return (html_error(_Http_code));
 	}
 	if (_Is_autoindex == 1)
 	{
@@ -76,20 +83,20 @@ std::string	Server::html_request(int client_fd)
 	{
 		if (_Is_cgi == 1)
 		{
-			_Is_cgi = 0;
-			if (cgi_handle(client_fd) == 1)
-				return (html_error(404)); // Ici on doit envoyer error 400, bad request
+			error_cgi = cgi_handle(client_fd);
+			if (error_cgi != 0)
+				return (html_error(error_cgi));
 			return (html_outputs(client_fd));
 		}
 		return (request_get(client_fd, 200));
 	}
 	else if (_Request_type == "POST")
 	{
-		if (_Http_code > 201)
-			return (html_error(400));
-		else if (_Is_cgi == 1)
+		if (_Is_cgi == 1)
 		{
-			_Is_cgi = 0;
+			error_cgi = cgi_handle(client_fd);
+			if (error_cgi != 0)
+				return (html_error(error_cgi));
 			return (html_outputs(client_fd));
 		}
 		else

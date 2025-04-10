@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 16:56:53 by armitite          #+#    #+#             */
-/*   Updated: 2025/04/10 12:53:23 by armitite         ###   ########.fr       */
+/*   Updated: 2025/04/10 14:21:58 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,10 @@ int	Server::set_request_type(char buffer[BUFSIZ]) {
 	std::string verbs;
 	size_t del_method;
 	int		error;
+	
 	_Http_code = 0;
 	_Is_autoindex = 0;
 	_Is_cgi = 0;
-	
 	error = 0;
 	oss_tmp << buffer;
 	sender_msg = oss_tmp.str();
@@ -63,8 +63,8 @@ int	Server::set_request_type(char buffer[BUFSIZ]) {
 			_Request_type = "DELETE";
 	}
 	error = parse_request();
-	if (parse_request() == 1)
-		return (404);
+	if (error != 0)
+		return (error);
 	if (_Request_type == "POST")
 		_Http_code = set_content_post(full_msg);
 	

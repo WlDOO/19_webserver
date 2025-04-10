@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 16:47:34 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/21 14:35:26 by armitite         ###   ########.fr       */
+/*   Updated: 2025/04/10 14:25:04 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	Server::cgi_handle(int client_fd) {
 
 	if (client_fd == -1)
-		return (1);
+		return (500);
 	int status = 0;
 	std::stringstream ss;
 	int fd[2];
@@ -41,7 +41,7 @@ int	Server::cgi_handle(int client_fd) {
 	ss.str("");
 	
 	if (pipe(fd) == -1)
-		return (1);
+		return (500);
     pid_t pid = fork();
 
     char *envp[] = 
@@ -57,14 +57,13 @@ int	Server::cgi_handle(int client_fd) {
 	if (pid < 0) {
 		
 		std::cout << "Pid error cgi" << std::endl;
-		return (1);
+		return (500);
 	}
 	if (pid == 0) {
 		
 		dup2(fd[1], 1);
 		close(fd[1]);
 		close(fd[0]);
-		//std::string python_path = "/usr/bin/python3";
 		std::vector<char *> argv;
 		argv.push_back(const_cast<char *>(_Script_path.c_str()));
 		argv.push_back(const_cast<char *>(_Script.c_str()));
@@ -81,7 +80,7 @@ int	Server::cgi_handle(int client_fd) {
 		if (status != 0)
 		{
 			std::cout << "Status cgi : " << status << std::endl;
-			return (1);
+			return (500);
 		}
 		int bytes_read;
 		std::string output;
@@ -93,7 +92,7 @@ int	Server::cgi_handle(int client_fd) {
 			close(fd[1]);
 			close(fd[0]);
 			std::cout << "Probleme read de cgi" << std::endl;
-			return (1);
+			return (500);
 		}
 		buffer[bytes_read] = '\0';
 		close(fd[1]);
