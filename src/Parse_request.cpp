@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:35:41 by armitite          #+#    #+#             */
-/*   Updated: 2025/04/10 15:03:14 by armitite         ###   ########.fr       */
+/*   Updated: 2025/04/10 15:59:34 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ int		Server::generate_autoindex(std::string loc) {
 	{
     	if (!(strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0))
 		{
-			output += "<a href=\"" + loc + "\">" + entry->d_name + "</a>\r\n";
+			std::string name = entry->d_name;
+			output += "<a href=\"" + name + "\">" + entry->d_name + "</a>\r\n";
 		}
 	}
 	closedir(dir);
@@ -144,6 +145,7 @@ int		Server::parse_request(void) {
 	if (_Request_content == "index.html" || _Request_content.empty())
 	{	
 		_Request_content = Conf.Server_par[0].index;
+		_Request_type = "GET";
 		return (0);
 	}
 	if (_Request_type == "DELETE")
@@ -153,16 +155,13 @@ int		Server::parse_request(void) {
 	if (found == std::string::npos)
 		return (404);
 	loc = _Request_content.substr(0, found + 1);
-	std::cout << "ici : " << loc << std::endl;
 	for (i = 0; i < Conf.Server_par[0].Loc.size(); i++) {
 
 		if (loc == Conf.Server_par[0].Loc[i].Location)
 		{
-			std::cout << "ok" << std::endl;
 			index_loc = i;
 			break ;
 		}
-		std::cout << "les loc : " << Conf.Server_par[0].Loc[i].Location << std::endl;
 	}
 	if (index_loc == -1)
 		return (404);

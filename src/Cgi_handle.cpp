@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 16:47:34 by armitite          #+#    #+#             */
-/*   Updated: 2025/04/10 14:25:04 by armitite         ###   ########.fr       */
+/*   Updated: 2025/04/10 16:34:36 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ int	Server::cgi_handle(int client_fd) {
 
 	if (client_fd == -1)
 		return (500);
-	int status = 0;
 	std::stringstream ss;
 	int fd[2];
 
@@ -54,11 +53,8 @@ int	Server::cgi_handle(int client_fd) {
             NULL
     };
 
-	if (pid < 0) {
-		
-		std::cout << "Pid error cgi" << std::endl;
+	if (pid < 0) 
 		return (500);
-	}
 	if (pid == 0) {
 		
 		dup2(fd[1], 1);
@@ -69,42 +65,57 @@ int	Server::cgi_handle(int client_fd) {
 		argv.push_back(const_cast<char *>(_Script.c_str()));
         argv.push_back(NULL);
 		if (execve(_Script_path.c_str(), argv.data(), envp) == -1)
-		{
-			std::cout << "Execve failed" << std::endl;
 			_exit(1);
-		}
 	}
 	else
 	{	
-		waitpid(pid, &status, 0);
-		if (status != 0)
-		{
-			std::cout << "Status cgi : " << status << std::endl;
-			return (500);
-		}
-		int bytes_read;
-		std::string output;
-		char buffer[BUFFER_SIZE] = {0};
-		dup2(fd[0], 0);
-		bytes_read = read(fd[0], buffer, BUFFER_SIZE - 1);
-		if (bytes_read == -1)
-		{
-			close(fd[1]);
-			close(fd[0]);
-			std::cout << "Probleme read de cgi" << std::endl;
-			return (500);
-		}
-		buffer[bytes_read] = '\0';
 		close(fd[1]);
-		close(fd[0]);
-		std::ostringstream oss_tmp;
-		oss_tmp << buffer;
-		output = oss_tmp.str();
-		std::cout << "Output du script : " << output << std::endl;
+        int status;
+        time_t start = time(NULL);
+        int timeout_sec = 5;
 
-		if (cgi_parse(output) == 1)
-			return (500);
-	}
+        while (true) 
+		{
+            int waitpid_return = waitpid(pid, &status, WNOHANG);
+            if (waitpid_return == pid) 
+			{
+                if (WIFEXITED(status) && WEXITSTATUS(status) != 0) 
+				{
+                    close(fd[0]);
+                    return (500);
+                }
+                break;
+            } 
+			else if (waitpid_return == -1) 
+			{
+                close(fd[0]);
+                return 500;
+            }
+            if (time(NULL) - start >= timeout_sec) 
+			{
+                kill(pid, SIGKILL);
+                waitpid(pid, &status, 0);
+                close(fd[0]);
+                return (504);
+            }
+            usleep(100000);
+        }
+
+        std::string output;
+        char buffer[BUFFER_SIZE];
+        ssize_t bytes_read;
+
+        while ((bytes_read = read(fd[0], buffer, sizeof(buffer))) > 0) 
+		{
+            output.append(buffer, bytes_read);
+        }
+        close(fd[0]);
+        if (bytes_read == -1 || cgi_parse(output) == 1) 
+		{
+            return (500);
+        }
+    }
+
 
 	return (0);
 }
