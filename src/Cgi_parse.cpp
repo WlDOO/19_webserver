@@ -11,8 +11,36 @@
 /* ************************************************************************** */
 
 #include "../include/Server.hpp"
+#include "../include/Cgi.hpp"
 
-int		Server::cgi_parse(std::string output) {
+Cgi::Cgi() {
+
+	return ;
+}
+
+Cgi::~Cgi() {
+
+	return ;
+}
+
+void		Cgi::Set_fn(std::string fn) {
+
+	_Post_cgi_FN = fn;
+}
+void		Cgi::Set_ln(std::string ln) {
+
+	_Post_cgi_LN = ln;
+}
+void		Cgi::Set_content_type(std::string content_type) {
+
+	_Post_cgi_content_type = content_type;
+}
+void		Cgi::Set_content_lenght(std::string content_lenght) {
+
+	_Post_cgi_content_lenght = content_lenght;
+}
+
+int		Cgi::cgi_parse(std::string output, std::string &_Cgi_output) {
 
 	size_t found;
 	std::string Content_type;

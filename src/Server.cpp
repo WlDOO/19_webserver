@@ -12,8 +12,9 @@
 
 #include "../include/Server.hpp"
 #include "../include/Config.hpp"
+#include "../include/Cgi.hpp"
 
-Server::Server(const std::vector<int>& ports, Config conf)
+Server::Server(const std::vector<int>& ports, Config conf) : cgi(new Cgi())
 {
 	for (size_t i = 0; i < ports.size(); i++)
    		setupSocket(ports[i]);
@@ -26,6 +27,7 @@ Server::~Server()
 	for (size_t i = 0; i < server_fds.size(); i++)
    		close(server_fds[i]);
     close(epoll_fd);
+	delete cgi;
 }
 
 void Server::handleConnections() {

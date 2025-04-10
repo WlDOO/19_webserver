@@ -11,17 +11,22 @@
 /* ************************************************************************** */
 
 #include "../include/Server.hpp"
+#include "../include/Cgi.hpp"
 
 int		Server::content_post_cgi(std::string full_msg) {
 
 	size_t found1;
 	std::string verbs;
+	std::string content_type;
+	std::string content_lenght;
+	std::string last_name;
+	std::string first_name;
 	
-	_Post_cgi_content_type = set_params_file(full_msg, "Content-Type: ", "\r\n");
-	if (_Post_cgi_content_type.empty())
+	content_type = set_params_file(full_msg, "Content-Type: ", "\r\n");
+	if (content_type.empty())
 		return (print_logs("Client", "Cgi content type not found", 2), 400);
-	_Post_cgi_content_lenght = set_params_file(full_msg, "Content-Length: ", "\r\n");
-	if (_Post_cgi_content_lenght.empty())
+	content_lenght = set_params_file(full_msg, "Content-Length: ", "\r\n");
+	if (content_lenght.empty())
 		return (print_logs("Client", "Cgi content lenght not found", 2), 411);
 	found1 = full_msg.find("\r\n\r\n", 0);
 	if (found1 == std::string::npos)
@@ -31,29 +36,31 @@ int		Server::content_post_cgi(std::string full_msg) {
 	if (found1 == std::string::npos)
 		return (print_logs("Client", "Bad data, missing 'nom'", 2), 400);
 	full_msg.erase(0, found1);
-	found1 = atoi(_Post_cgi_content_lenght.c_str());
+	found1 = atoi(content_lenght.c_str());
 	if (found1 == 0)
 		return (print_logs("Client", "Bad request (2)", 2), 400);
 	verbs = full_msg.substr(0, found1);
-	_Post_cgi_LN = set_params_file(verbs, "nom=", "&");
-	if (_Post_cgi_LN.empty())
+	last_name = set_params_file(verbs, "nom=", "&");
+	if (last_name.empty())
 		return (print_logs("Client", "Cgi last name not found", 2), 400);
 	found1 = verbs.find("prenom=", 0);
 	if (found1 == std::string::npos)
 		return (print_logs("Client", "Bad request (3)", 2), 400);
 	verbs.erase(0, found1);
-	_Post_cgi_FN = set_params_file(verbs, "prenom=", "\0");
-	if (_Post_cgi_LN.empty())
+	first_name = set_params_file(verbs, "prenom=", "\0");
+	if (last_name.empty())
 		return (print_logs("Client", "Cgi first name not found", 2), 400);
-
-	if (cgi_handle(6) != 0)
-		return (print_logs("Server", "Cgi failed execution", 2), 500);
 	
+	cgi->Set_fn(first_name);
+	cgi->Set_ln(last_name);
+	cgi->Set_content_lenght(content_lenght);
+	cgi->Set_content_type(content_type);
+
 	std::cout << "post cgi content : " << full_msg << std::endl;
-	std::cout << "_Post_cgi_LN : " << _Post_cgi_LN << std::endl;
-	std::cout << "_Post_cgi_FN : " << _Post_cgi_FN << std::endl;
-	std::cout << "_Post_cgi_content_type : " << _Post_cgi_content_type << std::endl;
-	std::cout << "_Post_cgi_content_lenght : " << _Post_cgi_content_lenght << std::endl;
+	std::cout << "last_name : " << last_name << std::endl;
+	std::cout << "first_name : " << first_name << std::endl;
+	std::cout << "content_type : " << content_type << std::endl;
+	std::cout << "content_lenght : " << content_lenght << std::endl;
 
 	return (201);
 }

@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../include/Server.hpp"
+#include "../include/Cgi.hpp"
 
 std::string Server::html_outputs(int client_fd) {
 
@@ -83,7 +84,7 @@ std::string	Server::html_request(int client_fd)
 	{
 		if (_Is_cgi == 1)
 		{
-			error_cgi = cgi_handle(client_fd);
+			error_cgi = cgi->cgi_handle(_Request_type, _Script, _Script_path, _Cgi_output);
 			if (error_cgi != 0)
 				return (html_error(error_cgi));
 			return (html_outputs(client_fd));
@@ -94,7 +95,7 @@ std::string	Server::html_request(int client_fd)
 	{
 		if (_Is_cgi == 1)
 		{
-			error_cgi = cgi_handle(client_fd);
+			error_cgi = cgi->cgi_handle(_Request_type, _Script, _Script_path, _Cgi_output);
 			if (error_cgi != 0)
 				return (html_error(error_cgi));
 			return (html_outputs(client_fd));

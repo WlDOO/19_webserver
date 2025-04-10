@@ -11,11 +11,10 @@
 /* ************************************************************************** */
 
 #include "../include/Server.hpp"
+#include "../include/Cgi.hpp"
 
-int	Server::cgi_handle(int client_fd) {
+int	Cgi::cgi_handle(std::string const &Request_type, std::string const &Script, std::string const &Script_path, std::string &_Cgi_output) {
 
-	if (client_fd == -1)
-		return (500);
 	std::stringstream ss;
 	int fd[2];
 
@@ -27,7 +26,7 @@ int	Server::cgi_handle(int client_fd) {
     std::string FIRST_NAME = ss.str();
 	ss.str("");
 	
-	ss <<"REQUEST_METHOD=" << _Request_type;
+	ss <<"REQUEST_METHOD=" << Request_type;
 	std::string REQUEST_METHOD = ss.str();
 	ss.str("");
 
@@ -61,10 +60,10 @@ int	Server::cgi_handle(int client_fd) {
 		close(fd[1]);
 		close(fd[0]);
 		std::vector<char *> argv;
-		argv.push_back(const_cast<char *>(_Script_path.c_str()));
-		argv.push_back(const_cast<char *>(_Script.c_str()));
+		argv.push_back(const_cast<char *>(Script_path.c_str()));
+		argv.push_back(const_cast<char *>(Script.c_str()));
         argv.push_back(NULL);
-		if (execve(_Script_path.c_str(), argv.data(), envp) == -1)
+		if (execve(Script_path.c_str(), argv.data(), envp) == -1)
 			_exit(1);
 	}
 	else
@@ -110,7 +109,7 @@ int	Server::cgi_handle(int client_fd) {
             output.append(buffer, bytes_read);
         }
         close(fd[0]);
-        if (bytes_read == -1 || cgi_parse(output) == 1) 
+        if (bytes_read == -1 || cgi_parse(output, _Cgi_output) == 1) 
 		{
             return (500);
         }

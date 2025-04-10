@@ -31,8 +31,8 @@
 #include <unistd.h>
 #include <dirent.h>
 #include "Config.hpp"
+#include "Cgi.hpp"
 #pragma once
-
 
 #define MAX_EVENTS 30 // nombre de client max
 #define BUFFER_SIZE 1024
@@ -47,22 +47,22 @@ uint32_t ntohl(uint32_t netlong);   //"Network to host long"
 uint16_t ntohs(uint16_t netshort);  //"Network to host short"
 //inet_pton << "pton” veut dire " presentation to network" ou, en français “présentation au réseau”
 
+class Cgi;
+
 class Server
 {
 	private:
 		
+		Cgi*		cgi;
+		Config		Conf;
+
 		std::string _Script;
 		std::string _Script_path;
-		Config		Conf;
 		std::string _Request_type;
 		std::string _Request_content;
 		std::string _Request_html;
 		std::string _Post_content;
 		std::string _Post_file_name;
-		std::string _Post_cgi_FN;
-		std::string _Post_cgi_LN;
-		std::string _Post_cgi_content_type;
-		std::string _Post_cgi_content_lenght;
 		std::string _Autoindex_output;
 		std::string _Cgi_output;
 		bool		_Keep_alive;
@@ -100,9 +100,6 @@ class Server
 		void run();
 		//Logs
 		void		print_logs(std::string user, std::string message, int code);
-		//Cgi
-		int			cgi_handle(int client_fd);
-		int			cgi_parse(std::string output);
 		//Parse_request
 		int			parse_request(void);
 		int			check_vectors(std::vector<std::string> vector, std::string to_find);
@@ -117,12 +114,8 @@ class Server
 		std::string read_html_file(const std::string& file_path);
 		std::string html_response(int client_fd, std::string web_page);
 		int			set_request_type(char buffer[BUFSIZ]);
-		void		parsing_request_content(void);
 		std::string	html_request(int client_fd);
 		int			set_request_http(std::string sender_msg);
-		int			set_request_custom(std::string sender_msg);
-		int			request_custom_type(std::string full_msg);
-		int			request_custom_content(std::string full_msg);
 		std::string	request_get(int client_fd, int code);
 		int			request_post(void);
 		std::string request_delete(int client_fd);
