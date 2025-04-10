@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 20:18:50 by armitite          #+#    #+#             */
-/*   Updated: 2025/03/19 14:40:51 by armitite         ###   ########.fr       */
+/*   Updated: 2025/04/10 12:53:10 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ int		Server::content_post_cgi(std::string full_msg) {
 	if (found1 == std::string::npos)
 		return (print_logs("Client", "Bad data, missing 'nom'", 2), 400);
 	full_msg.erase(0, found1);
-	found1 = full_msg.find("\r\n", 0);
-	// if (found1 == std::string::npos)
-	// 	return (print_logs("Client", "Bad request (2)", 2), 400);
+	found1 = atoi(_Post_cgi_content_lenght.c_str());
+	if (found1 == 0)
+		return (print_logs("Client", "Bad request (2)", 2), 400);
 	verbs = full_msg.substr(0, found1);
 	_Post_cgi_LN = set_params_file(verbs, "nom=", "&");
 	if (_Post_cgi_LN.empty())
@@ -150,7 +150,7 @@ int		Server::set_content_post(std::string full_msg) {
 
 int	Server::request_post(void) {
 
-	std::string dir = "/home/adduser/WEbserv/tmp/";
+	std::string dir = Conf.Server_par[0].root + "tmp/";
 	std::string new_name = dir + _Post_file_name;
 	std::cout << "ici" << std::endl;
 	std::cout << new_name << std::endl;

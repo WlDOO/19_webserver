@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Set_request.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
+/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 16:56:53 by armitite          #+#    #+#             */
-/*   Updated: 2025/04/07 23:13:20 by rafnasci         ###   ########.fr       */
+/*   Updated: 2025/04/10 12:53:23 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ int	Server::set_request_http(std::string full_msg) {
 	std::cout << "Request type: " << _Request_type << std::endl;
 	verbs.erase(0, found);
 	_Request_content = verbs.substr(2, (verbs.size() - 3));
-	std::cout << "THE _REQUEST: " << _Request_content << "ERRORRRRR: " << _Http_code << std::endl;
 	
 	return (0);
 }

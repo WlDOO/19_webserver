@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   html_gen.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
+/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 20:39:35 by rafnasci          #+#    #+#             */
-/*   Updated: 2025/04/07 23:14:31 by rafnasci         ###   ########.fr       */
+/*   Updated: 2025/04/10 13:03:39 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,12 @@ std::string	Server::get_msg(int code) {
 			return ("Not Found");
 		case 405 :
 			return ("Method Not Allowed");
+		case 411 :
+			return ("Length Required");
 		case 413 :
 			return ("Request Too Large");
+		case 415 :
+			return ("Unsupported Media Type");
 		case 500 :
 			return ("Internal Server Error");
 		case 504 :
