@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:35:41 by armitite          #+#    #+#             */
-/*   Updated: 2025/04/10 15:59:34 by armitite         ###   ########.fr       */
+/*   Updated: 2025/04/15 15:50:41 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,26 +18,28 @@ int		Server::generate_autoindex(std::string loc, int index_loc) {
 	if (!dir)
 		return (1);
 	std::string tmp;
+	std::string loc_tmp;
 	if (!Conf.Server_par[0].Loc[index_loc].alias.empty())
 		tmp = Conf.Server_par[0].Loc[index_loc].Location;
 	else
-		tmp = loc;
-	std::string loc_tmp;
-	loc_tmp = loc;
-	loc_tmp.erase(0, Conf.Server_par[0].Loc[index_loc].Location.size());
-	if (!loc_tmp.empty())
 	{
-		size_t found;
-		found = loc_tmp.find("/");
-		while (found != std::string::npos)
+		tmp = loc;
+		loc_tmp = loc;
+		loc_tmp.erase(0, Conf.Server_par[0].Loc[index_loc].Location.size());
+		if (!loc_tmp.empty())
 		{
-			loc_tmp.erase(0, found + 1);
-			std::cout << loc_tmp << std::endl;
+			size_t found;
 			found = loc_tmp.find("/");
+			while (found != std::string::npos)
+			{
+				loc_tmp.erase(0, found + 1);
+				std::cout << loc_tmp << std::endl;
+				found = loc_tmp.find("/");
+			}
+			loc_tmp += "/";
 		}
-		loc_tmp += "/";
+		std::cout << "Et donc le end : " << loc_tmp << std::endl;
 	}
-	std::cout << "Et donc le end : " << loc_tmp << std::endl;
 	std::string output;
 	output += "<!DOCTYPE html>\r\n";
     output += "<html>\r\n<head>\r\n";
