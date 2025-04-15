@@ -74,6 +74,7 @@ std::string	Server::html_request(int client_fd)
 	error_cgi = 0;
 	if (_Http_code > 201)
 	{
+		print_logs("Server", "Error ", 3);
 		return (html_error(_Http_code));
 	}
 	if (_Is_autoindex == 1)
@@ -86,7 +87,10 @@ std::string	Server::html_request(int client_fd)
 		{
 			error_cgi = cgi->cgi_handle(_Request_type, _Script, _Script_path, _Cgi_output);
 			if (error_cgi != 0)
+			{
+				print_logs("Server", "Error ", 3);	
 				return (html_error(error_cgi));
+			}
 			return (html_outputs(client_fd));
 		}
 		return (request_get(client_fd, 200));
@@ -97,7 +101,10 @@ std::string	Server::html_request(int client_fd)
 		{
 			error_cgi = cgi->cgi_handle(_Request_type, _Script, _Script_path, _Cgi_output);
 			if (error_cgi != 0)
+			{
+				print_logs("Server", "Error ", 3);
 				return (html_error(error_cgi));
+			}
 			return (html_outputs(client_fd));
 		}
 		else

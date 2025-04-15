@@ -68,7 +68,8 @@ int	Server::set_request_type(char buffer[BUFSIZ]) {
 	if (_Request_type == "POST")
 		_Http_code = set_content_post(full_msg);
 	
-	print_logs("Sender", _Request_type + " " + _Request_content, 1);
+	if (_Http_code == 0)
+		print_logs("Sender", _Request_type + " " + _Request_content, 1);
 	
 	return (_Http_code);
 }

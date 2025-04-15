@@ -12,15 +12,36 @@
 
 #include "../include/Server.hpp"
 
-int		Server::generate_autoindex(std::string loc) {
-
+int		Server::generate_autoindex(std::string loc, int index_loc) {
+	
 	DIR *dir = opendir(loc.c_str());
 	if (!dir)
 		return (1);
+	std::string tmp;
+	if (!Conf.Server_par[0].Loc[index_loc].alias.empty())
+		tmp = Conf.Server_par[0].Loc[index_loc].Location;
+	else
+		tmp = loc;
+	std::string loc_tmp;
+	loc_tmp = loc;
+	loc_tmp.erase(0, Conf.Server_par[0].Loc[index_loc].Location.size());
+	if (!loc_tmp.empty())
+	{
+		size_t found;
+		found = loc_tmp.find("/");
+		while (found != std::string::npos)
+		{
+			loc_tmp.erase(0, found + 1);
+			std::cout << loc_tmp << std::endl;
+			found = loc_tmp.find("/");
+		}
+		loc_tmp += "/";
+	}
+	std::cout << "Et donc le end : " << loc_tmp << std::endl;
 	std::string output;
 	output += "<!DOCTYPE html>\r\n";
     output += "<html>\r\n<head>\r\n";
-    output += "<title>Index of " + loc + "</title>\r\n";
+    output += "<title>Index of " + tmp + "</title>\r\n";
     output += "<style>\r\n";
     output += "body { font-family: sans-serif; margin: 2em; }\r\n";
     output += "pre { background: #f8f8f8; padding: 1em; border-radius: 4px; }\r\n";
@@ -28,7 +49,7 @@ int		Server::generate_autoindex(std::string loc) {
     output += "a:hover { text-decoration: underline; }\r\n";
     output += "</style>\r\n</head>\r\n";
     output += "<body>\r\n";
-    output += "<h1>Index of " + loc + "</h1>\r\n<hr>\r\n<pre>\r\n";
+    output += "<h1>Index of " + tmp + "</h1>\r\n<hr>\r\n<pre>\r\n";
     output += "<a href=\"../\">../</a>\r\n";
 	struct dirent *entry;
 	while ((entry = readdir(dir)) != NULL) 
@@ -36,7 +57,10 @@ int		Server::generate_autoindex(std::string loc) {
     	if (!(strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0))
 		{
 			std::string name = entry->d_name;
-			output += "<a href=\"" + name + "\">" + entry->d_name + "</a>\r\n";
+			if (!loc_tmp.empty())
+				output += "<a href=\"" + loc_tmp + name + "\">" + entry->d_name + "</a>\r\n";
+			else
+				output += "<a href=\"" + name + "\">" + entry->d_name + "</a>\r\n";
 		}
 	}
 	closedir(dir);
@@ -53,7 +77,10 @@ int		Server::check_autoindex(int index_loc, std::string loc) {
 	int check_dir = 0;
 
 	if (dir != NULL)
+	{
+		std::cout << "Is a good dir" << std::endl;
 		check_dir = 1;
+	}
 	closedir(dir);
 	if (_Request_content == loc || _Request_content == Conf.Server_par[0].Loc[index_loc].alias || check_dir == 1)
 	{
@@ -66,11 +93,11 @@ int		Server::check_autoindex(int index_loc, std::string loc) {
 		if (Conf.Server_par[0].Loc[index_loc].autoindex == "on") {
 			
 			if (!Conf.Server_par[0].Loc[index_loc].alias.empty())
-				generate_autoindex(Conf.Server_par[0].Loc[index_loc].alias);
+				generate_autoindex(Conf.Server_par[0].Loc[index_loc].alias, index_loc);
 			else if (check_dir == 1)
-				generate_autoindex(_Request_content);
+				generate_autoindex(_Request_content, index_loc);
 			else
-				generate_autoindex(loc);
+				generate_autoindex(loc, index_loc);
 			_Is_autoindex = 1;
 		}
 		else
@@ -191,8 +218,6 @@ int		Server::parse_request(void) {
 		return (403);
 	if (check_autoindex(index_loc, loc) != 0)
 		return (403);
-	// if (check_vectors(Conf.Server_par[0].Loc[index_loc].methods, _Request_type) != 1)
-	// 	return (print_logs("Client", "Unothorized method", 2), 404);
 
 	return (0);
 }

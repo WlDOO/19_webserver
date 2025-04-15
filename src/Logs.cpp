@@ -20,6 +20,8 @@ void	Server::print_logs(std::string user, std::string message, int code) {
 		std::cout << GREEN << message << RESET << " " << std::endl;
 	if (code == 2)
 		std::cout << RED << message << RESET << " " << std::endl;
+	if (code == 3)
+		std::cout << RED << message << _Http_code <<  RESET << " " << std::endl;
 
 	return ;
 }

@@ -87,6 +87,7 @@ class Server
 		Server(const std::vector<int>& ports, Config conf);
 		
 		//Autoindex
+		int			generate_autoindex(std::string loc, int index_loc);
 
 		//HtmlAuto
 		std::string html_success(int code, const std::string& web_page);
@@ -105,7 +106,6 @@ class Server
 		int			check_vectors(std::vector<std::string> vector, std::string to_find);
 		int			check_cgi(int index_loc);
 		int			check_autoindex(int index_loc, std::string loc);
-		int			generate_autoindex(std::string loc);
 		int			allowed_method(int index_loc);
 		std::string	handle_alias(std::string alias, std::string loc);
 		//Read_send

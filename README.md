@@ -1,3 +1,7 @@
+UPDATE 15/04 : 
+
+- 1 : Si il y a dans la location un alias, la location ne doit pas exister, seulement alias doit exister
+
 UPDATE 09/04 :
 
 - 1 : Gros changement car on approche de la fin, _Error_flag devient _Html_code, car on va l'utiliser de maniere globales, c'est a dire qu'il aura la code http a envoyer au client, celui-ci est add durant le parsing en general et utilise dans Read_send
