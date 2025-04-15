@@ -49,7 +49,13 @@ int		Server::generate_autoindex(std::string loc) {
 
 int		Server::check_autoindex(int index_loc, std::string loc) {
 
-	if (_Request_content == loc)
+	DIR *dir = opendir(_Request_content.c_str());
+	int check_dir = 0;
+
+	if (dir != NULL)
+		check_dir = 1;
+	closedir(dir);
+	if (_Request_content == loc || _Request_content == Conf.Server_par[0].Loc[index_loc].alias || check_dir == 1)
 	{
 		if (!(Conf.Server_par[0].Loc[index_loc].index.empty()))
 		{
@@ -58,8 +64,13 @@ int		Server::check_autoindex(int index_loc, std::string loc) {
 			return (0);
 		}
 		if (Conf.Server_par[0].Loc[index_loc].autoindex == "on") {
-	
-			generate_autoindex(loc);
+			
+			if (!Conf.Server_par[0].Loc[index_loc].alias.empty())
+				generate_autoindex(Conf.Server_par[0].Loc[index_loc].alias);
+			else if (check_dir == 1)
+				generate_autoindex(_Request_content);
+			else
+				generate_autoindex(loc);
 			_Is_autoindex = 1;
 		}
 		else
@@ -173,8 +184,11 @@ int		Server::parse_request(void) {
 		std::cout << Conf.Server_par[0].Loc[index_loc].alias << std::endl;
 		_Request_content = handle_alias(Conf.Server_par[0].Loc[index_loc].alias, loc);
 	}
-	if (loc == "cgi-bin/") // || _Request_content.find("cgi-bin/") >= 0)
+	if (loc == "cgi-bin/")
 		check_cgi(index_loc);
+	found = _Request_content.find("cgi-bin/");
+	if ((loc != "cgi-bin/") && found != std::string::npos)
+		return (403);
 	if (check_autoindex(index_loc, loc) != 0)
 		return (403);
 	// if (check_vectors(Conf.Server_par[0].Loc[index_loc].methods, _Request_type) != 1)
