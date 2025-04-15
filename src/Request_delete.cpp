@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request_delete.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
+/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:58:09 by rafnasci          #+#    #+#             */
-/*   Updated: 2025/04/07 23:14:25 by rafnasci         ###   ########.fr       */
+/*   Updated: 2025/04/15 16:58:58 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ std::string Server::request_delete(int client_fd)
 		file_path = "tmp/" + _Request_content;  // changer "html/" par le nom du repertoire ou seront les trucs a delete
 	else
 		file_path = _Request_content;
-	
+	file_path = "tmp/test.txt";
+	std::cout << "Method method :" << file_path << std::endl;
 	if (access(file_path.c_str(), F_OK) == 0)
 	{
 		if (std::remove(file_path.c_str()) == 0)

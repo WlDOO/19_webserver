@@ -56,6 +56,9 @@
             padding: 8px;
             width: 80%;
         }
+        #error {
+            color: red;
+        }
     </style>
 </head>
 <body>
@@ -69,15 +72,35 @@
     <div class="content">
         <div class="container">
             <h1>Supprimer un Fichier</h1>
-            <form action="/delete" method="POST">
-                <input type="hidden" name="_method" value="DELETE">
-                
+            <form id="delete">
                 <label for="filename">Nom du fichier à supprimer:</label>
                 <input type="text" id="filename" name="filename" required><br>
 
                 <button type="submit" class="button">Supprimer</button>
+                <p id="error"></p>
             </form>
         </div>
     </div>
+
+    <script>
+        let form = document.getElementById("delete");
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            let filename = document.getElementById("filename").value;
+            const resp = await fetch(`http://${window.location.host}/delete`, {
+                method: "DELETE",
+                body: new URLSearchParams({filename})
+            })
+
+            if (resp.ok) {
+                window.location.href = `http://${window.location.host}/post/conf_del.html`;
+            } else {
+                let error = document.getElementById("error");
+                error.innerText = `error: ${resp.status}`;
+            }
+        })
+    </script>
 </body>
 </html>
