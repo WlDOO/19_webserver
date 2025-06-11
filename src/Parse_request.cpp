@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Parse_request.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:35:41 by armitite          #+#    #+#             */
-/*   Updated: 2025/04/15 15:50:41 by armitite         ###   ########.fr       */
+/*   Updated: 2025/06/11 17:57:14 by rafnasci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,6 +205,8 @@ int		Server::parse_request(void) {
 	}
 	if (index_loc == -1)
 		return (404);
+	if (redirect(index_loc) == 1)
+		return (301);
 	if (allowed_method(index_loc) == 1)
 		return (405);
 	std::cout << "la loc :" << loc << std::endl;

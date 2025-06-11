@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Read_send.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 13:35:52 by armitite          #+#    #+#             */
-/*   Updated: 2025/04/10 14:26:04 by armitite         ###   ########.fr       */
+/*   Updated: 2025/06/11 18:22:12 by rafnasci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ std::string	Server::html_request(int client_fd)
 	int error_cgi;
 	
 	error_cgi = 0;
+	if (_Http_code == 301)
+		return (_Request_content);
 	if (_Http_code > 201)
 	{
 		print_logs("Server", "Error ", 3);

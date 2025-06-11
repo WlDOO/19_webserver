@@ -6,7 +6,7 @@
 /*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:12 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/04/07 22:58:59 by rafnasci         ###   ########.fr       */
+/*   Updated: 2025/06/11 17:35:29 by rafnasci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,7 @@ class Server
 		std::string	set_params_file(std::string full_msg, std::string to_find, std::string to_find2);
 		int			content_post_cgi(std::string full_msg);
 		std::string html_outputs(int client_fd);
+		int			redirect(int index_loc);
 		
 		~Server();
 };
