@@ -82,6 +82,21 @@ std::string		Server::set_params_file(std::string full_msg, std::string to_find, 
 	return (result);
 }
 
+int check_digit_content_lenght(std::string nbr) {
+
+	size_t i;
+
+	i = 0;
+	while (i < nbr.size()) {
+		std::cout << nbr.at(i) << std::endl;
+		if (!isdigit(nbr.at(i)))
+			return (1);
+		i++;
+	}
+
+	return (0);
+}
+
 int		Server::content_post_file(std::string full_msg) {
 
 	size_t found1;
@@ -97,6 +112,13 @@ int		Server::content_post_file(std::string full_msg) {
 	content_lenght = set_params_file(full_msg, "Content-Length: ", "\r\n");
 	if (content_lenght.empty())
 		return (print_logs("Client", "Content lenght not found", 2), 411);
+	if (check_digit_content_lenght(content_lenght) == 0) {
+		int size = std::atoi(content_lenght.c_str());
+		if (size >= std::atoi(Conf.Server_par[0].client_max_body_size.c_str()))
+			return (print_logs("Client", "Body size too large", 2), 413);
+	}
+	else
+		return (print_logs("Client", "Body size too large", 2), 400);
 	found1 = full_msg.find(boundary + "\r\n", 0);
 	if (found1 == std::string::npos)
 		return (print_logs("Client", "Boundary problem (1)", 2), 400);
