@@ -6,7 +6,7 @@
 /*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:46:38 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/06/17 15:18:09 by najeuneh         ###   ########.fr       */
+/*   Updated: 2025/06/17 15:20:33 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -343,11 +343,6 @@ int	parse_file(Config Conf)
 			}
 				if (!isDirectory(Conf.Server_par[i].Loc[y].root))
 				return std::cerr << "Error: Error page root directory does not exist" << std::endl, 0;
-			if (!isDirectory(Conf.Server_par[i].Loc[y].redirect_url))
-			{
-				std::cout << Conf.Server_par[i].Loc[y].redirect_url << std::endl;
-				return std::cerr << "Error: Error page redirect url directory does not exist" << std::endl, 0;
-			}
 			if (!isDirectory(Conf.Server_par[i].Loc[y].upload_store))
 				return std::cerr << "Error: Error page upload store directory does not exist" << std::endl, 0;
 			if (!Conf.Server_par[i].Loc[y].autoindex.empty() && Conf.Server_par[i].Loc[y].autoindex != "on" && Conf.Server_par[i].Loc[y].autoindex != "off")
