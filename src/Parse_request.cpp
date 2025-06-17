@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Parse_request.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
+/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:35:41 by armitite          #+#    #+#             */
-/*   Updated: 2025/06/11 17:57:14 by rafnasci         ###   ########.fr       */
+/*   Updated: 2025/06/17 14:18:44 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -216,7 +216,10 @@ int		Server::parse_request(void) {
 		_Request_content = handle_alias(Conf.Server_par[0].Loc[index_loc].alias, loc);
 	}
 	if (loc == "cgi-bin/")
-		check_cgi(index_loc);
+	{
+		if (check_cgi(index_loc) == 0)
+			return (415);
+	}
 	found = _Request_content.find("cgi-bin/");
 	if ((loc != "cgi-bin/") && found != std::string::npos)
 		return (403);
