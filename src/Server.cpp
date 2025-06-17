@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
+/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:31 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/04/09 15:02:46 by najeuneh         ###   ########.fr       */
+/*   Updated: 2025/06/17 13:48:04 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,12 @@ Server::~Server()
 
 void Server::handleConnections() {
     struct epoll_event events[MAX_EVENTS];
+	int startTest = 0;
     while (true) {
+		startTest++;
+		if (startTest > 20) {
+			break ;
+		}
         int event_count = epoll_wait(epoll_fd, events, MAX_EVENTS, -1);  //return the number of triggered (new conenctions or data) events
 		if (event_count == -1)
 		{
@@ -68,6 +73,7 @@ void Server::handleConnections() {
 			// }
         }
     }
+	std::cout << "finish" << std::endl;
 }
 
 void Server::setupEpoll() {

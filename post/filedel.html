@@ -89,7 +89,7 @@
             event.preventDefault();
 
             let filename = document.getElementById("filename").value;
-            const resp = await fetch(`http://${window.location.host}/delete`, {
+            const resp = await fetch(`http://${window.location.host}/${filename}`, {
                 method: "DELETE",
                 body: new URLSearchParams({filename})
             })
