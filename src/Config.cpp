@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:46:38 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/04/10 15:01:22 by armitite         ###   ########.fr       */
+/*   Updated: 2025/06/17 14:26:26 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,8 +109,9 @@ void	Config::SetLoc(std::string str)
 		ss.str(str);
 		getline(ss, line, ' ');
 		getline(ss, line, '{');
-		position = line.find(" ");
-		this->Server_par[size_serv].Loc[Server_par[size_serv].size - 1].Location = line.substr(0, position);
+		if (line[line.size() - 1 == ' '])
+		line.erase(line.size() - 1);
+		this->Server_par[size_serv].Loc[Server_par[size_serv].size - 1].Location = line;
 	}
 	else if ((position = str.find("root ")) != std::string::npos)
 	{
@@ -201,6 +202,7 @@ void	Config::SetLoc(std::string str)
 	else if ((position = str.find("allow_methods ")) != std::string::npos)
 	{
 		int last_pos = 0;
+		int index = 0;
 		ss.str(str);
 		getline(ss, line, ' ');
 		getline(ss, line, ';');
@@ -208,7 +210,6 @@ void	Config::SetLoc(std::string str)
 		{
 			if (line[y] == ' ' || line[y + 1] == '\0')
 			{
-				std::cout << "la" << std::endl;
 				if (line[y + 1] == '\0')
 				{
 					if (last_pos == 0)
@@ -219,6 +220,13 @@ void	Config::SetLoc(std::string str)
 				else
 					this->Server_par[size_serv].Loc[Server_par[size_serv].size - 1].methods.push_back(line.substr(last_pos, y - last_pos));
 				last_pos = y;
+				for (size_t i = 0; i < this->Server_par[size_serv].Loc[Server_par[size_serv].size - 1].methods[index].length(); ) {
+					if (this->Server_par[size_serv].Loc[Server_par[size_serv].size - 1].methods[index][i] == ' ')
+						this->Server_par[size_serv].Loc[Server_par[size_serv].size - 1].methods[index].erase(i, 1);
+					else
+						++i;
+				}
+				index++;
 			}
 		}
 	}
@@ -299,6 +307,9 @@ int	parse_file(Config Conf)
 			std::cout << Conf.Server_par[i].root << std::endl;
 			return std::cerr << "Error: Root directory does not exist" << std::endl, 0;
 		}
+		if (!isDirectory(Conf.Server_par[i].index)) {
+			return std::cerr << "Error: index directory does not exist" << std::endl, 0;
+		}
 			for (size_t y = 0; y < Conf.Server_par[i].error_page_loc.size(); y++)
 		{
 			if (!isDirectory(Conf.Server_par[i].error_page_loc[y]))
@@ -319,8 +330,11 @@ int	parse_file(Config Conf)
 		for (size_t y = 0; y < Conf.Server_par[i].Loc.size(); y++)
 		{
 			if (!isDirectory(Conf.Server_par[i].Loc[y].Location))
+			{
+				std::cout << "ici" << Conf.Server_par[i].Loc[y].Location << "ici" << std::endl;
 				return std::cerr << "Error: Error page Localisation directory does not exist" << std::endl, 0;
-			if (!isDirectory(Conf.Server_par[i].Loc[y].root))
+			}
+				if (!isDirectory(Conf.Server_par[i].Loc[y].root))
 				return std::cerr << "Error: Error page root directory does not exist" << std::endl, 0;
 			if (!isDirectory(Conf.Server_par[i].Loc[y].redirect_url))
 			{
@@ -348,6 +362,7 @@ int	parse_file(Config Conf)
 					return std::cerr << "Error: allow method does not exist" << std::endl, 0;
 				}
 			}
+			std::cout << std::endl;
 			if (!Conf.Server_par[i].Loc[y].cgi_extonsions.empty() && Conf.Server_par[i].Loc[y].cgi_extonsions != ".py" && Conf.Server_par[i].Loc[y].cgi_extonsions != ".js" && Conf.Server_par[i].Loc[y].cgi_extonsions != ".sh")
 				return std::cerr << "Error: cgi extension does not exist" << std::endl, 0;
 		}
