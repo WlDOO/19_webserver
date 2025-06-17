@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 16:56:53 by armitite          #+#    #+#             */
-/*   Updated: 2025/04/15 16:55:06 by armitite         ###   ########.fr       */
+/*   Updated: 2025/06/17 14:35:12 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ int	Server::set_request_http(std::string full_msg) {
 	if (found == std::string::npos)
 		return (print_logs("Client", "Incorrect content format", 2), 400);
 	_Request_type = verbs.substr(0, found);
-	// if (_Request_type != "GET" && _Request_type != "POST") 
-	// 	return (print_logs("Client", "Unsupported method: " + _Request_type, 2), 405);
+	if (_Request_type != "GET" && _Request_type != "POST" && _Request_type != "DELETE") 
+		return (print_logs("Client", "Unsupported method: " + _Request_type, 2), 405);
 	std::cout << "Request type: " << _Request_type << std::endl;
 	verbs.erase(0, found);
 	_Request_content = verbs.substr(2, (verbs.size() - 3));
