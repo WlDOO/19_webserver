@@ -6,7 +6,7 @@
 /*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:46:38 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/06/17 15:08:27 by najeuneh         ###   ########.fr       */
+/*   Updated: 2025/06/17 15:18:09 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -336,7 +336,7 @@ int	parse_file(Config Conf)
 					return std::cerr << "Error: Location is not unique" << std::endl, 0;
 				}
 			}
-			if (!isDirectory(Conf.Server_par[i].Loc[y].Location))
+			if (Conf.Server_par[i].Loc[y].alias.empty() && !isDirectory(Conf.Server_par[i].Loc[y].Location))
 			{
 				std::cout << "ici" << Conf.Server_par[i].Loc[y].Location << "ici" << std::endl;
 				return std::cerr << "Error: Error page Localisation directory does not exist" << std::endl, 0;
