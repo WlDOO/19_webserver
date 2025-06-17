@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Config.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: raf <raf@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:46:38 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/06/17 16:47:23 by raf              ###   ########.fr       */
+/*   Updated: 2025/06/17 17:02:47 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -287,7 +287,7 @@ Config	Config::Config_file(std::string str2)
 				if ((position = str.find("}")) != std::string::npos)
 					break ;
 			}
-			if (this->Server_par[size_serv].Loc[Server_par[size_serv].size - 1].root.empty())
+			if (this->Server_par[size_serv].Loc[Server_par[size_serv].size - 1].root.empty() && this->Server_par[size_serv].Loc[Server_par[size_serv].size - 1].Location != "cgi-bin/")
 				this->Server_par[size_serv].Loc[Server_par[size_serv].size - 1].root = this->Server_par[size_serv].root;
 		}
 	}
@@ -343,11 +343,6 @@ int	parse_file(Config Conf)
 			}
 				if (!isDirectory(Conf.Server_par[i].Loc[y].root))
 				return std::cerr << "Error: Error page root directory does not exist" << std::endl, 0;
-			// if (!isDirectory(Conf.Server_par[i].Loc[y].redirect_url))
-			// {
-			// 	std::cout << Conf.Server_par[i].Loc[y].redirect_url << std::endl;
-			// 	return std::cerr << "Error: Error page redirect url directory does not exist" << std::endl, 0;
-			// }
 			if (!isDirectory(Conf.Server_par[i].Loc[y].upload_store))
 				return std::cerr << "Error: Error page upload store directory does not exist" << std::endl, 0;
 			if (!Conf.Server_par[i].Loc[y].autoindex.empty() && Conf.Server_par[i].Loc[y].autoindex != "on" && Conf.Server_par[i].Loc[y].autoindex != "off")
@@ -369,10 +364,28 @@ int	parse_file(Config Conf)
 					return std::cerr << "Error: allow method does not exist" << std::endl, 0;
 				}
 			}
-			std::cout << std::endl;
 			if (!Conf.Server_par[i].Loc[y].cgi_extonsions.empty() && Conf.Server_par[i].Loc[y].cgi_extonsions != ".py" && Conf.Server_par[i].Loc[y].cgi_extonsions != ".js" && Conf.Server_par[i].Loc[y].cgi_extonsions != ".sh")
 				return std::cerr << "Error: cgi extension does not exist" << std::endl, 0;
 		}
+		int j = 0;
+		int check = 0;
+		for (size_t y = 0; y < Conf.Server_par[i].Loc.size(); y++)
+		{
+			if (Conf.Server_par[i].Loc[y].Location == "cgi-bin/") {
+				j = y;
+				check++;
+			}
+		}
+		if (check == 1)
+		{
+			if (Conf.Server_par[i].Loc[j].cgi_pass.empty() || Conf.Server_par[i].Loc[j].cgi_extonsions.empty() || Conf.Server_par[i].Loc[j].methods.empty())
+				return std::cerr << "Error: cgi_bin location is not complete" << std::endl, 0;
+			if (!Conf.Server_par[i].Loc[j].root.empty() || !Conf.Server_par[i].Loc[j].index.empty() || !Conf.Server_par[i].Loc[j].autoindex.empty() || !Conf.Server_par[i].Loc[j].redirect_url.empty() || !Conf.Server_par[i].Loc[j].upload_store.empty() || !Conf.Server_par[i].Loc[j].alias.empty() || !Conf.Server_par[i].Loc[j].script.empty())
+				return std::cerr << "Error: cgi_bin location should not have root, index, autoindex, redirect_url, upload_store or alias" << std::endl, 0;
+		}
+		if (check == 0)
+			return std::cerr << "Error: No cgi bin" << std::endl, 0;
+
 	}
 	return 1;
 }

@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 15:39:49 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/06/17 15:12:45 by armitite         ###   ########.fr       */
+/*   Updated: 2025/06/17 17:01:45 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,13 +178,13 @@ Config	setpath(Config Conf)
 		for (size_t y = 0; y < Conf.Server_par[i].Loc.size(); y++)
 		{
 			std::string root = Conf.Server_par[i].Loc[y].root + Conf.Server_par[i].Loc[y].Location;
-			if (!Conf.Server_par[i].Loc[y].index.empty())
+			if (!Conf.Server_par[i].Loc[y].index.empty() && Conf.Server_par[i].Loc[y].Location != "cgi-bin/")
 				Conf.Server_par[i].Loc[y].index = root + Conf.Server_par[i].Loc[y].index;
-			if (!Conf.Server_par[i].Loc[y].upload_store.empty())
+			if (!Conf.Server_par[i].Loc[y].upload_store.empty() && Conf.Server_par[i].Loc[y].Location != "cgi-bin/")
 				Conf.Server_par[i].Loc[y].upload_store = root + Conf.Server_par[i].Loc[y].upload_store;
-			if (!Conf.Server_par[i].Loc[y].directory_listening.empty())
+			if (!Conf.Server_par[i].Loc[y].directory_listening.empty() && Conf.Server_par[i].Loc[y].Location != "cgi-bin/")
 				Conf.Server_par[i].Loc[y].directory_listening = root + Conf.Server_par[i].Loc[y].directory_listening;
-			if (!Conf.Server_par[i].Loc[y].alias.empty())
+			if (!Conf.Server_par[i].Loc[y].alias.empty() && Conf.Server_par[i].Loc[y].Location != "cgi-bin/")
 				Conf.Server_par[i].Loc[y].alias =  Conf.Server_par[i].root + Conf.Server_par[i].Loc[y].alias;
 		}
 	}
