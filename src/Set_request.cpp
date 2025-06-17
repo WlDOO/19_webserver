@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 16:56:53 by armitite          #+#    #+#             */
-/*   Updated: 2025/06/17 14:35:12 by armitite         ###   ########.fr       */
+/*   Updated: 2025/06/17 15:33:47 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ int	Server::set_request_type(char buffer[BUFSIZ]) {
 	error = set_request_http(full_msg);
 	if (error != 0)
 		return (error);
+	//PE check ca
 	if (_Request_type == "POST")
 	{
 		del_method = full_msg.find("_method=DELETE");

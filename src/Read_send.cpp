@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Read_send.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
+/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 13:35:52 by armitite          #+#    #+#             */
-/*   Updated: 2025/06/11 18:22:12 by rafnasci         ###   ########.fr       */
+/*   Updated: 2025/06/17 15:41:23 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,8 @@ std::string	Server::html_request(int client_fd)
 			error_cgi = cgi->cgi_handle(_Request_type, _Script, _Script_path, _Cgi_output);
 			if (error_cgi != 0)
 			{
-				print_logs("Server", "Error ", 3);	
+				_Http_code = 500;
+				print_logs("Server", "Error ", 3);
 				return (html_error(error_cgi));
 			}
 			return (html_outputs(client_fd));

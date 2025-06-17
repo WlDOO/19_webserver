@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 16:47:34 by armitite          #+#    #+#             */
-/*   Updated: 2025/04/10 16:34:36 by armitite         ###   ########.fr       */
+/*   Updated: 2025/06/17 15:36:01 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ int	Cgi::cgi_handle(std::string const &Request_type, std::string const &Script, 
 	if (pipe(fd) == -1)
 		return (500);
     pid_t pid = fork();
-
+    
+    std::cout << "Script path :" << Script << std::endl;
     char *envp[] = 
     {
             const_cast<char *>(LAST_NAME.c_str()),

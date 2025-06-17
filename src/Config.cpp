@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:46:38 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/06/17 15:12:21 by armitite         ###   ########.fr       */
+/*   Updated: 2025/06/17 15:20:41 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -336,18 +336,13 @@ int	parse_file(Config Conf)
 					return std::cerr << "Error: Location is not unique" << std::endl, 0;
 				}
 			}
-			if (!isDirectory(Conf.Server_par[i].Loc[y].Location))
+			if (Conf.Server_par[i].Loc[y].alias.empty() && !isDirectory(Conf.Server_par[i].Loc[y].Location))
 			{
 				std::cout << "ici" << Conf.Server_par[i].Loc[y].Location << "ici" << std::endl;
 				return std::cerr << "Error: Error page Localisation directory does not exist" << std::endl, 0;
 			}
 				if (!isDirectory(Conf.Server_par[i].Loc[y].root))
 				return std::cerr << "Error: Error page root directory does not exist" << std::endl, 0;
-			if (!isDirectory(Conf.Server_par[i].Loc[y].redirect_url))
-			{
-				std::cout << Conf.Server_par[i].Loc[y].redirect_url << std::endl;
-				return std::cerr << "Error: Error page redirect url directory does not exist" << std::endl, 0;
-			}
 			if (!isDirectory(Conf.Server_par[i].Loc[y].upload_store))
 				return std::cerr << "Error: Error page upload store directory does not exist" << std::endl, 0;
 			if (!Conf.Server_par[i].Loc[y].autoindex.empty() && Conf.Server_par[i].Loc[y].autoindex != "on" && Conf.Server_par[i].Loc[y].autoindex != "off")
