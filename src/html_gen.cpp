@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   html_gen.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: raf <raf@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 20:39:35 by rafnasci          #+#    #+#             */
-/*   Updated: 2025/06/17 15:07:59 by armitite         ###   ########.fr       */
+/*   Updated: 2025/06/17 16:34:38 by raf              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,12 +59,12 @@ std::string	Server::check_error_dir(int code) {
 	
 	tmp << code;
 	i = -1;
-	while (++i < Conf.Server_par[0].error_page_num.size() - 1) {
-		if (Conf.Server_par[0].error_page_num[i] == tmp.str())
+	while (++i < Conf.Server_par[_server_index].error_page_num.size() - 1) {
+		if (Conf.Server_par[_server_index].error_page_num[i] == tmp.str())
 			break;
 	}
-	if ((Conf.Server_par[0].error_page_num[i] == tmp.str())) {
-		std::ifstream ifs(Conf.Server_par[0].error_page_loc[i].c_str(), std::ios::binary);
+	if ((Conf.Server_par[_server_index].error_page_num[i] == tmp.str())) {
+		std::ifstream ifs(Conf.Server_par[_server_index].error_page_loc[i].c_str(), std::ios::binary);
 		oss << ifs.rdbuf();
 		return (oss.str());
 	}

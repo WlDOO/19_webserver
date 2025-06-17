@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: raf <raf@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:31 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/06/17 13:48:04 by armitite         ###   ########.fr       */
+/*   Updated: 2025/06/17 16:09:58 by raf              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,12 @@ Server::~Server()
 
 void Server::handleConnections() {
     struct epoll_event events[MAX_EVENTS];
-	int startTest = 0;
+	// int startTest = 0;
     while (true) {
-		startTest++;
-		if (startTest > 20) {
-			break ;
-		}
+		// startTest++;
+		// if (startTest > 20) {
+		// 	break ;
+		// }
         int event_count = epoll_wait(epoll_fd, events, MAX_EVENTS, -1);  //return the number of triggered (new conenctions or data) events
 		if (event_count == -1)
 		{
@@ -161,11 +161,9 @@ int main(int ac, char **av)
 	Conf = Conf.Config_file(str2);
 	if (parse_file(Conf) == 0)
 		return 0;
-	std::cout << Conf.Server_par[0].Loc[1].index << std::endl;
 	std::vector<int> ports;  // les ports qu'on veut utiliser
-	ports.push_back(4242);
-	ports.push_back(8001);
-	
+	for (long unsigned int i = 0; i < Conf.Server_par.size(); i++)
+		ports.push_back(atoi(Conf.Server_par[i].listen[0].c_str()));
 	Server serv(ports, Conf);
 	serv.run();
 	return (0);

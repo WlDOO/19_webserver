@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Parse_request.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: raf <raf@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:35:41 by armitite          #+#    #+#             */
-/*   Updated: 2025/06/17 14:18:44 by armitite         ###   ########.fr       */
+/*   Updated: 2025/06/17 16:35:14 by raf              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,13 @@ int		Server::generate_autoindex(std::string loc, int index_loc) {
 		return (1);
 	std::string tmp;
 	std::string loc_tmp;
-	if (!Conf.Server_par[0].Loc[index_loc].alias.empty())
-		tmp = Conf.Server_par[0].Loc[index_loc].Location;
+	if (!Conf.Server_par[_server_index].Loc[index_loc].alias.empty())
+		tmp = Conf.Server_par[_server_index].Loc[index_loc].Location;
 	else
 	{
 		tmp = loc;
 		loc_tmp = loc;
-		loc_tmp.erase(0, Conf.Server_par[0].Loc[index_loc].Location.size());
+		loc_tmp.erase(0, Conf.Server_par[_server_index].Loc[index_loc].Location.size());
 		if (!loc_tmp.empty())
 		{
 			size_t found;
@@ -84,18 +84,18 @@ int		Server::check_autoindex(int index_loc, std::string loc) {
 		check_dir = 1;
 	}
 	closedir(dir);
-	if (_Request_content == loc || _Request_content == Conf.Server_par[0].Loc[index_loc].alias || check_dir == 1)
+	if (_Request_content == loc || _Request_content == Conf.Server_par[_server_index].Loc[index_loc].alias || check_dir == 1)
 	{
-		if (!(Conf.Server_par[0].Loc[index_loc].index.empty()))
+		if (!(Conf.Server_par[_server_index].Loc[index_loc].index.empty()))
 		{
-			_Request_content = Conf.Server_par[0].Loc[index_loc].index;
+			_Request_content = Conf.Server_par[_server_index].Loc[index_loc].index;
 			std::cout << "Req content dans autoindex : " << _Request_content << std::endl;
 			return (0);
 		}
-		if (Conf.Server_par[0].Loc[index_loc].autoindex == "on") {
+		if (Conf.Server_par[_server_index].Loc[index_loc].autoindex == "on") {
 			
-			if (!Conf.Server_par[0].Loc[index_loc].alias.empty())
-				generate_autoindex(Conf.Server_par[0].Loc[index_loc].alias, index_loc);
+			if (!Conf.Server_par[_server_index].Loc[index_loc].alias.empty())
+				generate_autoindex(Conf.Server_par[_server_index].Loc[index_loc].alias, index_loc);
 			else if (check_dir == 1)
 				generate_autoindex(_Request_content, index_loc);
 			else
@@ -118,10 +118,10 @@ int		Server::check_cgi(int index_loc) {
 	if (found == std::string::npos)
 		return (1);
 	ext = _Request_content.substr(found, _Request_content.size() - found);
-	if (Conf.Server_par[0].Loc[index_loc].cgi_extonsions == ext) {
+	if (Conf.Server_par[_server_index].Loc[index_loc].cgi_extonsions == ext) {
 
-		_Script_path = Conf.Server_par[0].Loc[index_loc].cgi_pass;
-		_Script = Conf.Server_par[0].root + _Request_content;
+		_Script_path = Conf.Server_par[_server_index].Loc[index_loc].cgi_pass;
+		_Script = Conf.Server_par[_server_index].root + _Request_content;
 		//_Script = "Bad";
 		_Is_cgi = 1;
 		std::cout << "alors : " << _Is_cgi << " + " << _Script << " + " << _Script_path << std::endl;
@@ -163,7 +163,7 @@ std::string	Server::handle_alias(std::string alias, std::string loc) {
 
 int		Server::allowed_method(int index_loc) {
 
-	if (check_vectors(Conf.Server_par[0].Loc[index_loc].methods, _Request_type) == 1)
+	if (check_vectors(Conf.Server_par[_server_index].Loc[index_loc].methods, _Request_type) == 1)
 	{
 		std::cout << "Good method" << std::endl;
 		return (0);
@@ -184,7 +184,7 @@ int		Server::parse_request(void) {
 		return (0);
 	if (_Request_content == "index.html" || _Request_content.empty())
 	{	
-		_Request_content = Conf.Server_par[0].index;
+		_Request_content = Conf.Server_par[_server_index].index;
 		_Request_type = "GET";
 		return (0);
 	}
@@ -195,9 +195,9 @@ int		Server::parse_request(void) {
 	if (found == std::string::npos)
 		return (404);
 	loc = _Request_content.substr(0, found + 1);
-	for (i = 0; i < Conf.Server_par[0].Loc.size(); i++) {
+	for (i = 0; i < Conf.Server_par[_server_index].Loc.size(); i++) {
 
-		if (loc == Conf.Server_par[0].Loc[i].Location)
+		if (loc == Conf.Server_par[_server_index].Loc[i].Location)
 		{
 			index_loc = i;
 			break ;
@@ -210,10 +210,10 @@ int		Server::parse_request(void) {
 	if (allowed_method(index_loc) == 1)
 		return (405);
 	std::cout << "la loc :" << loc << std::endl;
-	if (!Conf.Server_par[0].Loc[index_loc].alias.empty())
+	if (!Conf.Server_par[_server_index].Loc[index_loc].alias.empty())
 	{
-		std::cout << Conf.Server_par[0].Loc[index_loc].alias << std::endl;
-		_Request_content = handle_alias(Conf.Server_par[0].Loc[index_loc].alias, loc);
+		std::cout << Conf.Server_par[_server_index].Loc[index_loc].alias << std::endl;
+		_Request_content = handle_alias(Conf.Server_par[_server_index].Loc[index_loc].alias, loc);
 	}
 	if (loc == "cgi-bin/")
 	{

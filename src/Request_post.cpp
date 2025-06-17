@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request_post.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: raf <raf@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 20:18:50 by armitite          #+#    #+#             */
-/*   Updated: 2025/04/10 12:53:10 by armitite         ###   ########.fr       */
+/*   Updated: 2025/06/17 16:35:32 by raf              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ int		Server::content_post_file(std::string full_msg) {
 		return (print_logs("Client", "Content lenght not found", 2), 411);
 	if (check_digit_content_lenght(content_lenght) == 0) {
 		int size = std::atoi(content_lenght.c_str());
-		if (size >= std::atoi(Conf.Server_par[0].client_max_body_size.c_str()))
+		if (size >= std::atoi(Conf.Server_par[_server_index].client_max_body_size.c_str()))
 			return (print_logs("Client", "Body size too large", 2), 413);
 	}
 	else
@@ -179,7 +179,7 @@ int		Server::set_content_post(std::string full_msg) {
 
 int	Server::request_post(void) {
 
-	std::string dir = Conf.Server_par[0].root + "tmp/";
+	std::string dir = Conf.Server_par[_server_index].root + "tmp/";
 	std::string new_name = dir + _Post_file_name;
 	std::cout << "ici" << std::endl;
 	std::cout << new_name << std::endl;

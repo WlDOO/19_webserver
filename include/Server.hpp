@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
+/*   By: raf <raf@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:12 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/06/11 17:35:29 by rafnasci         ###   ########.fr       */
+/*   Updated: 2025/06/17 16:19:51 by raf              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,8 @@ class Server
 		int			_Http_code;
 		int			_Is_autoindex;
 		int			_Is_cgi;
+
+		int			_server_index;
 
 		void				handleKeepAlive(const std::string &request);
 

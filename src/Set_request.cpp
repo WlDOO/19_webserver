@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Set_request.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: raf <raf@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 16:56:53 by armitite          #+#    #+#             */
-/*   Updated: 2025/06/17 15:33:47 by armitite         ###   ########.fr       */
+/*   Updated: 2025/06/17 16:40:38 by raf              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,16 @@ int	Server::set_request_http(std::string full_msg) {
 	if (found == std::string::npos)
 		return (print_logs("Client", "Incorrect content format", 2), 400);
 	verbs = full_msg.substr(0, found);
+	found = full_msg.find("localhost:", 0);
+	_server_index = atoi(full_msg.substr(found + 10, full_msg.find("\n", found)).c_str());
+	for (long unsigned int i = 0; i < Conf.Server_par.size(); i++){
+		if (atoi(Conf.Server_par[i].listen[0].c_str()) == _server_index)
+		{
+			_server_index = i;
+			break ;
+		}
+	}
+	std::cout << "server port : " << _server_index << std::endl;
 	found = verbs.find(" ", 0);
 	if (found == std::string::npos)
 		return (print_logs("Client", "Incorrect content format", 2), 400);
