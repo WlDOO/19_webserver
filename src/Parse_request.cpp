@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Parse_request.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: raf <raf@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:35:41 by armitite          #+#    #+#             */
-/*   Updated: 2025/06/17 16:35:14 by raf              ###   ########.fr       */
+/*   Updated: 2025/06/17 18:10:43 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,31 @@
 
 int		Server::generate_autoindex(std::string loc, int index_loc) {
 	
-	DIR *dir = opendir(loc.c_str());
+	DIR *dir = opendir(_Request_content.c_str());
 	if (!dir)
 		return (1);
 	std::string tmp;
 	std::string loc_tmp;
+	std::cout << "_Re :" << _Request_content << std::endl;
 	if (!Conf.Server_par[_server_index].Loc[index_loc].alias.empty())
+	{
 		tmp = Conf.Server_par[_server_index].Loc[index_loc].Location;
+		loc_tmp = _Request_content;
+		loc_tmp.erase(0, Conf.Server_par[_server_index].Loc[index_loc].alias.size());
+		if (!loc_tmp.empty())
+		{
+			size_t found;
+			found = loc_tmp.find("/");
+			while (found != std::string::npos)
+			{
+				loc_tmp.erase(0, found + 1);
+				std::cout << loc_tmp << std::endl;
+				found = loc_tmp.find("/");
+			}
+			loc_tmp += "/";
+		}
+		std::cout << "Et donc le end : " << loc_tmp << std::endl;
+	}
 	else
 	{
 		tmp = loc;
@@ -63,6 +81,9 @@ int		Server::generate_autoindex(std::string loc, int index_loc) {
 				output += "<a href=\"" + loc_tmp + name + "\">" + entry->d_name + "</a>\r\n";
 			else
 				output += "<a href=\"" + name + "\">" + entry->d_name + "</a>\r\n";
+			std::cout << "le loc_tmp :" << loc_tmp << std::endl;
+			std::cout << "le name :" << name << std::endl;
+			std::cout << "le entry d name :" << entry->d_name << std::endl;
 		}
 	}
 	closedir(dir);
