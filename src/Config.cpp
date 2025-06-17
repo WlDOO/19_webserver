@@ -6,7 +6,7 @@
 /*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:46:38 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/06/17 14:14:44 by najeuneh         ###   ########.fr       */
+/*   Updated: 2025/06/17 15:08:27 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -329,6 +329,13 @@ int	parse_file(Config Conf)
 			return std::cerr << "Error: client mac body size does not goot" << std::endl, 0;
 		for (size_t y = 0; y < Conf.Server_par[i].Loc.size(); y++)
 		{
+			for (size_t x = 0; x < y; x++)
+			{
+				if (Conf.Server_par[i].Loc[y].Location == Conf.Server_par[i].Loc[x].Location)
+				{
+					return std::cerr << "Error: Location is not unique" << std::endl, 0;
+				}
+			}
 			if (!isDirectory(Conf.Server_par[i].Loc[y].Location))
 			{
 				std::cout << "ici" << Conf.Server_par[i].Loc[y].Location << "ici" << std::endl;
