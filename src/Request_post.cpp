@@ -6,7 +6,7 @@
 /*   By: raf <raf@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 20:18:50 by armitite          #+#    #+#             */
-/*   Updated: 2025/06/17 16:35:32 by raf              ###   ########.fr       */
+/*   Updated: 2025/06/17 18:31:50 by raf              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,6 @@ int		Server::content_post_cgi(std::string full_msg) {
 	cgi->Set_content_lenght(content_lenght);
 	cgi->Set_content_type(content_type);
 
-	std::cout << "post cgi content : " << full_msg << std::endl;
-	std::cout << "last_name : " << last_name << std::endl;
-	std::cout << "first_name : " << first_name << std::endl;
-	std::cout << "content_type : " << content_type << std::endl;
-	std::cout << "content_lenght : " << content_lenght << std::endl;
-
 	return (201);
 }
 
@@ -88,7 +82,6 @@ int check_digit_content_lenght(std::string nbr) {
 
 	i = 0;
 	while (i < nbr.size()) {
-		std::cout << nbr.at(i) << std::endl;
 		if (!isdigit(nbr.at(i)))
 			return (1);
 		i++;
@@ -142,7 +135,6 @@ int		Server::content_post_file(std::string full_msg) {
 		return (print_logs("Client", "Content type not found", 2), 400);
 	if (content_type != "text/plain")
 		return (print_logs("Client", "Content type wrong format : " + content_type, 2), 415);
-	std::cout << "content_type : " << content_type << std::endl;
 	found1 = content.find("\r\n\r\n\r\n", 0);
 	if (found1 != std::string::npos)
 		return (print_logs("Client", "Empty file", 2), 400); // ici qd c'est empty file on peut return une error code diff 400 bad request
@@ -181,9 +173,6 @@ int	Server::request_post(void) {
 
 	std::string dir = Conf.Server_par[_server_index].root + "tmp/";
 	std::string new_name = dir + _Post_file_name;
-	std::cout << "ici" << std::endl;
-	std::cout << new_name << std::endl;
-	std::cout << _Post_content << std::endl;
 
 	std::ofstream	ofs(new_name.c_str());
 	if (!ofs.is_open())

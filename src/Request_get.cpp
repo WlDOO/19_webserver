@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request_get.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rafnasci <rafnasci@student.42.fr>          +#+  +:+       +#+        */
+/*   By: raf <raf@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 20:10:46 by armitite          #+#    #+#             */
-/*   Updated: 2025/04/07 22:12:54 by rafnasci         ###   ########.fr       */
+/*   Updated: 2025/06/17 18:28:08 by raf              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 std::string	Server::request_get(int client_fd, int code) {
 
 	std::string web_page;
-	std::cout << client_fd << std::endl;
 	if (_Request_content == "favicon.ico")
 		web_page = "favicon.png";
 	else if (_Request_content.empty() || _Request_content == "/")

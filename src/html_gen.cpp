@@ -6,7 +6,7 @@
 /*   By: raf <raf@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 20:39:35 by rafnasci          #+#    #+#             */
-/*   Updated: 2025/06/17 16:34:38 by raf              ###   ########.fr       */
+/*   Updated: 2025/06/17 18:38:41 by raf              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,6 @@ std::string Server::html_success(int code, const std::string& web_page) {
 		oss << "HTTP/1.1 "<< code <<" OK\r\n";
 	if (code == 201)
 		oss << "HTTP/1.1 "<< code <<" Created\r\n";
-	// else
-	// oss << "HTTP/1.1 "<< code <<" Created\r\n";
     oss << "Content-Type: text/html\r\n";
     oss << "Content-Length: " << content.size() << "\r\n";
 	oss << "Connection: keep-alive\r\n";

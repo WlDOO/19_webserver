@@ -6,7 +6,7 @@
 /*   By: raf <raf@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 16:56:53 by armitite          #+#    #+#             */
-/*   Updated: 2025/06/17 16:46:20 by raf              ###   ########.fr       */
+/*   Updated: 2025/06/17 18:33:31 by raf              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,12 @@ int	Server::set_request_http(std::string full_msg) {
 			break ;
 		}
 	}
-	std::cout << "server port : " << _server_index << std::endl;
 	found = verbs.find(" ", 0);
 	if (found == std::string::npos)
 		return (print_logs("Client", "Incorrect content format", 2), 400);
 	_Request_type = verbs.substr(0, found);
 	if (_Request_type != "GET" && _Request_type != "POST" && _Request_type != "DELETE") 
 		return (print_logs("Client", "Unsupported method: " + _Request_type, 2), 405);
-	std::cout << "Request type: " << _Request_type << std::endl;
 	verbs.erase(0, found);
 	_Request_content = verbs.substr(2, (verbs.size() - 3));
 	
@@ -65,11 +63,9 @@ int	Server::set_request_type(char buffer[BUFSIZ]) {
 	full_msg.assign(sender_msg);
 	if (full_msg.find("favicon.ico") != std::string::npos)
 		return (0);
-	std::cout << " full_msg is : " << full_msg << std::endl;
 	error = set_request_http(full_msg);
 	if (error != 0)
 		return (error);
-	//PE check ca
 	if (_Request_type == "POST")
 	{
 		del_method = full_msg.find("_method=DELETE");

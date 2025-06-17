@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Read_send.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: raf <raf@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 13:35:52 by armitite          #+#    #+#             */
-/*   Updated: 2025/06/17 15:41:23 by armitite         ###   ########.fr       */
+/*   Updated: 2025/06/17 18:40:21 by raf              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,6 @@ void Server::send_data_to_socket(int i, struct epoll_event events[MAX_EVENTS]){
 	{
 		 if (errno == EAGAIN || errno == EWOULDBLOCK)
 		{
-			// Socket buffer is full, wait for EPOLLOUT to retry
 			std::cout << "Socket buffer full, waiting for EPOLLOUT to retry send on fd: " << events[i].data.fd << std::endl;
 			return;
 		}
@@ -142,9 +141,8 @@ void Server::send_data_to_socket(int i, struct epoll_event events[MAX_EVENTS]){
 			epoll_ctl(epoll_fd, EPOLL_CTL_DEL, sender_fd, NULL);
 		}
 	}
-	  // If all data was sent successfully, stop monitoring EPOLLOUT
     struct epoll_event event;
-    event.events = EPOLLIN; // Only monitor for incoming data
+    event.events = EPOLLIN;
     event.data.fd = events[i].data.fd;
     epoll_ctl(epoll_fd, EPOLL_CTL_MOD, events[i].data.fd, &event);
 	if (!_Keep_alive)
@@ -173,8 +171,6 @@ void Server::read_data_from_socket(int i, struct epoll_event events[MAX_EVENTS])
 	std::ostringstream oss;
 	std::ostringstream oss_tmp;
     int bytes_read;
-	// int	found;
-    //int status;
     int sender_fd;
 
 	sender_fd = (events)[i].data.fd;
@@ -192,7 +188,6 @@ void Server::read_data_from_socket(int i, struct epoll_event events[MAX_EVENTS])
 	}
 	else if (bytes_read == 0)  // Client has disconnected properly
 	{
-		std::cout << "close fd :" << events[i].data.fd << std::endl;
 		close(events[i].data.fd);
 		epoll_ctl(epoll_fd, EPOLL_CTL_DEL, events[i].data.fd, NULL);
 	}
@@ -202,7 +197,6 @@ void Server::read_data_from_socket(int i, struct epoll_event events[MAX_EVENTS])
 		std::string request(buffer);
 		handleKeepAlive(request);
 		_Http_code = set_request_type(buffer);
-		std::cout << "Error flag  : " << _Http_code << std::endl;
 		send_data_to_socket(i, events);
     }
 }

@@ -6,7 +6,7 @@
 /*   By: raf <raf@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:31 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/06/17 16:09:58 by raf              ###   ########.fr       */
+/*   Updated: 2025/06/17 18:43:41 by raf              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,7 @@ Server::~Server()
 
 void Server::handleConnections() {
     struct epoll_event events[MAX_EVENTS];
-	// int startTest = 0;
     while (true) {
-		// startTest++;
-		// if (startTest > 20) {
-		// 	break ;
-		// }
         int event_count = epoll_wait(epoll_fd, events, MAX_EVENTS, -1);  //return the number of triggered (new conenctions or data) events
 		if (event_count == -1)
 		{
@@ -63,17 +58,11 @@ void Server::handleConnections() {
                 client_event.data.fd = client_fd;  // socket of the client
 
                 epoll_ctl(epoll_fd, EPOLL_CTL_ADD, client_fd, &client_event);  // registers the client to the epoll instance
-                std::cout << "New client connected: " << client_fd << std::endl;
-            } else if (events[i].events && EPOLLIN) {  //ici on gere les pollin
-                // Handle client request
+            } else if (events[i].events && EPOLLIN) {
 				read_data_from_socket(i, events);
             } 
-			// else if (events[i].events & EPOLLOUT) {  ////ici on gere les POLLOUT
-			// 	// send_data_to_socket(i, events);
-			// }
         }
     }
-	std::cout << "finish" << std::endl;
 }
 
 void Server::setupEpoll() {
@@ -113,8 +102,6 @@ void Server::setupSocket(int port)
     }
     int opt = 1;
     setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)); //allows reusin the same address if the server restarts quickly
-	// int keepalive = 1;
-    // setsockopt(server_fd, SOL_SOCKET, SO_KEEPALIVE, &keepalive, sizeof(keepalive));
 	
     if (bind(server_fd, (struct sockaddr*)&address, sizeof(address)) < 0)
 	{
@@ -130,8 +117,6 @@ void Server::setupSocket(int port)
 
     fcntl(server_fd, F_SETFL, O_NONBLOCK); // Make it non-blocking
 	server_fds.push_back(server_fd);  //store the socket for epoll
-	std::cout << "Server created socket fd:" << server_fd << std::endl;
-    std::cout << "Server started on port " << port << std::endl;
 }
 
 void Server::run() {

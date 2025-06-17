@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cgi_handle.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: raf <raf@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 16:47:34 by armitite          #+#    #+#             */
-/*   Updated: 2025/06/17 15:36:01 by armitite         ###   ########.fr       */
+/*   Updated: 2025/06/17 18:36:22 by raf              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ int	Cgi::cgi_handle(std::string const &Request_type, std::string const &Script, 
 		return (500);
     pid_t pid = fork();
     
-    std::cout << "Script path :" << Script << std::endl;
     char *envp[] = 
     {
             const_cast<char *>(LAST_NAME.c_str()),
@@ -106,14 +105,10 @@ int	Cgi::cgi_handle(std::string const &Request_type, std::string const &Script, 
         ssize_t bytes_read;
 
         while ((bytes_read = read(fd[0], buffer, sizeof(buffer))) > 0) 
-		{
-            output.append(buffer, bytes_read);
-        }
-        close(fd[0]);
+        output.append(buffer, bytes_read);
+            close(fd[0]);
         if (bytes_read == -1 || cgi_parse(output, _Cgi_output) == 1) 
-		{
             return (500);
-        }
     }
 
 
