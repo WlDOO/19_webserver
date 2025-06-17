@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   config_utils.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
+/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 15:39:49 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/04/09 14:26:44 by najeuneh         ###   ########.fr       */
+/*   Updated: 2025/06/17 15:12:45 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,8 +180,6 @@ Config	setpath(Config Conf)
 			std::string root = Conf.Server_par[i].Loc[y].root + Conf.Server_par[i].Loc[y].Location;
 			if (!Conf.Server_par[i].Loc[y].index.empty())
 				Conf.Server_par[i].Loc[y].index = root + Conf.Server_par[i].Loc[y].index;
-			if (!Conf.Server_par[i].Loc[y].redirect_url.empty())
-				Conf.Server_par[i].Loc[y].redirect_url = root + Conf.Server_par[i].Loc[y].redirect_url;
 			if (!Conf.Server_par[i].Loc[y].upload_store.empty())
 				Conf.Server_par[i].Loc[y].upload_store = root + Conf.Server_par[i].Loc[y].upload_store;
 			if (!Conf.Server_par[i].Loc[y].directory_listening.empty())

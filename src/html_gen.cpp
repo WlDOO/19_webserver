@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 20:39:35 by rafnasci          #+#    #+#             */
-/*   Updated: 2025/06/17 13:48:59 by armitite         ###   ########.fr       */
+/*   Updated: 2025/06/17 15:07:59 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ std::string	Server::check_error_dir(int code) {
 	
 	tmp << code;
 	i = -1;
-	while (++i < Conf.Server_par[0].error_page_num.size()) {
+	while (++i < Conf.Server_par[0].error_page_num.size() - 1) {
 		if (Conf.Server_par[0].error_page_num[i] == tmp.str())
 			break;
 	}
