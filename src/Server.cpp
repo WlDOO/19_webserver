@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:31 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/06/18 15:16:32 by armitite         ###   ########.fr       */
+/*   Updated: 2025/06/18 16:21:35 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,7 @@ int main(int ac, char **av)
 	if (ac != 2)
 	{
 		std::cerr << "Args error" << std::endl;
-		return (2);
+		return (1);
 	}
 	Config Conf;
 	std::string str = av[1];
@@ -153,7 +153,17 @@ int main(int ac, char **av)
 		return 0;
 	std::vector<int> ports;  // les ports qu'on veut utiliser
 	for (long unsigned int i = 0; i < Conf.Server_par.size(); i++)
+	{
+		for (size_t x = i + 1; x < Conf.Server_par.size(); x++)
+		{
+			if (x < Conf.Server_par.size() && Conf.Server_par[i].listen[0] == Conf.Server_par[x].listen[0])
+			{
+				std::cerr << "Using same Port for different severs." << std::endl;
+				return (3);
+			}
+		}	
 		ports.push_back(atoi(Conf.Server_par[i].listen[0].c_str()));
+	}
 	Server serv(ports, Conf);
 	serv.run();
 	return (0);
