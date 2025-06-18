@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
+/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:31 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/06/18 15:08:42 by najeuneh         ###   ########.fr       */
+/*   Updated: 2025/06/18 15:16:32 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,8 +142,8 @@ int main(int ac, char **av)
 	std::string str = av[1];
 	if (str.find(".conf") == std::string::npos)
 	{
-	std::cerr << "Config file must have .conf extension" << std::endl;
-	return (2);
+		std::cerr << "Config file must have .conf extension" << std::endl;
+		return (2);
 	}
 	std::string str2;
 	

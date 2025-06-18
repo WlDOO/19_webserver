@@ -6,7 +6,7 @@
 /*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:35:41 by armitite          #+#    #+#             */
-/*   Updated: 2025/06/18 13:30:38 by armitite         ###   ########.fr       */
+/*   Updated: 2025/06/18 15:29:24 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,9 +181,9 @@ int		Server::parse_request(void) {
 	int index_loc = -1;
 	
 
-	if (_Request_content == "asa.html" || _Request_content == "reve.html" || _Request_content.empty())
-		return (0);
-	if (_Request_content == "index.html" || _Request_content.empty())
+	// if (_Request_content == "asa.html" || _Request_content == "reve.html" || _Request_content.empty())
+	// 	return (0);
+	if (_Request_content.empty())
 	{	
 		_Request_content = Conf.Server_par[_server_index].index;
 		_Request_type = "GET";
