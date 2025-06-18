@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Parse_request.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: raf <raf@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:35:41 by armitite          #+#    #+#             */
-/*   Updated: 2025/06/17 18:24:56 by raf              ###   ########.fr       */
+/*   Updated: 2025/06/18 13:30:38 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,11 +120,15 @@ int		Server::check_autoindex(int index_loc, std::string loc) {
 int		Server::check_cgi(int index_loc) {
 
 	std::size_t found;
+	std::size_t found2;
 	std::string ext;
 	
 	found = _Request_content.rfind(".");
 	if (found == std::string::npos)
-		return (1);
+		return (2);
+	found2 = _Request_content.rfind(".html");
+	if (found2 != std::string::npos)
+		return (0);
 	ext = _Request_content.substr(found, _Request_content.size() - found);
 	if (Conf.Server_par[_server_index].Loc[index_loc].cgi_extonsions == ext) {
 
@@ -134,7 +138,7 @@ int		Server::check_cgi(int index_loc) {
 		return (1);
 	}
 	
-	return (0);
+	return (2);
 }
 
 int		Server::check_vectors(std::vector<std::string> vector, std::string to_find) {
@@ -209,7 +213,7 @@ int		Server::parse_request(void) {
 		_Request_content = handle_alias(Conf.Server_par[_server_index].Loc[index_loc].alias, loc);
 	if (loc == "cgi-bin/")
 	{
-		if (check_cgi(index_loc) == 0)
+		if (check_cgi(index_loc) == 2)
 			return (415);
 	}
 	found = _Request_content.find("cgi-bin/");

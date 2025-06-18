@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: raf <raf@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:12 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/06/17 16:19:51 by raf              ###   ########.fr       */
+/*   Updated: 2025/06/18 13:15:52 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ class Server
 		int			set_request_type(char buffer[BUFSIZ]);
 		std::string	html_request(int client_fd);
 		int			set_request_http(std::string sender_msg);
-		std::string	request_get(int client_fd, int code);
+		std::string	request_get(int code);
 		int			request_post(void);
 		std::string request_delete(int client_fd);
 		int			content_del(std::string full_msg);

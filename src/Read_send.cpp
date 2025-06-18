@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Read_send.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: raf <raf@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 13:35:52 by armitite          #+#    #+#             */
-/*   Updated: 2025/06/17 18:40:21 by raf              ###   ########.fr       */
+/*   Updated: 2025/06/18 13:16:43 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ std::string	Server::html_request(int client_fd)
 			}
 			return (html_outputs(client_fd));
 		}
-		return (request_get(client_fd, 200));
+		return (request_get(200));
 	}
 	else if (_Request_type == "POST")
 	{
@@ -111,12 +111,12 @@ std::string	Server::html_request(int client_fd)
 			return (html_outputs(client_fd));
 		}
 		else
-			return (request_get(client_fd, 201));
+			return (request_get(201));
 	}
 	else if (_Request_type == "DELETE")
 		return (request_delete(client_fd));
 
-	return (request_get(client_fd, 200));
+	return (request_get(200));
 }
 void Server::send_data_to_socket(int i, struct epoll_event events[MAX_EVENTS]){
 

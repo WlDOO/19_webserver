@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Request_get.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: raf <raf@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 20:10:46 by armitite          #+#    #+#             */
-/*   Updated: 2025/06/17 18:28:08 by raf              ###   ########.fr       */
+/*   Updated: 2025/06/18 13:15:29 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/Server.hpp"
 
-std::string	Server::request_get(int client_fd, int code) {
+std::string	Server::request_get(int code) {
 
 	std::string web_page;
 	if (_Request_content == "favicon.ico")

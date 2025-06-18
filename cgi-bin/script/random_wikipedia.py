@@ -2,18 +2,23 @@
 import os
 import requests
 
+# Enable debugging for CGI scripts
 import cgitb
 cgitb.enable()
 
+# Function to fetch a random Wikipedia page URL'
 def get_random_wikipedia_url():
     response = requests.get("https://en.wikipedia.org/wiki/Special:Random")
     return response.url
 
+# Determine the HTTP method (GET or POST)
 request_method = os.environ.get("REQUEST_METHOD", "GET")
 
-print("Content-Type: text/html\r\n", end="")
-print("\r\n", end="")
+# Prepare response header
+print("Content-Type: text/html\r\n", end="")  # Explicitly add `\r\n`
+print("\r\n", end="")  # Blank line to indicate end of headers
 
+# Handle GET request - Directly print HTML response
 if request_method == "GET":
     random_url = get_random_wikipedia_url()
     print(f"""\
@@ -32,6 +37,7 @@ if request_method == "GET":
     </html>
     """)
 
+# Handle POST request - Directly print HTML response
 elif request_method == "POST":
     first_name = os.environ.get("FIRST_NAME", "Unknown")
     last_name = os.environ.get("LAST_NAME", "Unknown")
