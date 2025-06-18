@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Config.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:46:38 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/06/17 17:02:47 by armitite         ###   ########.fr       */
+/*   Updated: 2025/06/18 15:10:25 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -297,6 +297,8 @@ Config	Config::Config_file(std::string str2)
 
 int	parse_file(Config Conf)
 {
+	if (Conf.Server_par.empty())
+		return std::cerr << "Error: No server block found" << std::endl, 0;
 	for (size_t i = 0; i < Conf.Server_par.size(); i++)
 	{
 		if (CheckServer_name(Conf.Server_par[i].server_name) == 0)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: raf <raf@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: najeuneh <najeuneh@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:31 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/06/17 18:43:41 by raf              ###   ########.fr       */
+/*   Updated: 2025/06/18 15:08:42 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,11 @@ int main(int ac, char **av)
 	}
 	Config Conf;
 	std::string str = av[1];
+	if (str.find(".conf") == std::string::npos)
+	{
+	std::cerr << "Config file must have .conf extension" << std::endl;
+	return (2);
+	}
 	std::string str2;
 	
 	str2 = pick_file(str);
