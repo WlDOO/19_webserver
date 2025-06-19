@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: raf <raf@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:31 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/06/19 13:29:29 by raf              ###   ########.fr       */
+/*   Updated: 2025/06/19 13:32:22 by armitite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ int main(int ac, char **av)
 	std::string str;
 	if (ac == 1)
 	{
-		str = "Configuration/Good.conf";
+		str = "Configurations/Good.conf";
 	}
 	else if (ac == 2)
 	{
