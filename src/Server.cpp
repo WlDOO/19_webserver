@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armitite <armitite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: raf <raf@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:32:31 by najeuneh          #+#    #+#             */
-/*   Updated: 2025/06/18 16:21:35 by armitite         ###   ########.fr       */
+/*   Updated: 2025/06/19 13:29:29 by raf              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,15 +131,21 @@ void	Server::SetConf(Config config)
 
 int main(int ac, char **av)
 {
-	
-	(void)av;
-	if (ac != 2)
+	std::string str;
+	if (ac == 1)
+	{
+		str = "Configuration/Good.conf";
+	}
+	else if (ac == 2)
+	{
+		str = av[1];
+	}
+	else
 	{
 		std::cerr << "Args error" << std::endl;
-		return (1);
+		return (1);	
 	}
 	Config Conf;
-	std::string str = av[1];
 	if (str.find(".conf") == std::string::npos)
 	{
 		std::cerr << "Config file must have .conf extension" << std::endl;
